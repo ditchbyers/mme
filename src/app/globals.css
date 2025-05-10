@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -6,23 +6,6 @@
 
 body {
   font-family: Lato, Arial, Helvetica, sans-serif;
-}
-
-.instagram {
-  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
-}
-
-.facebook {
-  background-color: rgb(66, 103, 177);
-}
-
-.navigationLink:hover {
-  color: #ed1e37;
-}
-
-.logo {
-  -webkit-filter: drop-shadow(1px 1px #000);
-  filter: drop-shadow(1px 1px #000);
 }
 
 :root {

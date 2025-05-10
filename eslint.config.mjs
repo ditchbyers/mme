@@ -1,16 +1,50 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js"
+import prettier from "eslint-config-prettier"
+import next from "eslint-plugin-next"
+import tailwindcss from "eslint-plugin-tailwindcss"
+import tseslint from "typescript-eslint"
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export default [
+  // Base JavaScript + TypeScript setup
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+  // Next.js + Tailwind + Prettier
+  next.configs["core-web-vitals"],
+  {
+    plugins: {
+      tailwindcss,
+    },
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+      "react/jsx-key": "off",
+      "tailwindcss/no-custom-classname": "off",
+      "tailwindcss/classnames-order": "error",
+    },
+    settings: {
+      tailwindcss: {
+        callees: ["cn"], // e.g. clsx or cn()
+        config: "tailwind.config.js",
+      },
+      next: {
+        rootDir: true,
+      },
+    },
+  },
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
+  // Prettier last to disable conflicting formatting rules
+  {
+    rules: {
+      ...prettier.rules,
+    },
+  },
 
-export default eslintConfig;
+  // Parser for .ts and .tsx
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parser: tseslint.parser,
+    },
+  },
+]
