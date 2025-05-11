@@ -1,9 +1,19 @@
 import type { Metadata } from 'next'
+
 import './globals.css'
+
 import { MobileNavigation } from '@/components/usable/mobile-navigation'
 import { DesktopNavigation } from '@/components/usable/desktop-navigation'
 import { navigationConfig } from '@/config/navigation'
 import { Lato } from 'next/font/google'
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 const lato = Lato({
   variable: '--font-oswald',
@@ -22,12 +32,23 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${lato.variable} antialiased min-h-screen flex flex-col gap-10`}>
-        <DesktopNavigation items={navigationConfig.mainNav} />
-        <main className="flex-1 mb-36 space-y-20 pl-5 md:px-5">{children}</main>
-        <MobileNavigation />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${lato.variable} flex min-h-screen flex-col gap-10 antialiased`}>
+          {/* <DesktopNavigation items={navigationConfig.mainNav} /> */}
+          <header className="flex h-16 items-center justify-end gap-4 p-4">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
+          <MobileNavigation />
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
