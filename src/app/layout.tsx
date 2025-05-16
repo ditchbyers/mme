@@ -37,7 +37,6 @@ export default function RootLayout({
         <body
           className={`${lato.variable} flex min-h-screen flex-col antialiased`}
         >
-          <ThemeProvider>
             
               <header className="flex h-16 items-center justify-between px-4 shadow-md">
                 <h1 className="text-xl font-bold">Matchmaking Enabled</h1>
@@ -52,12 +51,11 @@ export default function RootLayout({
                 </div>
               </header>
 
-              <main className="flex-1 px-4 py-6">{children}</main>
+              <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
 
               <footer>
                 <MobileNavigation />
               </footer>
-          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
