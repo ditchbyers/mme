@@ -3,8 +3,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 import { MobileNavigation } from '@/components/usable/mobile-navigation'
-import { DesktopNavigation } from '@/components/usable/desktop-navigation'
-import { navigationConfig } from '@/config/navigation'
 import { Lato } from 'next/font/google'
 import {
   ClerkProvider,
@@ -14,6 +12,8 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import ThemeProvider from '@/providers/theme-provider'
+import  LayoutProvider  from '@/providers/layout-provider'
 
 const lato = Lato({
   variable: '--font-oswald',
@@ -34,19 +34,30 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${lato.variable} flex min-h-screen flex-col gap-10 antialiased`}>
-          {/* <DesktopNavigation items={navigationConfig.mainNav} /> */}
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
-          <MobileNavigation />
+        <body
+          className={`${lato.variable} flex min-h-screen flex-col antialiased`}
+        >
+          <ThemeProvider>
+            
+              <header className="flex h-16 items-center justify-between px-4 shadow-md">
+                <h1 className="text-xl font-bold">Matchmaking Enabled</h1>
+                <div className="flex gap-4">
+                  <SignedOut>
+                    <SignInButton />
+                    <SignUpButton />
+                  </SignedOut>
+                  <SignedIn>
+                    <UserButton />
+                  </SignedIn>
+                </div>
+              </header>
+
+              <main className="flex-1 px-4 py-6">{children}</main>
+
+              <footer>
+                <MobileNavigation />
+              </footer>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
