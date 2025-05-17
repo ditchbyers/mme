@@ -1,29 +1,35 @@
 'use client'
 import React, { useEffect } from "react";
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton} from '@clerk/nextjs'
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { UserType } from "@/interfaces";
 import CurrentUserInfo from "./current-user-infor";
+import { usePathname } from "next/navigation";
 
 function Header() {
 
-    const [currentUser , setCurrentUser] = React.useState<UserType | null>(null);
+    const [currentUser, setCurrentUser] = React.useState<UserType | null>(null);
     const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false);
-
-    const getCurrentUser = async () => {
-        try {
-            const response = await GetCurrentUserFromMongoDB();
-            if (response.error) throw new Error(response.error);
-            setCurrentUser(response);
-        } catch (error: any) {
-            console.error(error.message);
-        }
-    }
-
+    const pathname = usePathname();
+    const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up");
     useEffect(() => {
+        const getCurrentUser = async () => {
+            try {
+                const response = await GetCurrentUserFromMongoDB();
+                if (response.error) throw new Error(response.error);
+                setCurrentUser(response);
+            } catch (error: any) {
+                console.error(error.message);
+            }
+        };
         getCurrentUser();
     }, []);
+
+    // 🟨 Statt return null → nur JSX-Inhalt überspringen
+    if (isPublicRoute) {
+        return <></>; // oder null, aber *nach* allen Hooks
+    }
 
     return (
         <header className="bg-gray-200 w-full h-16 py-1 flex items-center justify-between px-5 border-b border-solid border-gray-300">
