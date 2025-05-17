@@ -4,16 +4,9 @@ import './globals.css'
 
 import { MobileNavigation } from '@/components/usable/mobile-navigation'
 import { Lato } from 'next/font/google'
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
+import { ClerkProvider} from '@clerk/nextjs'
 import ThemeProvider from '@/providers/theme-provider'
-import  LayoutProvider  from '@/providers/layout-provider'
+import LayoutProvider from '@/providers/layout-provider'
 
 const lato = Lato({
   variable: '--font-oswald',
@@ -34,28 +27,16 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${lato.variable} flex min-h-screen flex-col antialiased`}
-        >
-            
-              <header className="flex h-16 items-center justify-between px-4 shadow-md">
-                <h1 className="text-xl font-bold">Matchmaking Enabled</h1>
-                <div className="flex gap-4">
-                  <SignedOut>
-                    <SignInButton />
-                    <SignUpButton />
-                  </SignedOut>
-                  <SignedIn>
-                    <UserButton />
-                  </SignedIn>
-                </div>
-              </header>
-
+        <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
+          <ThemeProvider>
+            <LayoutProvider>
               <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
+            </LayoutProvider>
+          </ThemeProvider>
+          <footer>
+            <MobileNavigation />
+          </footer>
 
-              <footer>
-                <MobileNavigation />
-              </footer>
         </body>
       </html>
     </ClerkProvider>

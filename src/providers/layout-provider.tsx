@@ -6,7 +6,7 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
     return <div>
         <div>
            <Header />
-           <Content> {children} </Content>
+           {/*<Content> {children} </Content>*/}
         </div>
         {children}
     </div>;
