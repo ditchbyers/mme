@@ -26,6 +26,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    location: {
+        type: String,
+        required: false
+    },
+    games: {
+        type: [String],
+        required: false
+    },
+    age: {
+        type: Number,
+        required: false
+    },
+    platforms: {
+        type: String,
+        required: false
+    },
 }
     , { timestamps: true });
 

@@ -2,7 +2,6 @@
 import { connectMongoDB } from "@/config/db-config";
 import UserModel from "@/models/user-model";
 import { currentUser } from "@clerk/nextjs/server";
-import { Fira_Code } from "next/font/google";
 
 connectMongoDB();
 
@@ -23,7 +22,7 @@ export const GetCurrentUserFromMongoDB = async () => {
 
         const newUserPayload = {
             clerkUserId: clerkUser?.id,
-            name: clerkUser?.firstName + " " + clerkUser?.lastName,
+            name: [clerkUser?.firstName, clerkUser?.lastName].filter(Boolean).join(" "),
             userName: clerkUser?.username,
             email, 
             profilePicture: clerkUser?.imageUrl
