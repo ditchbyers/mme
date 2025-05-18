@@ -44,6 +44,7 @@
     "dayjs": "^1.11.13",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.7.3",
     "framer-motion": "^12.9.4",
     "gsap": "^3.13.0",
     "hamburger-react": "^2.5.2",
