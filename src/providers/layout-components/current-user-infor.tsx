@@ -5,26 +5,29 @@ import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Toast } from 'primereact/toast';
+import { useSelector } from "react-redux";
+import { UserState } from "@/redux/userSlice";
 
 
 function CurrentUserInfo({
-    currentUser,
     showCurrentUserInfo,
     setShowCurrentUserInfo,
 }: {
-    currentUser: UserType
     showCurrentUserInfo: boolean
     setShowCurrentUserInfo: React.Dispatch<React.SetStateAction<boolean>>
 }) {
     const [loading, setLoading] = React.useState(false);
+    const { currentUserData } :UserState = useSelector((state: any) => state.user);
     const { signOut } = useClerk();
     const router = useRouter();
 
     const getProperty = (key: string, value: string) => {
-        return <div className="flex flex-col">
-            <span className="font-semibold text-gray-700">{key}</span>
-            <span className="text-gray-600">{value}</span>
-        </div>
+        return (
+            <div className="flex flex-col">
+                <span className="font-semibold text-gray-700">{key}</span>
+                <span className="text-gray-600">{value}</span>
+            </div>
+        )
     }
 
     const toast = useRef<Toast>(null);
@@ -64,7 +67,7 @@ function CurrentUserInfo({
 
                     <div className="flex flex-col gap-5 justyfy-center items-center">
                         <img
-                            src={currentUser?.profilePicture}
+                            src={currentUserData?.profilePicture}
                             alt="Profile Picture"
                             className="w-28 h-28 rounded-full"
                         />
@@ -77,12 +80,12 @@ function CurrentUserInfo({
 
 
                     <div className="flex flex-col gap-5">
-                        {getProperty("Name", currentUser?.name)}
-                        {getProperty("Username", currentUser?.userName)}
-                        {getProperty("Email", currentUser?.email)}
-                        {getProperty("Bio", currentUser?.bio)}
-                        {getProperty("Location", currentUser?.location)}
-                        {getProperty("Games", currentUser?.games.join(", "))}
+                        {getProperty("Name", currentUserData?.name)}
+                        {getProperty("Username", currentUserData?.userName)}
+                        {getProperty("Email", currentUserData?.email)}
+                        {getProperty("Bio", currentUserData?.bio)}
+                        {getProperty("Location", currentUserData?.location)}
+                        {getProperty("Games", currentUserData?.games.join(", "))}
 
                     </div>
 

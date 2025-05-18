@@ -4,9 +4,10 @@ import './globals.css'
 
 import { MobileNavigation } from '@/components/usable/mobile-navigation'
 import { Lato } from 'next/font/google'
-import { ClerkProvider} from '@clerk/nextjs'
+import { ClerkProvider } from '@clerk/nextjs'
 import ThemeProvider from '@/providers/theme-provider'
 import LayoutProvider from '@/providers/layout-provider'
+import ReduxProvider from '@/providers/redux-provider'
 
 const lato = Lato({
   variable: '--font-oswald',
@@ -29,9 +30,11 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
           <ThemeProvider>
-            <LayoutProvider>
-              <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
-            </LayoutProvider>
+            <ReduxProvider>
+              <LayoutProvider>
+                <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
+              </LayoutProvider>
+            </ReduxProvider>
           </ThemeProvider>
           <footer>
             <MobileNavigation />

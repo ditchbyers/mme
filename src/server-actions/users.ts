@@ -9,6 +9,9 @@ connectMongoDB();
 export const GetCurrentUserFromMongoDB = async () => {
     try {
         const clerkUser = await currentUser();
+        if (!clerkUser) {
+            return { error: "User not authenticated." };
+        }
         // check if user is already in db based on clerkUserId
         const mongoUser = await UserModel.findOne({ clerkUserId: clerkUser?.id });
         if (mongoUser) {
@@ -24,7 +27,7 @@ export const GetCurrentUserFromMongoDB = async () => {
             clerkUserId: clerkUser?.id,
             name: [clerkUser?.firstName, clerkUser?.lastName].filter(Boolean).join(" "),
             userName: clerkUser?.username,
-            email, 
+            email,
             profilePicture: clerkUser?.imageUrl
         };
 
