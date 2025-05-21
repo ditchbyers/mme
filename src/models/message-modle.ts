@@ -15,5 +15,5 @@ if (mongoose.models && mongoose.models['messages']) {
     mongoose.deleteModel("messages");
 }
 
-const messageModel = mongoose.model('messages', messageSchema);
-export default messageModel;
+const MessageModel = mongoose.model('messages', messageSchema);
+export default MessageModel;

@@ -1,5 +1,5 @@
 "use server"
-import messageModel from "@/models/message-modle"
+import MessageModel from "@/models/message-modle"
 import ChatModel from "@/models/chat-model"
 
 export const SendNewMessage = async (payload:{
@@ -9,10 +9,10 @@ export const SendNewMessage = async (payload:{
     sender:string,
 }) => {
     try {
-        const newMessage = new messageModel(payload)
+        const newMessage = new MessageModel(payload)
         await newMessage.save()
         await ChatModel.findByIdAndUpdate(payload.chat, {
-            latestMessage: newMessage._id
+            lastMessage: newMessage._id
         })
         return {message: "Message sent successfully"}
     } catch (error:any) {
