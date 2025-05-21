@@ -1,10 +1,12 @@
-import React from "react";
+"use client";
+import Chats from "../../_chat-components/chats";
+import ChatArea from "../../_chat-components/chat-area";
 
-export default function CreateGroupPage() {
+export default function Chat() {
   return (
-    <div className="container mx-auto">
-      <h1 className="text-3xl font-bold">Create Group</h1>
-      <p className="mt-4">This is the create group page.</p>
+    <div className="flex h-[85vh]">
+      <Chats />
+      <ChatArea />
     </div>
   );
 }
