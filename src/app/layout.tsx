@@ -32,14 +32,13 @@ export default function RootLayout({
           <ThemeProvider>
             <ReduxProvider>
               <LayoutProvider>
-                <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
+                <main className="mb-36 flex-1 space-y-20 px-0">{children}</main>
               </LayoutProvider>
             </ReduxProvider>
           </ThemeProvider>
           <footer>
             <MobileNavigation />
           </footer>
-
         </body>
       </html>
     </ClerkProvider>

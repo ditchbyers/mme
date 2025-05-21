@@ -1,6 +1,5 @@
 import { UserType } from "@/interfaces";
 import { createSlice, current  } from "@reduxjs/toolkit";
-import { set } from "mongoose";
 
 
 const userSlice = createSlice({

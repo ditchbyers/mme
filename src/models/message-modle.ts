@@ -7,7 +7,7 @@ const messageSchema = new mongoose.Schema({
     sender : { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     text : { type: String, default: '' },
     image : { type: String, default: '' },
-    readBy : { type: [mongoose.Schema.Types.ObjectId], ref: 'users' },
+    readBy : { type: [mongoose.Schema.Types.ObjectId], ref: 'users', default: [] },
 
 } , {timestamps: true});
 
