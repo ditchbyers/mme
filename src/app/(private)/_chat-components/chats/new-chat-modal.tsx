@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { UserType } from '@/interfaces'
-import { ChatState } from '@/redux/chatSlice'
+import { ChatState, SetChats } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
 import { CreateNewChat } from '@/server-actions/chats'
 import { GetAllUsers } from '@/server-actions/users'
 import { Divider, Modal, Spin } from 'antd'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { use } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function NewChatModal({
     showNewChatModal,
@@ -25,6 +25,7 @@ export default function NewChatModal({
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const visibleUsers = users.filter((user) => user._id !== currentUserData._id)
     const {chats} : ChatState = useSelector((state: any) => state.chat)
+    const dispatch = useDispatch()
 
     const getUsers = async () => {
         try {
@@ -50,6 +51,7 @@ export default function NewChatModal({
                 isGroupChat: false,
             })
             if (response.error) throw new Error(response.error)
+            dispatch(SetChats(response))
             setShowNewChatModal(false)
         } catch (error: any) {
             error.message("Error creating chat")

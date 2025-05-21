@@ -16,29 +16,40 @@ export default function ChatsHeader() {
     const [showNewChatModal, setShowNewChatModal] = React.useState(false)
 
     return (
-        <div className="flex justify-between items-center">
-            <h1 className="text-xl text-gray-500 font-bold uppercase">Chats</h1>
+        <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center">
 
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button size="sm" variant="outline">
-                        New
-                        <ChevronDownIcon className="ml-1 size-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setShowNewChatModal(true)}
-                        onSelect={(e) => e.preventDefault()}>
-                        New Chat
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => console.log("New Group clicked")}>
-                        New Group
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            {showNewChatModal && (
-                <NewChatModal setShowNewChatModal={setShowNewChatModal} showNewChatModal={showNewChatModal} />
-            )}
+                <h1 className="text-xl text-gray-500 font-bold uppercase">Chats</h1>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button size="sm" variant="outline">
+                            New
+                            <ChevronDownIcon className="ml-1 size-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setShowNewChatModal(true)}
+                            onSelect={(e) => e.preventDefault()}>
+                            New Chat
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => console.log("New Group clicked")}>
+                            New Group
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                {showNewChatModal && (
+                    <NewChatModal setShowNewChatModal={setShowNewChatModal} showNewChatModal={showNewChatModal} />
+                )}
+
+            </div>
+            <input
+                type="text"
+                placeholder="Search chats..."
+                className="bg-blue-100/30 w-full border border-gray-300 border-solid outline-none rounded-md px-3 h-14 focus:outline-none focus:border-primary"
+            />
+
         </div>
+
     )
 }
