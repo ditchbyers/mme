@@ -41,7 +41,7 @@ function Header() {
     return (
         <header className="bg-gray-200 w-full h-16 py-1 flex items-center justify-between px-5 border-b border-solid border-gray-300">
             <div>
-                <h1 className="text-xl font-bold">Matchmaking Enabled</h1>
+                <h1 className="text-xl font-bold p-3">Matchmaking Enabled</h1>
             </div>
             <div className="flex gap-4">
                 <SignedOut>

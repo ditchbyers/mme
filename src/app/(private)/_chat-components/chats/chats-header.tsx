@@ -1,0 +1,44 @@
+"use client"
+import React from 'react'
+
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { ChevronDownIcon } from "lucide-react"
+import NewChatModal from './new-chat-modal'
+
+
+export default function ChatsHeader() {
+    const [showNewChatModal, setShowNewChatModal] = React.useState(false)
+
+    return (
+        <div className="flex justify-between items-center">
+            <h1 className="text-xl text-gray-500 font-bold uppercase">Chats</h1>
+
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button size="sm" variant="outline">
+                        New
+                        <ChevronDownIcon className="ml-1 size-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setShowNewChatModal(true)}
+                        onSelect={(e) => e.preventDefault()}>
+                        New Chat
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => console.log("New Group clicked")}>
+                        New Group
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            {showNewChatModal && (
+                <NewChatModal setShowNewChatModal={setShowNewChatModal} showNewChatModal={showNewChatModal} />
+            )}
+        </div>
+    )
+}

@@ -40,16 +40,6 @@ export const GetCurrentUserFromMongoDB = async () => {
     }
 }
 
-export const GetAllUsers = async () => {
-    try {
-        const users = await UserModel.find();
-        return JSON.parse(JSON.stringify(users));
-    } catch (error: any) {
-        return {
-            error: error.message
-        }
-    }
-}
 
 export const UpdateUserProfile = async (userId: string, payload: any) => {
     try {
@@ -61,3 +51,15 @@ export const UpdateUserProfile = async (userId: string, payload: any) => {
             error: error.message
         }
     }}
+
+export const GetAllUsers = async () => {
+    try {
+        const users = await UserModel.find({});
+        return JSON.parse(JSON.stringify(users));
+    } catch (error: any) {
+        return {
+            error: error.message
+        }
+    }
+
+}
