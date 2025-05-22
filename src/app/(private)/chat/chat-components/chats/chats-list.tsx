@@ -35,7 +35,7 @@ export default function ChatsList() {
       {chats.length > 0 && (
         <div className="flex flex-col gap-5 mt-5">
           {chats.map((chat) => {
-            return <ChatCard key={chat._id} chat={chat} />
+            return <ChatCard key={chat._id} chat={chat}/>
           })}
         </div>
       )}

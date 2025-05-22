@@ -1,15 +1,17 @@
 import { MessageType } from '@/interfaces'
 import { ChatState } from '@/redux/chatSlice'
-import { GetChatMessages } from '@/server-actions/messages'
+import { GetChatMessages, ReadAllMessages } from '@/server-actions/messages'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Message from './message'
+import { UserState } from '@/redux/userSlice'
 
 export default function Messages
   () {
   const [messages, setMessages] = React.useState<MessageType[]>([])
   const [loading, setLoading] = React.useState(false)
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
+  const { currentUserData}: UserState = useSelector((state: any) => state.user)
 
   const getMessages = async () => {
     try {
@@ -25,8 +27,12 @@ export default function Messages
   }
 
   React.useEffect(() => {
-    if (selectedChat) {
+    if (selectedChat && selectedChat._id) {
       getMessages()
+      ReadAllMessages({
+        userId: currentUserData._id!,
+        chatId: selectedChat._id!,
+      });
     }
   }, [selectedChat])
 

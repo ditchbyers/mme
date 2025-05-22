@@ -23,8 +23,8 @@ export default async function Home() {
   return (
     
     <div className="container mx-auto w-full h-full">
-      <NavigateButton href="/groups/create-group">
-        Gruppe erstellen
+      <NavigateButton href="/chat">
+        Chat
       </NavigateButton>
       <ClientGamePage data={userData.data} />
     </div>

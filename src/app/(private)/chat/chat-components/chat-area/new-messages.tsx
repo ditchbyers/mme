@@ -10,9 +10,11 @@ export default function NewMessages
   const [text, setText] = React.useState('')
   const {currentUserData} : UserState = useSelector((state: any) => state.user)
   const {selectedChat}: ChatState = useSelector((state: any) => state.chat)
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const onSend = async () => {
     try {
+      if (!text) return;
       const dbPayload = {
         text, 
         image: "",
@@ -39,6 +41,11 @@ export default function NewMessages
           className='w-full border border-solid border-gray-300 focus:outline-none focus:border-gray-500 h-[45px] px-5'
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && text.trim() !== '') {
+              onSend()
+            }
+          }}
         />
       </div>
       <Button onClick={onSend}>SEND</Button>

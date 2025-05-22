@@ -1,7 +1,6 @@
 "use client";
-import Chats from "../../_chat-components/chats";
-import ChatArea from "../../_chat-components/chat-area";
-import { Divider } from "antd";
+import Chats from "./chat-components/chats";
+import ChatArea from "./chat-components/chat-area";
 import { useEffect } from "react";
 
 export default function Chat() {
