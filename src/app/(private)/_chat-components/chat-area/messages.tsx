@@ -31,17 +31,13 @@ export default function Messages
   }, [selectedChat])
 
   return (
-    <div
-      className='flex-1 p-3'>
+    <div className='flex-1 p-3 overflow-y-auto'>
       <div className="flex flex-col gap-3">
-        {messages.map((message) => {
-          return (
-            <Message
-              key={message._id}
-              message={message}
-            />
-          )
-        })}
+        {[...messages]
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          .map((message) => (
+            <Message key={message._id} message={message} />
+          ))}
       </div>
     </div>
   )

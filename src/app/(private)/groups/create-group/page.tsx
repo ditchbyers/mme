@@ -13,7 +13,7 @@ export default function Chat() {
   }, []);
 
   return (
-    <div className="flex h-[85vh] w-full overflow-hidden">
+    <div className="flex h-[86vh] w-full overflow-hidden">
       <Chats />
       <div className="w-px h-full bg-gray-300" />
       <div className="flex-1 h-full w-full">

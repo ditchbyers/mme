@@ -7,8 +7,8 @@ export const CreateNewChat = async (payload: any) => {
         await ChatModel.create(payload);
         const newchats = await ChatModel.find({
             users: {
-                 $in: [payload.createdBy], 
-                },
+                $in: [payload.createdBy],
+            },
         }).populate("users").sort({ updatedAt: -1 });
         return JSON.parse(JSON.stringify(newchats));
     } catch (error: any) {
@@ -23,7 +23,7 @@ export const GetAllChats = async (userId: string) => {
     try {
         const users = await ChatModel.find({
             users: { $in: [userId] }
-        }).populate("users").populate("lastMessage").sort({ updatedAt: -1 });
+        }).populate("users").populate("lastMessage").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ updatedAt: -1 });
         return JSON.parse(JSON.stringify(users));
 
     } catch (error: any) {
