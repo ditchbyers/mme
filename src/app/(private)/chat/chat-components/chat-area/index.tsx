@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux'
 import Messages from './messages'
 import NewMessages from './new-messages'
 
+
 export default function ChatArea() {
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
-
 
   if (!selectedChat) {
     return (
@@ -23,10 +23,7 @@ export default function ChatArea() {
   return (
     selectedChat && (
       <div className='flex flex-col w-full h-full justify-between'>
-
         <Recipient />
-
-
         <Messages />
         <NewMessages />
       </div>

@@ -89,7 +89,7 @@ export default function NewChatModal({
                     <div className="flex flex-col gap-2">
                         {users.map((user, index) => {
                             const chatAlreadyCreated = chats.find((chat) =>
-                                chat.users.find((u) => u._id === user._id)
+                                chat.users.find((u) => u._id === user._id) && !chat.isGroupChat
                             );
                             if (user._id === currentUserData._id || chatAlreadyCreated) return null;
                             return (
