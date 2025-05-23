@@ -8,17 +8,18 @@ import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentUser, UserState } from "@/redux/userSlice";
 import { UserType } from "@/interfaces";
+import Link from 'next/link';
 
 function Header() {
 
-    
+
     const pathname = usePathname();
     const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up");
     const { isSignedIn } = useUser();
     if (isPublicRoute) return null;
 
     const dispatch = useDispatch();
-    const {currentUserData}: UserState = useSelector((state: any) => state.user);
+    const { currentUserData }: UserState = useSelector((state: any) => state.user);
     const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false);
 
     useEffect(() => {
@@ -35,13 +36,17 @@ function Header() {
         getCurrentUser();
     }, [isSignedIn]);
 
-    
-    
+
+
 
     return (
         <header className="bg-gray-200 w-full h-16 py-1 flex items-center justify-between px-5 border-b border-solid border-gray-300">
             <div>
-                <h1 className="text-xl font-bold p-3">Matchmaking Enabled</h1>
+                <Link href="/">
+                    <h1 className="text-xl font-bold p-3 cursor-pointer hover:underline">
+                        Matchmaking Enabled
+                    </h1>
+                </Link>
             </div>
             <div className="flex gap-4">
                 <SignedOut>

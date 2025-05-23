@@ -10,10 +10,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
 import NewChatModal from './new-chat-modal'
-
+import { useRouter } from 'next/navigation';
 
 export default function ChatsHeader() {
     const [showNewChatModal, setShowNewChatModal] = React.useState(false)
+    const router = useRouter();
 
     return (
         <div className="flex flex-col gap-4">
@@ -33,7 +34,7 @@ export default function ChatsHeader() {
                             onSelect={(e) => e.preventDefault()}>
                             New Chat
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => console.log("New Group clicked")}>
+                        <DropdownMenuItem onSelect={() => router.push('/chat/groups/create-group')}>
                             New Group
                         </DropdownMenuItem>
                     </DropdownMenuContent>
