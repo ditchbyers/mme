@@ -10,7 +10,7 @@ function Content({
     children: React.ReactNode 
 }) {
     const pathname = usePathname();
-    const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up");
+    const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up") || pathname.includes("/");
     if (isPublicRoute) return <>{children}</>;
 
     const {currentUserData} : UserState = useSelector((state: { user: UserState }) => state.user);

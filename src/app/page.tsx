@@ -5,7 +5,6 @@ import { currentUser } from '@clerk/nextjs/server'
 import { connect } from 'http2'
 import { cache } from 'react'
 import '@ant-design/v5-patch-for-react-19';
-import { Toaster } from "sonner";
 
 
 const fetchToken = cache(async () => {
