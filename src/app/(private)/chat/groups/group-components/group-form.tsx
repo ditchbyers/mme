@@ -1,44 +1,57 @@
 'use client'
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { UploadImageToFirebaseAndReturnUrl } from '@/helpers/image-upload'
 import { UserType } from '@/interfaces'
 import { UserState } from '@/redux/userSlice'
-import { CreateNewChat } from '@/server-actions/chats'
+import { CreateNewChat, UpdateChat } from '@/server-actions/chats'
 import { Form, Input, Upload } from 'antd'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import { useSelector } from 'react-redux'
 
-export default function GroupForm({ users }: { users: UserType[] }) {
+export default function GroupForm({ users, initialData = null }: { users: UserType[], initialData: any }) {
     const router = useRouter()
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
-    const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>([])
+    const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>(
+        initialData?.users.filter((userId: string) => userId !== currentUserData?._id!) || []
+    )
+
     const [selectedProfilePicture, setSelectedProfilePicture] = React.useState<File>()
     const [loading = false, setLoading] = React.useState<boolean>(false)
 
     const onFinish = async (values: any) => {
         try {
             setLoading(true)
+
             const payload = {
                 groupName: values.groupName,
                 groupBio: values.groupDescription,
                 users: [...selectedUserIds, currentUserData?._id!],
                 createdBy: currentUserData?._id!,
                 isGroupChat: true,
-                groupProfilePicture: '',
+                groupProfilePicture: initialData?.groupProfilePicture || '',
             }
 
             if (selectedProfilePicture) {
                 payload.groupProfilePicture = await UploadImageToFirebaseAndReturnUrl(selectedProfilePicture)
             }
 
-            const response = await CreateNewChat(payload)
-            if (response.error) throw new Error('Error creating group chat')
-            console.log('Group chat created successfully', response)
+            let response: any = null
+
+            if (initialData) {
+
+                response = await UpdateChat({
+                    chatId: initialData._id,
+                    payload: payload,
+                })
+            } else {
+
+                response = await CreateNewChat(payload)
+            }
+
+            if (response?.error) throw new Error('Fehler beim Speichern des Gruppenchats')
             router.refresh()
             router.push('/chat')
-
-
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -46,6 +59,7 @@ export default function GroupForm({ users }: { users: UserType[] }) {
             setLoading(false)
         }
     }
+
 
     return (
         <div className='grid grid-cols-2'>
@@ -77,7 +91,9 @@ export default function GroupForm({ users }: { users: UserType[] }) {
             <div>
                 <Form
                     onFinish={onFinish}
-                    layout='vertical'>
+                    layout='vertical'
+                    initialValues={initialData}
+                >
                     <Form.Item
                         label="Group Name"
                         name="groupName"
@@ -103,11 +119,14 @@ export default function GroupForm({ users }: { users: UserType[] }) {
                     </Upload>
 
                     <div className='flex justify-end gap-2'>
-                        <Button>
+                        <Button
+                            type="button"
+                            onClick={() => router.push('/chat')}
+                        >
                             Cancel
                         </Button>
-                        <Button>
-                            Create Group
+                        <Button type='submit' loading={loading}>
+                            {initialData ? 'Update Group' : 'Create Group'}
                         </Button>
                     </div>
                 </Form>

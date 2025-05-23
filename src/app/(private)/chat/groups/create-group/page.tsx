@@ -1,3 +1,4 @@
+
 import UserModel from '@/models/user-model'
 import Link from 'next/link'
 import React from 'react'
@@ -17,7 +18,7 @@ async function CreateGroupPage
         Create Group Chat
       </h1>
 
-      <GroupForm users={JSON.parse(JSON.stringify(users))} />
+      <GroupForm users={JSON.parse(JSON.stringify(users))} initialData={null} />
 
 
     </div>

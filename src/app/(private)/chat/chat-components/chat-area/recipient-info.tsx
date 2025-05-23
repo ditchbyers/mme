@@ -1,9 +1,11 @@
+import { Button } from '@/components/ui/button'
 import { formatDateTime } from '@/helpers/date-formats'
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
 import { Drawer } from 'antd'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useRouter } from 'next/navigation'
 
 export default function RecipientInfo({
     showRecipientInfo,
@@ -14,7 +16,7 @@ export default function RecipientInfo({
 }) {
     const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
-
+    const router = useRouter()
 
     let chatName = ""
     let chatImage = ""
@@ -56,14 +58,20 @@ export default function RecipientInfo({
                 />
                 <span className='text-gray-600'>{chatName}</span>
             </div>
-                    
-            
+
+
 
             {selectedChat?.isGroupChat && (
                 <>
                     <div className="w-full border-t border-gray-300 my-4" />
+
                     <div className="flex flex-col gap-5 my-4">
-                        <span className="text-grey-500 text-sm">{selectedChat.users.length} Members</span>
+                        <div className='flex justify-between items-center'>
+                            <span className="text-grey-500 text-sm">{selectedChat.users.length} Members</span>
+                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat._id}`) }>
+                                Edit Group
+                            </Button>
+                        </div>
                         {selectedChat?.users.map((user: any) => (
                             <div key={user._id} className="flex items-center gap-3">
                                 <img
