@@ -5,7 +5,7 @@ import React from 'react'
 import GroupForm from '../group-components/group-form'
 import { UserType } from '@/interfaces'
 
-export async function CreateGroupPage
+async function CreateGroupPage
   () {
   const users: UserType[] = await UserModel.find({})
 
@@ -24,3 +24,5 @@ export async function CreateGroupPage
     </div>
   )
 }
+
+export default CreateGroupPage
