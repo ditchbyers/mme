@@ -162,3 +162,8 @@ body {
   background: #888;
   border-radius: 10px;
 }
+
+textarea {
+  min-height: 200px;
+  height: 200px;
+}

@@ -43,14 +43,14 @@ function ChatCard({ chat }: { chat: ChatType }) {
     const isSelected = selectedChat?._id === chat._id
 
     const unreadCounts = () => {
-    const count = chatWithUnread.unreadCounts?.[currentUserData._id];
-    if (!count) return null;
-    return (
-      <div className='bg-green-700 h-5 w-5 rounded-full flex items-center justify-center'>
-        <span className='text-white text-xs'>{count}</span>
-      </div>
-    );
-  };
+        const count = chatWithUnread.unreadCounts?.[currentUserData._id];
+        if (!count) return null;
+        return (
+            <div className='bg-green-700 h-5 w-5 rounded-full flex items-center justify-center'>
+                <span className='text-white text-xs'>{count}</span>
+            </div>
+        );
+    };
 
     return (
         <div
@@ -58,7 +58,14 @@ function ChatCard({ chat }: { chat: ChatType }) {
             onClick={() => dispatch(SetSelectedChat(chat))}
         >
             <div className='flex gap-5 items-center'>
-                <img src={chatImage} alt="chat-image" className='w-10 h-10 rounded-full' />
+                <img
+                    src={chatImage || './image.png'}
+                    alt="Profile"
+                    className='w-10 h-10 rounded-full'
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = './image.png';
+                    }}
+                />
                 <div className='flex flex-col gap-1'>
                     <span className='text-gray-700 text-sm'>{chatName}</span>
                     <span className='text-gray-700 text-xs'>{lastMessageSenderName} {lastMessage}</span>
