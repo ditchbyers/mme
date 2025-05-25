@@ -26,6 +26,7 @@ export const SendNewMessage = async (payload: {
         await ChatModel.findByIdAndUpdate(payload.chat, {
             lastMessage: newMessage._id,
             unreadCounts: existingUnreadCounts,
+            lastMessageAt: new Date().toISOString(),
         })
 
         return { message: "Message sent successfully" }
@@ -48,13 +49,13 @@ export const GetChatMessages = async (chatId: string) => {
 
 export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, userId: string }) => {
     try {
-        await MessageModel.updateMany( 
-            { chat: chatId, sender:{$ne: userId},  readBy: { $nin: [userId] } },
+        await MessageModel.updateMany(
+            { chat: chatId, sender: { $ne: userId }, readBy: { $nin: [userId] } },
             { $addToSet: { readBy: userId } }
         )
         const existingChat = await ChatModel.findById(chatId)
         const existingUnreadCounts = existingChat?.unreadCounts
-        const newUnreadCounts = { ...existingUnreadCounts , [userId]: 0 }
+        const newUnreadCounts = { ...existingUnreadCounts, [userId]: 0 }
 
         await ChatModel.findByIdAndUpdate(chatId, {
             unreadCounts: newUnreadCounts,
@@ -62,6 +63,6 @@ export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, user
         return { message: "All messages marked as read" }
     } catch (error: any) {
         return { error: error.message }
-        
+
     }
- }
+}

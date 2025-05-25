@@ -11,6 +11,7 @@ const chatSchema = new mongoose.Schema({
     groupBio: { type: String, default: '' },
     groupAdmins: { type: [mongoose.Schema.Types.ObjectId], ref: 'users' },
     unreadCounts:{type : Object, default: {}},
+    lastMessageAt: { type: String, default: ""}
     }, 
     {timestamps: true,});
 

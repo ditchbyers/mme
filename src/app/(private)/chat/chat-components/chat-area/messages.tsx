@@ -58,15 +58,16 @@ export default function Messages
     if (messagesDivRef.current) {
       messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100;
     }
-        ReadAllMessages({
+    ReadAllMessages({
       userId: currentUserData?._id!,
       chatId: selectedChat?._id!,
     });
 
     const newChats = chats.map((chat) => {
       if (chat._id === selectedChat?._id) {
-        const chatData = { ...chat };
+        let chatData = { ...chat };
         chatData.unreadCounts = { ...chat.unreadCounts };
+        chatData.unreadCounts[currentUserData._id] = 0;
         return chatData;
       } else {
         return chat;
@@ -74,7 +75,7 @@ export default function Messages
     });
 
     dispach(SetChats(newChats));
-  }, [messages])
+  }, [selectedChat, messages]);
 
   return (
     <div className='flex-1 p-3 overflow-y-auto' ref={messagesDivRef}>
