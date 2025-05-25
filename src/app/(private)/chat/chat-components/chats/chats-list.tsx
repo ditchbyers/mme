@@ -46,7 +46,8 @@ export default function ChatsList() {
 
       let chatToUpdate = prevChats[indexOfChatToUpdate]
 
-      if(chatToUpdate.lastMessage.socketMessageId === newMessage.socketMessageId) return;
+     if(chatToUpdate.lastMessage && chatToUpdate.lastMessage.socketMessageId === newMessage.socketMessageId) return;
+
 
       let chatToUpdateCopy: ChatType = { ...chatToUpdate }
       chatToUpdateCopy.lastMessage = newMessage

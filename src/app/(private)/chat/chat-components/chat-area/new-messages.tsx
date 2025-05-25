@@ -3,6 +3,7 @@ import socket from '@/config/socket-config'
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
 import { SendNewMessage } from '@/server-actions/messages'
+import { current } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
 import { create } from 'domain'
 import React, { useEffect } from 'react'
@@ -46,7 +47,7 @@ export default function NewMessages
   }
 
   useEffect(() => {
-    socket.emit("typing", {chat : selectedChat, senderId: currentUserData?._id})
+    socket.emit("typing", {chat : selectedChat, senderId: currentUserData?._id, senderName :currentUserData?.name!})
   } , [selectedChat, text])
 
 

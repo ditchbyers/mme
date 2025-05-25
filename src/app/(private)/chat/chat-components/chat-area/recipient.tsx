@@ -9,6 +9,7 @@ import { set } from 'mongoose'
 
 export default function Recipient() {
     const [typing = false, setTyping] = React.useState<boolean>(false)
+    const [senderName = "", setSenderName] = React.useState<string>("")
     const [showRecipientInfo, setShowRecipientInfo] = React.useState<boolean>(false)
     const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
@@ -30,14 +31,20 @@ export default function Recipient() {
     const typingAnimation = () => {
         if (typing) return (
             <span className='text-green-700 font-semibold text-xs'>
+                {selectedChat?.isGroupChat && `${senderName} is Typing...`}
                 Typing...
             </span>
         )
     }
 
     useEffect(() => {
-        socket.on("typing", (chat: ChatType) => {
-            if (selectedChat?._id === chat._id) setTyping(true)
+        socket.on("typing", ({ chat, senderName }: { chat: ChatType, senderName: string }) => {
+            if (selectedChat?._id === chat._id) {
+                setTyping(true)
+                if (chat.isGroupChat) {
+                    setSenderName(senderName)
+                }
+            }
 
             setTimeout(() => {
                 setTyping(false)
