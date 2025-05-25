@@ -3,11 +3,13 @@ import socket from '@/config/socket-config'
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
 import { SendNewMessage } from '@/server-actions/messages'
-import { current } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
-import { create } from 'domain'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { Smile, ImagePlus  } from 'lucide-react'
+import EmojiPicker from 'emoji-picker-react';
+import ImageSelector from './image-selector'
+
 
 export default function NewMessages
   () {
@@ -15,6 +17,8 @@ export default function NewMessages
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
   const inputRef = React.useRef<HTMLInputElement>(null)
+  const [showEmojiPicker, setShowEmojiPicker] = React.useState(false)
+  const [showImageSelector, setShowImageSelector] = React.useState(false)
 
   const onSend = async () => {
     try {
@@ -32,6 +36,7 @@ export default function NewMessages
 
       socket.emit('send-new-message', socketPayload)
       setText('')
+      setShowEmojiPicker(false)
       {
         const dbPayload = {
           ...commonPayload,
@@ -47,15 +52,21 @@ export default function NewMessages
   }
 
   useEffect(() => {
-    socket.emit("typing", {chat : selectedChat, senderId: currentUserData?._id, senderName :currentUserData?.name!})
-  } , [selectedChat, text])
+    socket.emit("typing", { chat: selectedChat, senderId: currentUserData?._id, senderName: currentUserData?.name! })
+  }, [selectedChat, text])
 
 
   return (
     <div
-      className='p-3 bg-gray-100 border-0 border-t border-solid border-gray-200 flex gap-5 justify-center items-center'>
-      <div>
-        {/*Emoji hier*/}
+      className='p-3 bg-gray-100 border-0 border-t border-solid border-gray-200 flex gap-5 justify-center items-center relative'>
+      <div className='gap-5 flex'>
+        {showEmojiPicker && <div className="absolute left-5 bottom-20"><EmojiPicker 
+        onEmojiClick={(emojiObject: any) => {
+          setText((prevText) => prevText + emojiObject.emoji);
+          inputRef.current?.focus();
+        }}/></div>}
+        <Button className = ""onClick={()=> setShowEmojiPicker(!showEmojiPicker)}><Smile className="w-5 h-5" /></Button>
+        {/* Todo: hier noch Logik um Bilder Upzuloaden <Button className = ""onClick={()=> setShowImageSelector(!showImageSelector)}><ImagePlus className="w-5 h-5" /></Button>*/}
       </div>
       <div className='flex-1'>
         <input
@@ -72,6 +83,10 @@ export default function NewMessages
         />
       </div>
       <Button onClick={onSend}>SEND</Button>
+
+      {showImageSelector && (
+        <ImageSelector setShowImageSelector={setShowImageSelector} showImageSelector={showImageSelector} />
+      )}
     </div>
   )
 }
