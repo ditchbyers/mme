@@ -6,9 +6,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import CurrentUserInfo from "./current-user-infor";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentUser, UserState } from "@/redux/userSlice";
+import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice";
 import { UserType } from "@/interfaces";
 import Link from 'next/link';
+import socket from "@/config/socket-config";
 
 function Header() {
 
@@ -36,7 +37,22 @@ function Header() {
         getCurrentUser();
     }, [isSignedIn]);
 
+    useEffect(() => {
+        if (currentUserData) {
+            socket.emit("join", currentUserData._id);
 
+            const handleOnlineUsers = (onlineUsers: string[]) => {
+                dispatch(SetOnlineUsers(onlineUsers));
+                console.log("Online users updated:", onlineUsers);
+            };
+
+            socket.on("online-users-updated", handleOnlineUsers);
+
+            return () => {
+                socket.off("online-users-updated", handleOnlineUsers);
+            };
+        }
+    }, [currentUserData]);
 
 
     return (

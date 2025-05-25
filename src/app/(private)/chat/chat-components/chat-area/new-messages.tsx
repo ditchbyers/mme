@@ -1,29 +1,45 @@
 import { Button } from '@/components/ui/button'
+import socket from '@/config/socket-config'
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
 import { SendNewMessage } from '@/server-actions/messages'
+import dayjs from 'dayjs'
+import { create } from 'domain'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
 export default function NewMessages
   () {
   const [text, setText] = React.useState('')
-  const {currentUserData} : UserState = useSelector((state: any) => state.user)
-  const {selectedChat}: ChatState = useSelector((state: any) => state.chat)
+  const { currentUserData }: UserState = useSelector((state: any) => state.user)
+  const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const onSend = async () => {
     try {
       if (!text) return;
-      const dbPayload = {
-        text, 
-        image: "",
-        sender: currentUserData?._id!,
-        chat: selectedChat?._id!
+
+      const commonPayload = {
+        text, image: "", socketMessageId: dayjs().unix(), createdAt: dayjs().toISOString(), updatedAt: dayjs().toISOString(),
       }
-      const response = await SendNewMessage(dbPayload)
-      if (response.error) throw new Error(response.error)
+
+      const socketPayload = {
+        ...commonPayload,
+        chat: selectedChat,
+        sender: currentUserData,
+      }
+
+      socket.emit('send-new-message', socketPayload)
       setText('')
+      {
+        const dbPayload = {
+          ...commonPayload,
+          sender: currentUserData?._id!,
+          chat: selectedChat?._id!
+        }
+        await SendNewMessage(dbPayload)
+      }
+
     } catch (error: any) {
       console.log(error)
     }

@@ -1,8 +1,5 @@
 import ClientGamePage from '@/components/usable/game-carousels'
 import NavigateButton from '@/components/ui/navigate-button'
-import { UserButton} from '@clerk/nextjs'
-import { currentUser } from '@clerk/nextjs/server'
-import { connect } from 'http2'
 import { cache } from 'react'
 import '@ant-design/v5-patch-for-react-19';
 
@@ -14,13 +11,15 @@ const fetchToken = cache(async () => {
 })
 
 
+
 export default async function Home() {
   const token = await fetchToken()
   const helix = await fetch(`http:localhost:3000/api/twitch/user?token=${token}`)
   const userData = await helix.json()
 
+
   return (
-    
+
     <div className="container mx-auto w-full h-full">
       <NavigateButton href="/chat">
         Chat

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SetCurrentUser, UserState } from "@/redux/userSlice";
 import { UploadImageToFirebaseAndReturnUrl } from "@/helpers/image-upload";
 import { UpdateUserProfile } from "@/server-actions/users";
+import socket from "@/config/socket-config";
 
 
 function CurrentUserInfo({
@@ -40,6 +41,7 @@ function CurrentUserInfo({
     const onLogout = async () => {
         try {
             setLoading(true);
+            socket.emit("logout", currentUserData?._id);
             await signOut();
             setShowCurrentUserInfo(false);
             toast.current?.show({

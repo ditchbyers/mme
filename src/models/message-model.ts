@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
 
+    socketMessageId : { type: String, default: '' },
     chat : { type: mongoose.Schema.Types.ObjectId, ref: 'chats', required: true },
     sender : { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
     text : { type: String, default: '' },

@@ -11,7 +11,7 @@ type ChatWithUnreadCounts = ChatType & {
 
 function ChatCard({ chat }: { chat: ChatType }) {
     const dispatch = useDispatch()
-    const { currentUserData }: UserState = useSelector((state: any) => state.user)
+    const { currentUserData, onlineUsers }: UserState = useSelector((state: any) => state.user)
     const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
     const chatWithUnread = chat as ChatWithUnreadCounts;
 
@@ -45,12 +45,24 @@ function ChatCard({ chat }: { chat: ChatType }) {
     const unreadCounts = () => {
         const count = chatWithUnread.unreadCounts?.[currentUserData._id];
         if (!count) return null;
+
+
+
         return (
             <div className='bg-green-700 h-5 w-5 rounded-full flex items-center justify-center'>
                 <span className='text-white text-xs'>{count}</span>
             </div>
         );
     };
+
+    const onlineIndicator = () => {
+        if (chat.isGroupChat) return null;
+        const recipientId = chat.users.find(user => user._id !== currentUserData._id)?._id;
+        if (onlineUsers.includes(recipientId!)) {
+            return <div className='bg-green-500 h-2 w-2 rounded-full'></div>
+        }
+
+    }
 
     return (
         <div
@@ -67,7 +79,10 @@ function ChatCard({ chat }: { chat: ChatType }) {
                     }}
                 />
                 <div className='flex flex-col gap-1'>
-                    <span className='text-gray-700 text-sm'>{chatName}</span>
+                    <span className='text-gray-700 text-sm flex gap-2 items-center'>
+                        {chatName}
+                        {onlineIndicator()}
+                    </span>
                     <span className='text-gray-700 text-xs'>{lastMessageSenderName} {lastMessage}</span>
                 </div>
             </div>
