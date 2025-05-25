@@ -1,9 +1,11 @@
-'use client'
+"use client"
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { NavItem } from '@/types'
-import { Input } from '../ui/input'
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { NavItem } from "@/types"
+import { UserButton } from "@clerk/nextjs"
+
+import { Input } from "../ui/input"
 
 interface NavigationProps {
   items: NavItem[]
@@ -16,26 +18,33 @@ export function DesktopNavigation({ items }: NavigationProps) {
     const value = e.target.value
     const params = new URLSearchParams()
     if (value) {
-      params.set('query', value)
+      params.set("query", value)
     }
     router.replace(`/?${params.toString()}`, { scroll: false })
   }
 
   return (
-    <div className="sticky top-0 w-full mx-auto h-20 bg-[#f4f4f4] z-50 shadow-sm">
-      <nav className="relative container mx-auto grid grid-cols-3 h-full justify-center items-center md:px-5 xl:px-5">
-        <div className="font-bold text-4xl">
+    <div className="sticky top-0 z-50 mx-auto h-20 w-full bg-[#f4f4f4] shadow-sm">
+      <nav className="relative container mx-auto grid h-full grid-cols-3 items-center justify-center px-5">
+        <div className="text-4xl font-bold">
           <Link href="/">MME</Link>
         </div>
         <div className="text-center">
-          <Input type="text" onChange={handleChange} placeholder="Search games..." className="px-3 py-1 rounded-md border" />
+          <Input
+            type="text"
+            onChange={handleChange}
+            placeholder="Search games..."
+            className="rounded-md border px-3 py-1"
+          />
         </div>
-        <div className="hidden lg:flex space-x-6 text-xl overflow-hidden justify-center">
-          {items.map((item, index) => (
-            <Link key={index} href={item.href} className="uppercase hover:text-[#490007] font-bold" prefetch={false}>
-              {item.title}
-            </Link>
-          ))}
+        <div className="flex justify-end space-x-6 overflow-hidden text-xl">
+          <UserButton
+            userProfileMode="navigation"
+            userProfileUrl="/user-profile"
+            appearance={{
+              elements: { userButtonPopoverCard: { pointerEvents: "initial" } },
+            }}
+          />
         </div>
       </nav>
     </div>

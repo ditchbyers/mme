@@ -1,24 +1,26 @@
-import type { Metadata } from 'next'
+import type { Metadata } from "next"
 
-import './globals.css'
+import "./globals.css"
 
-import { MobileNavigation } from '@/components/usable/mobile-navigation'
-import { Lato } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
-import ThemeProvider from '@/providers/theme-provider'
-import LayoutProvider from '@/providers/layout-provider'
-import ReduxProvider from '@/providers/redux-provider'
-import 'remixicon/fonts/remixicon.css'
+import { Lato } from "next/font/google"
+import LayoutProvider from "@/providers/layout-provider"
+import ReduxProvider from "@/providers/redux-provider"
+import ThemeProvider from "@/providers/theme-provider"
+import { ClerkProvider } from "@clerk/nextjs"
+
+import { MobileNavigation } from "@/components/usable/mobile-navigation"
+
+import "remixicon/fonts/remixicon.css"
 
 const lato = Lato({
-  variable: '--font-oswald',
-  subsets: ['latin'],
-  weight: ['100', '300', '400', '700', '900'],
+  variable: "--font-oswald",
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "700", "900"],
 })
 
 export const metadata: Metadata = {
-  title: 'Matchmaking Enabled',
-  description: 'App for gamers to find gamers',
+  title: "Matchmaking Enabled",
+  description: "App for gamers to find gamers",
 }
 
 export default function RootLayout({
