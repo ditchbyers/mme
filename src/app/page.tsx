@@ -1,7 +1,6 @@
 import ClientGamePage from '@/components/usable/game-carousels'
 import NavigateButton from '@/components/ui/navigate-button'
 import { cache } from 'react'
-import '@ant-design/v5-patch-for-react-19';
 
 
 const fetchToken = cache(async () => {
