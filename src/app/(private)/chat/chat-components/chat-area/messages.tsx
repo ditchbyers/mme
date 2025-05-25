@@ -1,8 +1,8 @@
 import { MessageType } from '@/interfaces'
-import { ChatState } from '@/redux/chatSlice'
+import { ChatState, SetChats } from '@/redux/chatSlice'
 import { GetChatMessages, ReadAllMessages } from '@/server-actions/messages'
-import React, { use, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Message from './message'
 import { UserState } from '@/redux/userSlice'
 import socket from '@/config/socket-config'
@@ -11,9 +11,10 @@ export default function Messages
   () {
   const [messages, setMessages] = React.useState<MessageType[]>([])
   const [loading, setLoading] = React.useState(false)
-  const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
+  const { selectedChat, chats }: ChatState = useSelector((state: any) => state.chat)
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const messagesDivRef = React.useRef<HTMLDivElement>(null)
+  const dispach = useDispatch()
 
   const getMessages = async () => {
     try {
@@ -29,14 +30,11 @@ export default function Messages
   }
 
   React.useEffect(() => {
-    if (selectedChat && selectedChat._id) {
-      getMessages()
-      ReadAllMessages({
-        userId: currentUserData._id!,
-        chatId: selectedChat._id!,
-      });
-    }
-  }, [selectedChat])
+
+    getMessages()
+
+
+  }, [selectedChat]);
 
   useEffect(() => {
 
@@ -44,13 +42,13 @@ export default function Messages
 
 
       if (selectedChat?._id === message.chat._id) {
-        setMessages((prevMessages) => {
+        setMessages((prev) => {
 
-          const messageAlreadyExists = prevMessages.find(
+          const messageAlreadyExists = prev.find(
             (msg) => msg.socketMessageId === message.socketMessageId
           )
-          if (messageAlreadyExists) return prevMessages;
-          else return [...prevMessages, message];
+          if (messageAlreadyExists) return prev;
+          else return [...prev, message];
         });
       }
     })
@@ -60,6 +58,22 @@ export default function Messages
     if (messagesDivRef.current) {
       messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100;
     }
+        ReadAllMessages({
+      userId: currentUserData?._id!,
+      chatId: selectedChat?._id!,
+    });
+
+    const newChats = chats.map((chat) => {
+      if (chat._id === selectedChat?._id) {
+        const chatData = { ...chat };
+        chatData.unreadCounts = { ...chat.unreadCounts };
+        return chatData;
+      } else {
+        return chat;
+      }
+    });
+
+    dispach(SetChats(newChats));
   }, [messages])
 
   return (

@@ -34,7 +34,6 @@ export default function ChatsList() {
   }, [currentUserData])
 
   useEffect(() => {
-    if (!currentUserData?._id) return;
     socket.on("new-message-received", (newMessage: MessageType) => {
 
       let { chats }: ChatState = store.getState().chat
@@ -56,7 +55,7 @@ export default function ChatsList() {
 
       if (newMessage.sender._id !== currentUserData?._id &&
         selectedChat?._id !== newMessage.chat._id) {
-        chatToUpdateCopy.unreadCounts[currentUserData._id!] = (chatToUpdateCopy.unreadCounts[currentUserData._id!] || 0) + 1;
+        chatToUpdateCopy.unreadCounts[currentUserData?._id!] = (chatToUpdateCopy.unreadCounts[currentUserData?._id!] || 0) + 1;
       }
 
       prevChats[indexOfChatToUpdate] = chatToUpdateCopy;
