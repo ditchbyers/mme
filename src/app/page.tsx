@@ -1,6 +1,7 @@
 import { cache } from "react"
 import { Game } from "@/types"
 
+import NavigateButton from "@/components/ui/navigate-button"
 import ClientGamePage from "@/components/usable/game-carousels"
 
 interface GamesResponseProps {
