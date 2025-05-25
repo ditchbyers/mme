@@ -3,14 +3,15 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 import { Lato } from "next/font/google"
-import LayoutProvider from "@/providers/layout-provider"
 import ReduxProvider from "@/providers/redux-provider"
-import ThemeProvider from "@/providers/theme-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
 import { MobileNavigation } from "@/components/usable/mobile-navigation"
 
 import "remixicon/fonts/remixicon.css"
+
+import Content from "@/providers/layout-components/content"
+import Header from "@/providers/layout-components/header"
 
 const lato = Lato({
   variable: "--font-oswald",
@@ -32,13 +33,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
-          <ThemeProvider>
-            <ReduxProvider>
-              <LayoutProvider>
-                <main className="mb-36 flex-1 space-y-20 px-0">{children}</main>
-              </LayoutProvider>
-            </ReduxProvider>
-          </ThemeProvider>
+          <ReduxProvider>
+            <Header />
+            <Content>{children}</Content>
+          </ReduxProvider>
           <footer>
             <MobileNavigation />
           </footer>
