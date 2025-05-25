@@ -31,7 +31,7 @@ export default function Recipient() {
     const typingAnimation = () => {
         if (typing) return (
             <span className='text-green-700 font-semibold text-xs'>
-                {selectedChat?.isGroupChat && `${senderName} is Typing...`}
+                {selectedChat?.isGroupChat && `${senderName} `}
                 Typing...
             </span>
         )
