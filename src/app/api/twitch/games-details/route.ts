@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       Accept: "application/json",
     },
     body: `fields 
-      age_ratings,
+      age_ratings.*,
       aggregated_rating,
       aggregated_rating_count,
       alternative_names.*,
@@ -69,8 +69,9 @@ export async function GET(request: NextRequest) {
       url,
       version_parent,
       version_title,
-      videos,websites;
-      where name = "League of Legends";
+      videos,
+      websites.*;
+      where name = "Valorant";
     `,
   })
 

@@ -28,18 +28,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${lato.variable} flex min-h-screen flex-col gap-10 antialiased`}>
-          {/* <DesktopNavigation items={navigationConfig.mainNav} /> */}
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
+        <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
+          <header className="flex h-20 items-center justify-end gap-4">
             <SignedOut>
               <SignInButton />
               <SignUpButton />
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <DesktopNavigation items={navigationConfig.mainNav} />
             </SignedIn>
           </header>
-          <main className="mb-36 flex-1 space-y-20 pl-5 md:px-5">{children}</main>
+          <main className="flex-1">{children}</main>
           <MobileNavigation />
         </body>
       </html>

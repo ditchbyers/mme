@@ -25,7 +25,7 @@ export default function ClientGamePage({ data }: GameCarouselProps) {
   }
 
   return (
-    <div className="container mx-auto">
+    <>
       {query ? (
         <>
           <TH3>Search Results</TH3>
@@ -47,6 +47,6 @@ export default function ClientGamePage({ data }: GameCarouselProps) {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

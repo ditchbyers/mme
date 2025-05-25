@@ -33,10 +33,8 @@ export default async function Home() {
   const games = await fetchGames(token)
   const gamedetails = await fetchGameDetails(token)
 
-  console.log(gamedetails)
-
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mb-36 space-y-20 ps-5 pt-10">
       <ClientGamePage data={games.data} />
     </div>
   )

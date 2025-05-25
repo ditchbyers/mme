@@ -3,15 +3,12 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Game } from "@/types"
-import { DialogDescription } from "@radix-ui/react-dialog"
 
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
 
 interface GameCarouselProps {
   games: Game[]

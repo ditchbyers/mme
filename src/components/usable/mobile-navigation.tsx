@@ -1,11 +1,13 @@
+import { UserButton } from "@clerk/nextjs"
+
 export const MobileNavigation = () => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-slate-900 z-50">
-      <div className="container mx-auto uppercase flex justify-between  text-gray-200 py-6 px-4 font-bold">
+    <div className="fixed right-0 bottom-0 left-0 z-50 h-20 bg-slate-900">
+      <div className="container mx-auto flex justify-between px-4 py-6 font-bold text-gray-200 uppercase">
         <div>Startseite</div>
         <div>Durchsuchen</div>
         <div>Aktivität</div>
-        <div>Profil</div>
+        <UserButton />
       </div>
     </div>
   )
