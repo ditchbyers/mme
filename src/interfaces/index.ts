@@ -23,7 +23,7 @@ export interface ChatType {
     groupProfilePicture: string;
     groupBio: string;
     groupAdmins: string[];
-    unreadCounts: object;
+    unreadCounts: { [userId: string]: number }
     createdAt: string;
     updatedAt: string;
 

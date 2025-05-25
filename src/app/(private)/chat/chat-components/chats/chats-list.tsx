@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import ChatCard from './chat-card'
 import { Spin } from 'antd'
 import socket from '@/config/socket-config'
-import { MessageType } from '@/interfaces'
+import { ChatType, MessageType } from '@/interfaces'
 import store from '@/redux/store'
 
 export default function ChatsList() {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
-  const { chats }: ChatState = useSelector((state: any) => state.chat)
-  const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
+  const { chats, selectedChat }: ChatState = useSelector((state: any) => state.chat)
   const [loading, setLoading] = React.useState(false)
 
   const getChats = async () => {
@@ -35,52 +34,65 @@ export default function ChatsList() {
   }, [currentUserData])
 
   useEffect(() => {
+    if (!currentUserData?._id) return;
     socket.on("new-message-received", (newMessage: MessageType) => {
+
       let { chats }: ChatState = store.getState().chat
       let prevChats = [...chats]
+
       let indexOfChatToUpdate = prevChats.findIndex(
         (chat) => chat._id === newMessage.chat._id
       )
-      if (!indexOfChatToUpdate) return;
+      if (indexOfChatToUpdate === -1) return;
 
       let chatToUpdate = prevChats[indexOfChatToUpdate]
 
-      let chatToUpdateCopy: any = { ...chatToUpdate, }
+      if(chatToUpdate.lastMessage.socketMessageId === newMessage.socketMessageId) return;
+
+      let chatToUpdateCopy: ChatType = { ...chatToUpdate }
       chatToUpdateCopy.lastMessage = newMessage
       chatToUpdateCopy.updatedAt = newMessage.createdAt
+      chatToUpdateCopy.unreadCounts = { ...(chatToUpdate.unreadCounts || {}) }
+
+      if (newMessage.sender._id !== currentUserData?._id &&
+        selectedChat?._id !== newMessage.chat._id) {
+        chatToUpdateCopy.unreadCounts[currentUserData._id!] = (chatToUpdateCopy.unreadCounts[currentUserData._id!] || 0) + 1;
+      }
 
       prevChats[indexOfChatToUpdate] = chatToUpdateCopy;
 
       prevChats = [
-        prevChats[indexOfChatToUpdate] ,
+        prevChats[indexOfChatToUpdate],
         ...prevChats.filter((chat) => chat._id !== newMessage.chat._id),
       ];
-        dispatch(SetChats(prevChats))
+      dispatch(SetChats(prevChats))
     })
+    return () => {
+      socket.off("new-message-received");
+    };
+  }, [currentUserData?._id, selectedChat]
+  )
 
-}, [selectedChat]
-)
-
-return (
-  <div>
-    {chats.length > 0 && (
-      <div className="flex flex-col gap-5 mt-5">
-        {chats.map((chat) => {
-          return <ChatCard key={chat._id} chat={chat} />
-        })}
-      </div>
-    )}
-
-    {loading && (
-      <div className="flex mt-32 items-center, justify-center">
-        <div className="flex flex-col ">
-          <Spin />
-          <span className='text-gray-500 text-sm my-5'>
-            Loading chats...
-          </span>
+  return (
+    <div>
+      {chats.length > 0 && (
+        <div className="flex flex-col gap-5 mt-5">
+          {chats.map((chat) => {
+            return <ChatCard key={chat._id} chat={chat} />
+          })}
         </div>
-      </div>
-    )}
-  </div>
-)
+      )}
+
+      {loading && (
+        <div className="flex mt-32 items-center, justify-center">
+          <div className="flex flex-col ">
+            <Spin />
+            <span className='text-gray-500 text-sm my-5'>
+              Loading chats...
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
