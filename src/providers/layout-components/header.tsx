@@ -1,59 +1,41 @@
-"use client"
-
-import React, { useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { UserType } from "@/interfaces"
-import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
-import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
-import { useDispatch, useSelector } from "react-redux"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
+import { currentUser } from "@clerk/nextjs/server"
 
-import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 
 import CurrentUserInfo from "./current-user-infor"
 
-function Header() {
-  const pathname = usePathname()
-  const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
-  const { isSignedIn } = useUser()
-  if (isPublicRoute) return null
+export async function Header() {
+  const user = await currentUser()
 
-  const dispatch = useDispatch()
-  const { currentUserData }: UserState = useSelector((state: any) => state.user)
-  const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
+  // useEffect(() => {
+  //   if (currentUserData) {
+  //     socket.emit("join", currentUserData._id)
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      if (!isSignedIn) return
-      try {
-        const response = await GetCurrentUserFromMongoDB()
-        if (response.error) throw new Error(response.error)
-        dispatch(SetCurrentUser(response as UserType))
-      } catch (error: any) {
-        console.error(error.message)
-      }
-    }
-    getCurrentUser()
-  }, [isSignedIn])
+  //     const handleOnlineUsers = (onlineUsers: string[]) => {
+  //       dispatch(SetOnlineUsers(onlineUsers))
+  //       console.log("Online users updated:", onlineUsers)
+  //     }
 
-  useEffect(() => {
-    if (currentUserData) {
-      socket.emit("join", currentUserData._id)
+  //     socket.on("online-users-updated", handleOnlineUsers)
 
-      const handleOnlineUsers = (onlineUsers: string[]) => {
-        dispatch(SetOnlineUsers(onlineUsers))
-        console.log("Online users updated:", onlineUsers)
-      }
-
-      socket.on("online-users-updated", handleOnlineUsers)
-
-      return () => {
-        socket.off("online-users-updated", handleOnlineUsers)
-      }
-    }
-  }, [currentUserData])
+  //     return () => {
+  //       socket.off("online-users-updated", handleOnlineUsers)
+  //     }
+  //   }
+  // }, [currentUserData])
 
   return (
     <header className="flex h-16 w-full items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">
@@ -68,24 +50,36 @@ function Header() {
           <SignUpButton />
         </SignedOut>
         <SignedIn>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-bold">{currentUserData?.userName}</span>
-            <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
-              <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </div>
-
-          {showCurrentUserInfo && currentUserData && (
-            <CurrentUserInfo
-              setShowCurrentUserInfo={setShowCurrentUserInfo}
-              showCurrentUserInfo={showCurrentUserInfo}
-            />
-          )}
+          <Drawer direction="right">
+            <DrawerTrigger asChild>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-bold">{user?.username}</span>
+                <Avatar className="cursor-pointer">
+                  <AvatarImage src={user?.imageUrl} alt="User Avatar" />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+              </div>
+            </DrawerTrigger>
+            <DrawerContent>
+              <div className="mx-auto w-full max-w-sm">
+                <DrawerHeader>
+                  <DrawerTitle>Move Goal</DrawerTitle>
+                  <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+                </DrawerHeader>
+                <div className="p-4 pb-0">
+                  <div className="flex items-center justify-center space-x-2">test</div>
+                </div>
+                <DrawerFooter>
+                  <Button>Submit</Button>
+                  <DrawerClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </div>
+            </DrawerContent>
+          </Drawer>
         </SignedIn>
       </div>
     </header>
   )
 }
-
-export default Header

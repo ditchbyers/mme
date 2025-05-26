@@ -11,7 +11,7 @@ import { MobileNavigation } from "@/components/usable/mobile-navigation"
 import "remixicon/fonts/remixicon.css"
 
 import Content from "@/providers/layout-components/content"
-import Header from "@/providers/layout-components/header"
+import { Header } from "@/providers/layout-components/header"
 
 const lato = Lato({
   variable: "--font-oswald",
@@ -33,10 +33,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
-          <ReduxProvider>
-            <Header />
-            <Content>{children}</Content>
-          </ReduxProvider>
+          <Header />
+          <Content>{children}</Content>
           <footer>
             <MobileNavigation />
           </footer>
