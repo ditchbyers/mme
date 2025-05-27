@@ -21,11 +21,12 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
   useEffect(() => {
     const updateSlidesToScroll = () => {
       const width = window.innerWidth
-      if (width < 640) {
+
+      if (width <= 640) {
         setSlidesToScroll(2)
-      } else if (width < 768) {
+      } else if (width > 640 && width <= 768) {
         setSlidesToScroll(3)
-      } else if (width < 1024) {
+      } else if (width > 768 && width <= 1280) {
         setSlidesToScroll(4)
       } else {
         setSlidesToScroll(6)
@@ -45,7 +46,7 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
             <CarouselItem
               key={index}
               className={cn(
-                "relative aspect-[3/4] basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6",
+                "relative aspect-[3/4] basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 xl:basis-1/6",
                 "flex items-center justify-center select-none"
               )}
             >
@@ -60,7 +61,7 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
                 <DialogTrigger asChild>
                   <div className="relative aspect-[3/4] w-full">
                     <Image
-                      src={game.box_art_url.replace("{width}", "285").replace("{height}", "380")}
+                      src={game.cover.replace("{width}", "285").replace("{height}", "380")}
                       alt={game.name}
                       className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
                       fill
@@ -75,7 +76,7 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
                     <div className="flex flex-row gap-4">
                       <div className="relative aspect-[3/4] w-full max-w-[285px]">
                         <Image
-                          src={game.box_art_url.replace("{width}", "285").replace("{height}", "380")}
+                          src={game.cover.replace("{width}", "285").replace("{height}", "380")}
                           alt={game.name}
                           className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
                           fill

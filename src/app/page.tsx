@@ -1,41 +1,40 @@
 import { cache } from "react"
 import { Game } from "@/types"
 
-import ClientGamePage from "@/components/usable/game-carousels"
+import { TH3 } from "@/components/typography/h3"
+import { GameCarousel } from "@/components/usable/game-wrapper"
 
-interface GamesResponseProps {
-  data: Game[]
-  pagination: {
-    cursor: string
+interface Stream {
+  genre: {
+    identifier: string
+    name: string
   }
+  queue: Game[]
 }
 
-const fetchToken = cache(async (): Promise<string> => {
-  const res = await fetch("http:localhost:3000/api/twitch/token", {
-    method: "POST",
+const fetchStreams = cache(async (): Promise<Stream[]> => {
+  const res = await fetch("https://revenant.lyrica.systems/discovery/stream", {
+    method: "GET",
+    headers: {
+      "X-Session-Token": " _dev_skip_auth_roy",
+    },
   })
+
   const json = await res.json()
-  return json.access_token as string
-})
-
-const fetchGames = cache(async (token: string): Promise<GamesResponseProps> => {
-  const res = await fetch(`http:localhost:3000/api/twitch/games?token=${token}`)
-  return res.json()
-})
-
-const fetchGameDetails = cache(async (token: string): Promise<GamesResponseProps> => {
-  const res = await fetch(`http:localhost:3000/api/twitch/games-details?token=${token}`)
-  return res.json()
+  return json
 })
 
 export default async function Home() {
-  const token = await fetchToken()
-  const games = await fetchGames(token)
-  const gamedetails = await fetchGameDetails(token)
+  const streams = await fetchStreams()
 
   return (
     <div className="container mx-auto mb-36 space-y-20 ps-5 pt-10">
-      <ClientGamePage data={games.data} />
+      {streams.map((stream) => (
+        <div key={stream.genre.identifier}>
+          <TH3>{stream.genre.name}</TH3>
+          <GameCarousel games={stream.queue}></GameCarousel>
+        </div>
+      ))}
     </div>
   )
 }

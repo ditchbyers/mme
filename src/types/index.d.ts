@@ -11,8 +11,10 @@ export type NavItem = {
 }
 
 interface Game {
-  id: string
+  age_rating: number
+  cover: string
+  identifier: string
   name: string
-  box_art_url: string
-  igdb_id: string
+  rating: number
+  viewer_count: number
 }
