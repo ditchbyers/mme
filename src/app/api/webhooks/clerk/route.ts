@@ -7,6 +7,8 @@ export async function POST(req: NextRequest) {
 
     // Do something with payload
     // For this guide, log payload to console
+
+    // Todo : Replace with your own logic to handle the webhook event
     const { id } = evt.data
     const eventType = evt.type
     console.log(`Received webhook with ID ${id} and event type of ${eventType}`)
