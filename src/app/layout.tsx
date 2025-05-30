@@ -29,7 +29,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
           <Header />
-          <main className="mb-36 flex-1 space-y-20 px-0">{children}</main>
+          <main className="flex-1 space-y-20">{children}</main>
           <footer>
             <MobileNavigation />
           </footer>

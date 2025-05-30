@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Game } from "@/types"
 
 import { cn } from "@/lib/utils"
 
-import { Button } from "../ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 
 interface GameCarouselProps {
   games: Game[]
@@ -50,46 +49,16 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
                 "flex items-center justify-center select-none"
               )}
             >
-              <Dialog>
-                <DialogTrigger></DialogTrigger>
-                <DialogContent>
-                  <DialogTitle>Test123 </DialogTitle>
-                  <DialogContent>asdf</DialogContent>
-                </DialogContent>
-              </Dialog>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <div className="relative aspect-[3/4] w-full">
-                    <Image
-                      src={game.cover.replace("{width}", "285").replace("{height}", "380")}
-                      alt={game.name}
-                      className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
-                      fill
-                    />
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="">
-                  <DialogHeader>
-                    <DialogTitle>Details - {game.name}</DialogTitle>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="flex flex-row gap-4">
-                      <div className="relative aspect-[3/4] w-full max-w-[285px]">
-                        <Image
-                          src={game.cover.replace("{width}", "285").replace("{height}", "380")}
-                          alt={game.name}
-                          className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
-                          fill
-                        />
-                      </div>
-                      <div>test</div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <div className="relative aspect-[3/4] w-full">
+                <Link href={`/games/${game.identifier}`}>
+                  <Image
+                    src={game.cover.replace("{width}", "285").replace("{height}", "380")}
+                    alt={game.name}
+                    className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
+                    fill
+                  />
+                </Link>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
