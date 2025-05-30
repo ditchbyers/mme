@@ -9,11 +9,15 @@ export const SendNewMessage = async (payload: {
     sender: string,
 }) => {
     try {
-        const newMessage = new MessageModel(payload)
+        /*const newMessage = new MessageModel(payload)
         await newMessage.save()
 
         const existingChat = await ChatModel.findById(payload.chat)
         const existingUnreadCounts = existingChat?.unreadCounts
+
+        //Todo: Das ist die Funktion welche die Unread Counts aktualisiert
+        //aber ich bekomme jetzt ja nur zurück ob die Daten gespeichert wurden aber nicht von welchem User diese gelesen wurden
+
 
         existingChat?.users.forEach((user: any) => {
             const userIdString = user.toString()
@@ -28,8 +32,26 @@ export const SendNewMessage = async (payload: {
             unreadCounts: existingUnreadCounts,
             lastMessageAt: new Date().toISOString(),
         })
-
         return { message: "Message sent successfully" }
+        */
+        
+        const response = await fetch("/api/messages", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Error sending message:", data.error);
+            return { error: data.error || "Unknown error occurred" };
+        }
+
+        return data;
+        
     } catch (error: any) {
         return { error: error.message }
 
@@ -38,10 +60,25 @@ export const SendNewMessage = async (payload: {
 
 export const GetChatMessages = async (chatId: string) => {
     try {
-        const messages = await MessageModel.find({ chat: chatId })
+        /*const messages = await MessageModel.find({ chat: chatId })
             .populate("sender")
             .sort({ createdAt: -1 })
+        console.log("Fetched messages:", messages)
         return JSON.parse(JSON.stringify(messages))
+        */
+        const response = await fetch(`/api/messages/${chatId}`, {
+            method: "GET"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Error fetching messages:", data.error);
+            return { error: data.error || "Unknown error occurred" };
+        }
+
+        return data;
+
     } catch (error: any) {
         return { error: error.message }
     }
@@ -49,7 +86,7 @@ export const GetChatMessages = async (chatId: string) => {
 
 export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, userId: string }) => {
     try {
-        await MessageModel.updateMany(
+        /*await MessageModel.updateMany(
             { chat: chatId, sender: { $ne: userId }, readBy: { $nin: [userId] } },
             { $addToSet: { readBy: userId } }
         )
@@ -61,6 +98,25 @@ export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, user
             unreadCounts: newUnreadCounts,
         })
         return { message: "All messages marked as read" }
+        */
+       
+        const response = await fetch("/api/messages/read", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ chatId, userId })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Error marking messages as read:", data.error);
+            return { error: data.error || "Unknown error occurred" };
+        }
+
+        return data;
+
     } catch (error: any) {
         return { error: error.message }
 
