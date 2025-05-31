@@ -9,6 +9,28 @@ export async function POST(req: NextRequest) {
     // For this guide, log payload to console
 
     // Todo : Replace with your own logic to handle the webhook event
+
+    if (evt.type == "session.ended" || evt.type == "session.removed" || evt.type == "session.revoked") {
+      const UserId = evt.data.user_id
+      const payload = {
+        session_token: [evt.data.id]
+      };
+      const response = await fetch(`http://127.0.0.1:8000/user/self/session?clerk_user_id=${UserId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Fehler beim Löschen der Session:", response.status, errorText);
+        return { error: errorText || "Unknown error occurred" };
+      }
+    }
+
+
     const { id } = evt.data
     const eventType = evt.type
     console.log(`Received webhook with ID ${id} and event type of ${eventType}`)
