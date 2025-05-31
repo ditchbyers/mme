@@ -1,20 +1,24 @@
 'use server';
 import { connectMongoDB } from "@/config/db-config";
 import UserModel from "@/models/user-model";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser, auth} from "@clerk/nextjs/server";
 
-connectMongoDB();
 
 
 export const GetCurrentUserFromMongoDB = async () => {
     try {
+        
+        const {  sessionId, userId } = await auth()
         const clerkUser = await currentUser();
+        //console.log("Clerk User:", clerkUser);
         if (!clerkUser) {
             return { error: "User not authenticated." };
         }
         // check if user is already in db based on clerkUserId
-
-        /*const mongoUser = await UserModel.findOne({ clerkUserId: clerkUser?.id });
+        //console.log("Session ID:", sessionId);
+        //console.log("User ID:", userId);
+/*
+        const mongoUser = await UserModel.findOne({ clerkUserId: clerkUser?.id });
         if (mongoUser) {
             console.log("User found in MongoDB:", mongoUser);
             return JSON.parse(JSON.stringify(mongoUser));
@@ -27,15 +31,16 @@ export const GetCurrentUserFromMongoDB = async () => {
         }
 
         const newUserPayload = {
+            session_token: [sessionId],
             clerkUserId: clerkUser?.id,
             name: [clerkUser?.firstName, clerkUser?.lastName].filter(Boolean).join(" "),
             userName: clerkUser?.username,
             email,
             profilePicture: clerkUser?.imageUrl
         };
-
+        //console.log("New User Payload:", newUserPayload);
         // Todo Route zum BE eintragen ? oder schauen was genau mby hier auch put ? 
-        const response = await fetch("/api/users", {
+        const response = await fetch("http://127.0.0.1:8000/user/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -49,13 +54,13 @@ export const GetCurrentUserFromMongoDB = async () => {
             console.error("Error creating user:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-
+        console.log("New user created:", data);
         return data;
 
         /*const newUser = await UserModel.create(newUserPayload);
         console.log("New user created:", newUser);
-        return JSON.parse(JSON.stringify(newUser));
-        */
+        return JSON.parse(JSON.stringify(newUser));*/
+        
 
     } catch (error: any) {
         return {
@@ -117,5 +122,4 @@ export const GetAllUsers = async () => {
             error: error.message
         }
     }
-
 }

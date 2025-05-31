@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { UserType } from "@/interfaces"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
@@ -14,19 +14,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import CurrentUserInfo from "./current-user-infor"
 
-function Header() {
+export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
   const { isSignedIn } = useUser()
-  if (isPublicRoute) return null
 
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
+  console.log("signedIn", isSignedIn)
+  if (isPublicRoute) return null
 
   useEffect(() => {
     const getCurrentUser = async () => {
-      if (!isSignedIn) return
+      
+      if (isSignedIn) return
       try {
         const response = await GetCurrentUserFromMongoDB()
         if (response.error) throw new Error(response.error)
@@ -87,5 +89,3 @@ function Header() {
     </header>
   )
 }
-
-export default Header

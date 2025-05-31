@@ -1,5 +1,6 @@
 
 export interface UserType {
+    session_token: string[];
     _id: string;
     ckerkUserId: string;
     name: string;
