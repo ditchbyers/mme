@@ -37,7 +37,7 @@ export const GetCurrentUserFromMongoDB = async () => {
         };
         //console.log("New User Payload:", newUserPayload);
         // Todo Route zum BE eintragen ? oder schauen was genau mby hier auch put ? 
-        const response = await fetch("http://127.0.0.1:8000/user/", {
+        const response = await fetch(`${process.env.DEV_URL}/user/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

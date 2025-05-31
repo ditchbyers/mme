@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       const payload = {
         session_token: [evt.data.id]
       };
-      const response = await fetch(`http://127.0.0.1:8000/user/self/session?clerk_user_id=${UserId}`, {
+      const response = await fetch(`${process.env.DEV_URL}/user/self/session?clerk_user_id=${UserId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
