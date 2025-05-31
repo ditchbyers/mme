@@ -1,9 +1,5 @@
 'use server';
-import { connectMongoDB } from "@/config/db-config";
-import UserModel from "@/models/user-model";
 import { currentUser, auth} from "@clerk/nextjs/server";
-
-
 
 export const GetCurrentUserFromMongoDB = async () => {
     try {
@@ -11,6 +7,7 @@ export const GetCurrentUserFromMongoDB = async () => {
         const {  sessionId, userId } = await auth()
         const clerkUser = await currentUser();
         //console.log("Clerk User:", clerkUser);
+        
         if (!clerkUser) {
             return { error: "User not authenticated." };
         }
