@@ -94,7 +94,7 @@ export default function RecipientInfo({
                 {getProperty("Created On", formatDateTime(selectedChat?.createdAt!))}
                 {selectedChat?.isGroupChat && (
                     <>
-                        {getProperty("Created By", selectedChat?.createdBy?.name!)}
+                        {getProperty("Created By", selectedChat?.createdBy!)}
                     </>
                 )}
                 {!selectedChat?.isGroupChat && (

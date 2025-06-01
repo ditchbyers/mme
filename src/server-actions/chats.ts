@@ -1,8 +1,10 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
+import { current } from "@reduxjs/toolkit";
 
 
-export const CreateNewChat = async (payload: any) => {
+
+export const CreateNewChat = async (payload: any, currentUserId: any) => {
     try {
         /*await ChatModel.create(payload);
         const newchats = await ChatModel.find({
@@ -12,17 +14,17 @@ export const CreateNewChat = async (payload: any) => {
         }).populate("users").sort({ updatedAt: -1 });
         return JSON.parse(JSON.stringify(newchats));
         */
-        const { sessionId, userId } = await auth();
-        const { currentUser } = payload.currentUserData.id
-        console.log("currentUser", currentUser, sessionId)
-        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId}`, {
+        console.log("payload", payload)
+        const  {sessionId} = await auth();
+        const  currentUser  = currentUserId.userId
+
+        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId!}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
         });
-
         const data = await response.json();
 
         if (!response.ok) {
@@ -30,7 +32,7 @@ export const CreateNewChat = async (payload: any) => {
             console.error("Error creating chat:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-
+        console.log("data", data)
         return data;
 
     } catch (error: any) {

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { UserType } from '@/interfaces'
 import { ChatState, SetChats } from '@/redux/chatSlice'
@@ -5,7 +6,6 @@ import { UserState } from '@/redux/userSlice'
 import { CreateNewChat } from '@/server-actions/chats'
 import { GetAllUsers } from '@/server-actions/users'
 import { Divider, Modal, Spin } from 'antd'
-import React, { use } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function NewChatModal({
@@ -46,9 +46,10 @@ export default function NewChatModal({
             setLoading(true)
             const response = await CreateNewChat({
                 users: [userId, currentUserData.id],
-                createdBy: currentUserData.id,
+                createdBy: currentUserData.name!,
                 isGroupChat: false,
-            })
+            }, { userId: currentUserData.id })
+            console.log("response", response)
             if (response.error) throw new Error(response.error)
             dispatch(SetChats(response))
             setShowNewChatModal(false)

@@ -19,17 +19,20 @@ export default function ChatsList() {
     try {
       setLoading(true)
       const response = await GetAllChats(currentUserData?.id!)
-      console.log("response", response)
       if (response.error) throw new Error("No chat found")
+      console.log("response", response)
       dispatch(SetChats(response))
     } catch (error: any) {
+      error.message("Error fetching chats")
     } finally {
       setLoading(false)
     }
   }
 
-  React.useEffect(() => {
-    if (currentUserData) getChats()
+  useEffect(() => {
+    if (currentUserData) {
+      getChats()
+    }
   }, [currentUserData])
 
   useEffect(() => {

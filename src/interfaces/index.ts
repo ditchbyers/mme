@@ -6,19 +6,19 @@ export interface UserType {
     name: string;
     userName: string;
     email: string;
-    profilePicture: string;
-    bio: string;
-    location: string;
-    platform: string;
-    language: string;
-    games: string[];
+    profilePicture?: string;
+    bio?: string;
+    location?: string;
+    platform?: string;
+    language?: string;
+    games?: string[];
 }
 
 export interface ChatType {
     id: string;
     users: UserType[];
-    createdBy: UserType;
-    lastMessage: MessageType;
+    createdBy: string;
+    lastMessage?: MessageType;
     isGroupChat: boolean;
     groupName: string;
     groupProfilePicture: string;

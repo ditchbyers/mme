@@ -27,7 +27,7 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
                 groupName: values.groupName,
                 groupBio: values.groupDescription,
                 users: [...selectedUserIds, currentUserData?.id!],
-                createdBy: currentUserData?.id!,
+                createdBy: currentUserData.name!,
                 isGroupChat: true,
                 groupProfilePicture: initialData?.groupProfilePicture || '',
             }
@@ -46,7 +46,7 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
                 })
             } else {
 
-                response = await CreateNewChat(payload)
+                response = await CreateNewChat(payload, { userId: currentUserData?.id! })
             }
 
             if (response?.error) throw new Error('Fehler beim Speichern des Gruppenchats')
