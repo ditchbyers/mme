@@ -1,5 +1,5 @@
 "use server";
-import ChatModel from "@/models/chat-model";
+import { auth } from "@clerk/nextjs/server";
 
 
 export const CreateNewChat = async (payload: any) => {
@@ -12,7 +12,10 @@ export const CreateNewChat = async (payload: any) => {
         }).populate("users").sort({ updatedAt: -1 });
         return JSON.parse(JSON.stringify(newchats));
         */
-        const response = await fetch("/api/chats", {
+        const { sessionId, userId } = await auth();
+        const { currentUser } = payload.currentUserData.id
+        console.log("currentUser", currentUser, sessionId)
+        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -23,6 +26,7 @@ export const CreateNewChat = async (payload: any) => {
         const data = await response.json();
 
         if (!response.ok) {
+            console.log("scheiße")
             console.error("Error creating chat:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
@@ -101,7 +105,7 @@ export const UpdateChat = async ({ chatId, payload }: { chatId: string, payload:
         /*await ChatModel.findByIdAndUpdate(chatId, payload)
         return { message: "Chat updated successfully" };
         */
-       
+
         const response = await fetch(`/api/chats/${chatId}`, {
             method: "PUT",
             headers: {

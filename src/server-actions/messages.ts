@@ -1,6 +1,5 @@
 "use server"
-import MessageModel from "@/models/message-model"
-import ChatModel from "@/models/chat-model"
+import { currentUser, auth} from "@clerk/nextjs/server";
 
 export const SendNewMessage = async (payload: {
     text?: string,
@@ -34,7 +33,7 @@ export const SendNewMessage = async (payload: {
         })
         return { message: "Message sent successfully" }
         */
-        
+        const {  sessionId, userId } = await auth()
         const response = await fetch("/api/messages", {
             method: "POST",
             headers: {
