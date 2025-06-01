@@ -40,8 +40,8 @@ export default function NewMessages
       {
         const dbPayload = {
           ...commonPayload,
-          sender: currentUserData?._id!,
-          chat: selectedChat?._id!
+          sender: currentUserData?.id!,
+          chat: selectedChat?.id!
         }
         await SendNewMessage(dbPayload)
       }
@@ -52,7 +52,7 @@ export default function NewMessages
   }
 
   useEffect(() => {
-    socket.emit("typing", { chat: selectedChat, senderId: currentUserData?._id, senderName: currentUserData?.name! })
+    socket.emit("typing", { chat: selectedChat, senderId: currentUserData?.id, senderName: currentUserData?.name! })
   }, [selectedChat, text])
 
 

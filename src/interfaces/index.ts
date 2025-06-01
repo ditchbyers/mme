@@ -1,7 +1,7 @@
 
 export interface UserType {
     session_token: string[];
-    _id: string;
+    id: string;
     ckerkUserId: string;
     name: string;
     userName: string;
@@ -15,7 +15,7 @@ export interface UserType {
 }
 
 export interface ChatType {
-    _id: string;
+    id: string;
     users: UserType[];
     createdBy: UserType;
     lastMessage: MessageType;
@@ -31,7 +31,7 @@ export interface ChatType {
 }
 
 export interface MessageType {
-    _id: string;
+    id: string;
     socketMessageId: string;
     chat: ChatType;
     sender: UserType;

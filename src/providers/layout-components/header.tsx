@@ -38,7 +38,7 @@ export default function Header() {
 
   useEffect(() => {
     if (currentUserData) {
-      socket.emit("join", currentUserData._id)
+      socket.emit("join", currentUserData.id)
 
       const handleOnlineUsers = (onlineUsers: string[]) => {
         dispatch(SetOnlineUsers(onlineUsers))

@@ -23,7 +23,7 @@ export default function NewChatModal({
     const [users, setUsers] = React.useState<UserType[]>([])
     const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null)
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
-    const visibleUsers = users.filter((user) => user._id !== currentUserData._id)
+    const visibleUsers = users.filter((user) => user.id !== currentUserData.id)
     const {chats} : ChatState = useSelector((state: any) => state.chat)
     const dispatch = useDispatch()
 
@@ -33,7 +33,6 @@ export default function NewChatModal({
             const response = await GetAllUsers()
             if (response.error) throw new Error("No user found")
             setUsers(response)
-            console.log(response)
         } catch (error) {
             console.log(error)
         } finally {
@@ -46,8 +45,8 @@ export default function NewChatModal({
             setSelectedUserId(userId)
             setLoading(true)
             const response = await CreateNewChat({
-                users: [userId, currentUserData._id],
-                createdBy: currentUserData._id,
+                users: [userId, currentUserData.id],
+                createdBy: currentUserData.id,
                 isGroupChat: false,
             })
             if (response.error) throw new Error(response.error)
@@ -89,21 +88,21 @@ export default function NewChatModal({
                     <div className="flex flex-col gap-2">
                         {users.map((user, index) => {
                             const chatAlreadyCreated = chats.find((chat) =>
-                                chat.users.find((u) => u._id === user._id) && !chat.isGroupChat
+                                chat.users.find((u) => u.id === user.id) && !chat.isGroupChat
                             );
-                            if (user._id === currentUserData._id || chatAlreadyCreated) return null;
+                            if (user.id === currentUserData.id || chatAlreadyCreated) return null;
                             return (
-                                <React.Fragment key={user._id}>
+                                <React.Fragment key={user.id}>
                                     <div className="flex justify-between items-center">
                                         <div className="flex gap-4 items-center">
                                             <img src={user.profilePicture} alt="avatar" className="w-10 h-10 rounded-full" />
                                             <span className="text-gray-500">{user.name}</span>
                                         </div>
                                         <Button
-                                            loading={selectedUserId === user._id && loading}
+                                            loading={selectedUserId === user.id && loading}
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => onaAddToChat(user._id)}
+                                            onClick={() => onaAddToChat(user.id)}
                                             disabled={!!chatAlreadyCreated}
                                         >
                                             {chatAlreadyCreated ? "Already in Chat" : "Add to Chat"}

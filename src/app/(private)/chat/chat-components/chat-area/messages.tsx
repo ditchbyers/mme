@@ -19,7 +19,7 @@ export default function Messages
   const getMessages = async () => {
     try {
       setLoading(true)
-      const response = await GetChatMessages(selectedChat?._id!)
+      const response = await GetChatMessages(selectedChat?.id!)
       if (response.error) throw new Error(response.error)
       setMessages(response)
     } catch (error: any) {
@@ -41,7 +41,7 @@ export default function Messages
     socket.on("new-message-received", (message: MessageType) => {
 
 
-      if (selectedChat?._id === message.chat._id) {
+      if (selectedChat?.id === message.chat.id) {
         setMessages((prev) => {
 
           const messageAlreadyExists = prev.find(
@@ -59,15 +59,15 @@ export default function Messages
       messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100;
     }
     ReadAllMessages({
-      userId: currentUserData?._id!,
-      chatId: selectedChat?._id!,
+      userId: currentUserData?.id!,
+      chatId: selectedChat?.id!,
     });
 
     const newChats = chats.map((chat) => {
-      if (chat._id === selectedChat?._id) {
+      if (chat.id === selectedChat?.id) {
         let chatData = { ...chat };
         chatData.unreadCounts = { ...chat.unreadCounts };
-        chatData.unreadCounts[currentUserData._id] = 0;
+        chatData.unreadCounts[currentUserData.id] = 0;
         return chatData;
       } else {
         return chat;
@@ -83,10 +83,10 @@ export default function Messages
         {[...messages]
           .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
           .map((message) => (
-            <Message key={message._id || message.socketMessageId} message={message} />
+            <Message key={message.id || message.socketMessageId} message={message} />
           ))}
         {/*{messages.map((message) => {
-          return <Message key={message._id || message.socketMessageId} message={message}/>
+          return <Message key={message.id || message.socketMessageId} message={message}/>
         })}*/}
       </div>
     </div>

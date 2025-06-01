@@ -51,7 +51,6 @@ export const GetCurrentUserFromMongoDB = async () => {
             console.error("Error creating user:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-        console.log("New user created:", data);
         return data;
 
         /*const newUser = await UserModel.create(newUserPayload);
@@ -101,17 +100,16 @@ export const GetAllUsers = async () => {
     try {
         //const users = await UserModel.find({});
         //return JSON.parse(JSON.stringify(users));
-        const response = await fetch("/api/users", {
+        const response = await fetch(`${process.env.DEV_URL}/user/profiles`, {
             method: "GET"
         });
 
+        
         const data = await response.json();
-
         if (!response.ok) {
             console.error("Error fetching users:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-
         return data;
 
     } catch (error: any) {

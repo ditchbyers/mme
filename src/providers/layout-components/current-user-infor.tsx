@@ -1,4 +1,3 @@
-import { UserType } from "@/interfaces";
 import React, { useRef } from "react";
 import { Divider, Drawer, Upload } from "antd";
 import { useClerk } from "@clerk/nextjs";
@@ -10,6 +9,7 @@ import { SetCurrentUser, UserState } from "@/redux/userSlice";
 import { UploadImageToFirebaseAndReturnUrl } from "@/helpers/image-upload";
 import { UpdateUserProfile } from "@/server-actions/users";
 import socket from "@/config/socket-config";
+import { Pencil } from "lucide-react";
 
 
 function CurrentUserInfo({
@@ -30,7 +30,17 @@ function CurrentUserInfo({
     const getProperty = (key: string, value: string) => {
         return (
             <div className="flex flex-col">
-                <span className="font-semibold text-gray-700">{key}</span>
+                <div className="group flex items-center gap-2">
+                    <span className="font-semibold text-gray-700 cursor-pointer">{key}</span>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white hover:bg-transparent border border-white hover:border-gray-700 rounded"
+                        onClick={() => {}}
+                    >
+                        <Pencil className="w-4 h-4 text-gray-500 hover:text-black" />
+                    </Button>
+                </div>
                 <span className="text-gray-600">{value}</span>
             </div>
         )
@@ -41,7 +51,7 @@ function CurrentUserInfo({
     const onLogout = async () => {
         try {
             setLoading(true);
-            socket.emit("logout", currentUserData?._id);
+            socket.emit("logout", currentUserData?.id);
             await signOut();
             setShowCurrentUserInfo(false);
             toast.current?.show({
@@ -66,7 +76,7 @@ function CurrentUserInfo({
         try {
             setLoading(true);
             const url: string = await UploadImageToFirebaseAndReturnUrl(selectedFile!);
-            const response = await UpdateUserProfile(currentUserData?._id!, { profilePicture: url });
+            const response = await UpdateUserProfile(currentUserData?.id!, { profilePicture: url });
             if (response.error) throw new Error(response.error);
             dispatch(SetCurrentUser(response));
         } catch (error: any) {
@@ -76,6 +86,16 @@ function CurrentUserInfo({
             setSelectedFile(null);
         }
     }
+
+    const onProfileChange = async () => {
+        try {
+            
+        } catch (error: any) {
+            console.error("Error updating profile: ", error);
+            
+        }
+    }
+
 
     return (
         <>
@@ -102,7 +122,8 @@ function CurrentUserInfo({
                             listType={selectedFile ? "picture-circle" : "text"}
                             maxCount={1}
                         >
-                            Change Profile Picture </Upload>
+                            Change Profile Picture
+                        </Upload>
 
                     </div>
 
@@ -110,12 +131,25 @@ function CurrentUserInfo({
 
 
                     <div className="flex flex-col gap-5">
-                        {getProperty("Name", currentUserData?.name)}
-                        {getProperty("Username", currentUserData?.userName)}
-                        {getProperty("Email", currentUserData?.email)}
-                        {getProperty("Bio", currentUserData?.bio)}
-                        {getProperty("Location", currentUserData?.location)}
-                        {getProperty("Games", currentUserData?.games.join(", "))}
+                        <div>
+                            {getProperty("Name", currentUserData?.name)}
+                        </div>
+                        <div>
+                            {getProperty("Username", currentUserData?.userName)}
+                        </div>
+                        <div>
+                            {getProperty("Email", currentUserData?.email)}
+                        </div>
+                        <div>
+                            {getProperty("Bio", currentUserData?.bio)}
+                        </div>
+                        <div>
+                            {getProperty("Location", currentUserData?.location)}
+                        </div>
+                        <div>
+                            {getProperty("Games", currentUserData?.games.join(", "))}
+                        </div>
+
 
                     </div>
                     <div className="flex flex-col gap-5">
@@ -124,7 +158,7 @@ function CurrentUserInfo({
                             onClick={onProfilePictureUpload}
                             disabled={!selectedFile}
                         >
-                            Update Profile Picture
+                            Update Profile
                         </Button>
 
                         <Button

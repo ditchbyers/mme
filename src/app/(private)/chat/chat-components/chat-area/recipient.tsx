@@ -22,7 +22,7 @@ export default function Recipient() {
         chatImage = selectedChat.groupProfilePicture
     } else {
         const recipient = selectedChat?.users.find(
-            (user) => user._id !== currentUserData?._id
+            (user) => user.id !== currentUserData?.id
         )
         chatName = recipient?.name || ""
         chatImage = recipient?.profilePicture || ""
@@ -39,7 +39,7 @@ export default function Recipient() {
 
     useEffect(() => {
         socket.on("typing", ({ chat, senderName }: { chat: ChatType, senderName: string }) => {
-            if (selectedChat?._id === chat._id) {
+            if (selectedChat?.id === chat.id) {
                 setTyping(true)
                 if (chat.isGroupChat) {
                     setSenderName(senderName)

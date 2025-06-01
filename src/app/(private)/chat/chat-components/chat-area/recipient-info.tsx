@@ -25,7 +25,7 @@ export default function RecipientInfo({
         chatImage = selectedChat.groupProfilePicture
     } else {
         const recipient = selectedChat?.users.find(
-            (user) => user._id !== currentUserData?._id
+            (user) => user.id !== currentUserData?.id
         )
         chatName = recipient?.name || ""
         chatImage = recipient?.profilePicture || ""
@@ -68,12 +68,12 @@ export default function RecipientInfo({
                     <div className="flex flex-col gap-5 my-4">
                         <div className='flex justify-between items-center'>
                             <span className="text-grey-500 text-sm">{selectedChat.users.length} Members</span>
-                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat._id}`) }>
+                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat.id}`) }>
                                 Edit Group
                             </Button>
                         </div>
                         {selectedChat?.users.map((user: any) => (
-                            <div key={user._id} className="flex items-center gap-3">
+                            <div key={user.id} className="flex items-center gap-3">
                                 <img
                                     src={user.profilePicture || './image.png'}
                                     alt="Profile"

@@ -13,7 +13,7 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
     const router = useRouter()
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>(
-        initialData?.users.filter((userId: string) => userId !== currentUserData?._id!) || []
+        initialData?.users.filter((userId: string) => userId !== currentUserData?.id!) || []
     )
 
     const [selectedProfilePicture, setSelectedProfilePicture] = React.useState<File>()
@@ -26,8 +26,8 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
             const payload = {
                 groupName: values.groupName,
                 groupBio: values.groupDescription,
-                users: [...selectedUserIds, currentUserData?._id!],
-                createdBy: currentUserData?._id!,
+                users: [...selectedUserIds, currentUserData?.id!],
+                createdBy: currentUserData?.id!,
                 isGroupChat: true,
                 groupProfilePicture: initialData?.groupProfilePicture || '',
             }
@@ -41,7 +41,7 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
             if (initialData) {
 
                 response = await UpdateChat({
-                    chatId: initialData._id,
+                    chatId: initialData.id,
                     payload: payload,
                 })
             } else {
@@ -68,16 +68,16 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
                     Select users
                 </span>
                 {users.map((user) => {
-                    if (user._id === currentUserData?._id) return null
+                    if (user.id === currentUserData?.id) return null
                     return <div
-                        key={user._id} className='flex gap-5 items-center'>
+                        key={user.id} className='flex gap-5 items-center'>
                         <input type="checkbox"
-                            checked={selectedUserIds.includes(user._id)}
+                            checked={selectedUserIds.includes(user.id)}
                             onChange={() => {
-                                if (selectedUserIds.includes(user._id)) {
-                                    setSelectedUserIds(selectedUserIds.filter((id) => id !== user._id))
+                                if (selectedUserIds.includes(user.id)) {
+                                    setSelectedUserIds(selectedUserIds.filter((id) => id !== user.id))
                                 } else {
-                                    setSelectedUserIds([...selectedUserIds, user._id])
+                                    setSelectedUserIds([...selectedUserIds, user.id])
                                 }
                             }}
                         />

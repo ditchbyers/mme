@@ -26,38 +26,38 @@ function ChatCard({ chat }: { chat: ChatType }) {
         chatName = chat.groupName
         chatImage = chat.groupProfilePicture
     } else {
-        const receipient = chat.users.find((user) => user._id !== currentUserData?._id)
+        const receipient = chat.users.find((user) => user.id !== currentUserData?.id)
         chatName = receipient?.name!
         chatImage = receipient?.profilePicture!
     }
 
     if (chat.lastMessage?.sender) {
         lastMessageSenderName =
-            chat.lastMessage.sender._id === currentUserData?._id
+            chat.lastMessage.sender.id === currentUserData?.id
                 ? "You :"
                 : `${chat.lastMessage.sender.name.split(" ")[0]} :`
         lastMessageTime = formatDateTime(chat.lastMessage.createdAt)
         lastMessage = chat.lastMessage.text
     }
 
-    const isSelected = selectedChat?._id === chat._id
+    const isSelected = selectedChat?.id === chat.id
 
     const unreadCounts = () => {
-        if (!chat.unreadCounts || !chat.unreadCounts[currentUserData?._id!]
-            || chat._id === selectedChat?._id
+        if (!chat.unreadCounts || !chat.unreadCounts[currentUserData?.id!]
+            || chat.id === selectedChat?.id
         ) { return null; }
 
 
         return (
             <div className='bg-green-700 h-5 w-5 rounded-full flex items-center justify-center'>
-                <span className='text-white text-xs'>{chat.unreadCounts[currentUserData?._id!]}</span>
+                <span className='text-white text-xs'>{chat.unreadCounts[currentUserData?.id!]}</span>
             </div>
         );
     };
 
     const onlineIndicator = () => {
         if (chat.isGroupChat) return null;
-        const recipientId = chat.users.find(user => user._id !== currentUserData._id)?._id;
+        const recipientId = chat.users.find(user => user.id !== currentUserData.id)?.id;
         if (onlineUsers.includes(recipientId!)) {
             return <div className='bg-green-500 h-2 w-2 rounded-full'></div>
         }
