@@ -1,6 +1,6 @@
 
 export interface UserType {
-    session_token: string[];
+    session_token?: string[];
     id: string;
     clerkUserId: string;
     name: string;
