@@ -48,17 +48,16 @@ export const GetAllChats = async (userId: string) => {
         }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
         return JSON.parse(JSON.stringify(users));
         */
-        const response = await fetch(`/api/chats?userId=${userId}`, {
+
+        const response = await fetch(`${process.env.DEV_URL}/chat/${userId}/all`, {
             method: "GET"
         });
 
         const data = await response.json();
-
         if (!response.ok) {
             console.error("Error fetching chats:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-
         return data;
 
     } catch (error: any) {

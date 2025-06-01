@@ -40,7 +40,7 @@ export default function NewChatModal({
         }
     }
 
-    const onaAddToChat = async (userId: string) => {
+    const onAddToChat = async (userId: string) => {
         try {
             setSelectedUserId(userId)
             setLoading(true)
@@ -53,7 +53,7 @@ export default function NewChatModal({
             dispatch(SetChats(response))
             setShowNewChatModal(false)
         } catch (error: any) {
-            error.message("Error creating chat")
+            
         } finally {
             setLoading(false)
         }
@@ -102,7 +102,7 @@ export default function NewChatModal({
                                             loading={selectedUserId === user.id && loading}
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => onaAddToChat(user.id)}
+                                            onClick={() => onAddToChat(user.id)}
                                             disabled={!!chatAlreadyCreated}
                                         >
                                             {chatAlreadyCreated ? "Already in Chat" : "Add to Chat"}
