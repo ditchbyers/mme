@@ -21,9 +21,11 @@ export default function ChatsList() {
       const response = await GetAllChats(currentUserData?.id!)
       if (response.error) throw new Error("No chat found")
       console.log("response", response)
+  
+
       dispatch(SetChats(response))
     } catch (error: any) {
-      error.message("Error fetching chats")
+      console.error("Error fetching chats", error.message || error)
     } finally {
       setLoading(false)
     }
@@ -79,7 +81,8 @@ export default function ChatsList() {
     <div>
       {chats.length > 0 && (
         <div className="flex flex-col gap-5 mt-5">
-          {chats.map((chat) => {
+          
+          {chats.map((chat) => {console.log("CHATS", chats)
             return <ChatCard key={chat.id} chat={chat} />
           })}
         </div>
