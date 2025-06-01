@@ -32,6 +32,7 @@ export const GetCurrentUserFromMongoDB = async () => {
         };
 
         const newUser = await UserModel.create(newUserPayload);
+        console.log("New User",JSON.parse(JSON.stringify(newUser)));
         return JSON.parse(JSON.stringify(newUser));
     } catch (error: any) {
         return {
@@ -44,6 +45,7 @@ export const GetCurrentUserFromMongoDB = async () => {
 export const UpdateUserProfile = async (userId: string, payload: any) => {
     try {
     const updatedUser = await UserModel.findByIdAndUpdate(userId, payload, { new: true });
+    console.log(JSON.parse(JSON.stringify(updatedUser)));
     return JSON.parse(JSON.stringify(updatedUser));
     }
     catch (error: any) {
@@ -55,6 +57,7 @@ export const UpdateUserProfile = async (userId: string, payload: any) => {
 export const GetAllUsers = async () => {
     try {
         const users = await UserModel.find({});
+        console.log("All User", JSON.parse(JSON.stringify(users)));
         return JSON.parse(JSON.stringify(users));
     } catch (error: any) {
         return {

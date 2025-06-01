@@ -10,6 +10,7 @@ export const CreateNewChat = async (payload: any) => {
                 $in: [payload.createdBy],
             },
         }).populate("users").sort({ updatedAt: -1 });
+        console.log("New Chat",JSON.parse(JSON.stringify(newchats)));
         return JSON.parse(JSON.stringify(newchats));
     } catch (error: any) {
         return {
@@ -24,6 +25,7 @@ export const GetAllChats = async (userId: string) => {
         const users = await ChatModel.find({
             users: { $in: [userId] }
         }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
+        console.log("All Chats",JSON.parse(JSON.stringify(users)));
         return JSON.parse(JSON.stringify(users));
 
     } catch (error: any) {
@@ -41,6 +43,7 @@ export const GetChatDataById = async (chatId: string) => {
             .populate("lastMessage")
             .populate("createdBy")
             .populate({ path: "lastMessage", populate: { path: "sender", } });
+        console.log("Get Chat", JSON.parse(JSON.stringify(chat)));
         return JSON.parse(JSON.stringify(chat));
     } catch (error: any) {
         return {

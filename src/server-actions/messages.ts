@@ -1,6 +1,7 @@
 "use server"
 import MessageModel from "@/models/message-model"
 import ChatModel from "@/models/chat-model"
+import { message } from "antd"
 
 export const SendNewMessage = async (payload: {
     text?: string,
@@ -28,7 +29,7 @@ export const SendNewMessage = async (payload: {
             unreadCounts: existingUnreadCounts,
             lastMessageAt: new Date().toISOString(),
         })
-
+        console.log("Send Message",JSON.parse(JSON.stringify(newMessage)));
         return { message: "Message sent successfully" }
     } catch (error: any) {
         return { error: error.message }
@@ -41,6 +42,7 @@ export const GetChatMessages = async (chatId: string) => {
         const messages = await MessageModel.find({ chat: chatId })
             .populate("sender")
             .sort({ createdAt: -1 })
+        console.log("Get Chat Message",JSON.parse(JSON.stringify(messages)));
         return JSON.parse(JSON.stringify(messages))
     } catch (error: any) {
         return { error: error.message }
