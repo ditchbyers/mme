@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 import { Lato } from "next/font/google"
-import { Header } from "@/providers/layout-components/header"
+import  Header  from "@/providers/layout-components/header"
 import ReduxProvider from "@/providers/redux-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
