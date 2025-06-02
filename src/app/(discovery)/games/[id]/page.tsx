@@ -48,7 +48,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
 
   return (
     <div className="mx-auto mb-36 max-w-[96rem] space-y-5 p-6">
-      <div className="flex flex-col md:gap-10 lg:flex-row lg:items-start">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
         <div className="relative mx-auto aspect-[3/4] w-full max-w-[360px] min-w-[285px]">
           <Image
             src={gamedetails.cover.replace("{width}", "285").replace("{height}", "380")}
@@ -57,8 +57,8 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
             fill
           />
         </div>
-        <div className="flex-1 space-y-2">
-          <Card className="mt-6 flex-1 md:mt-0">
+        <div className="flex-1">
+          <Card className="overscroll-y-scroll mt-6 h-[480px] max-h-[480px] flex-1 md:mt-0">
             <CardHeader>
               <CardTitle className="space-y-2">
                 <TH1>{gamedetails.name}</TH1>
@@ -68,7 +68,8 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <Separator />
+            <CardContent className="space-y-4 overflow-y-scroll">
               <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Storyline</h3>
               <div className="text-justify text-sm">{gamedetails.summary}</div>
               {gamedetails.storyline && (
@@ -96,7 +97,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                   <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Game Modes</h3>
                   <div className="flex flex-wrap gap-2">
                     {gamedetails.game_modes.map((mode) => (
-                      <Badge key={mode} variant="outline" className="capitalize">
+                      <Badge key={mode} variant="secondary" className="capitalize">
                         {mode.replace(/-/g, " ")}
                       </Badge>
                     ))}
@@ -109,7 +110,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                   <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Platforms</h3>
                   <div className="flex flex-wrap gap-2">
                     {gamedetails.platforms.map((platform) => (
-                      <Badge key={platform} variant="default">
+                      <Badge key={platform} variant="secondary">
                         {platform.toUpperCase()}
                       </Badge>
                     ))}
