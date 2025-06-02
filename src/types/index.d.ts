@@ -10,9 +10,28 @@ export type NavItem = {
   href: string
 }
 
-interface Game {
-  id: string
+export interface GameDetails extends Game {
+  first_release_date: string
+  summary: string
+  storyline: string
+  platforms: string[]
+  game_modes: string[]
+  genres: string[]
+}
+
+export interface Game {
+  age_rating: number
+  cover: string
+  identifier: string
   name: string
-  box_art_url: string
-  igdb_id: string
+  rating: number
+  viewer_count: number
+}
+
+export interface Stream {
+  genre: {
+    identifier: string
+    name: string
+  }
+  queue: Game[]
 }
