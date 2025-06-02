@@ -38,7 +38,7 @@ export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
   }, [])
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto max-w-[96rem]">
       <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll }} draggable={false}>
         <CarouselContent className="-ml-2 pr-8 lg:pr-0">
           {games.map((game, index) => (

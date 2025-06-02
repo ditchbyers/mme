@@ -1,6 +1,7 @@
+"use client"
+
 import Link from "next/link"
 import { SignedIn, SignedOut, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
-import { currentUser } from "@clerk/nextjs/server"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -15,10 +16,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
-import CurrentUserInfo from "./current-user-infor"
-
-export async function Header() {
-  const user = await currentUser()
+export function Header() {
+  const { user } = useUser()
 
   // useEffect(() => {
   //   if (currentUserData) {
@@ -53,7 +52,6 @@ export async function Header() {
           <Drawer direction="right">
             <DrawerTrigger asChild>
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-bold">{user?.username}</span>
                 <Avatar className="cursor-pointer">
                   <AvatarImage src={user?.imageUrl} alt="User Avatar" />
                   <AvatarFallback>U</AvatarFallback>
