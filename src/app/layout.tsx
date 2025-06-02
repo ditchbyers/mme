@@ -4,6 +4,7 @@ import "./globals.css"
 
 import { Lato } from "next/font/google"
 import { Header } from "@/providers/layout-components/header"
+import ReduxProvider from "@/providers/redux-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
 import { MobileNavigation } from "@/components/usable/mobile-navigation"
@@ -28,8 +29,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
-          <Header />
-          <main className="flex-1 space-y-20">{children}</main>
+          <ReduxProvider>
+            <Header />
+            <main className="flex-1 space-y-20">{children}</main>
+          </ReduxProvider>
           <footer>
             <MobileNavigation />
           </footer>
