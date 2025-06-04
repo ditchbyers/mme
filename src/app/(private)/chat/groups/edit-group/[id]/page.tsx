@@ -2,18 +2,20 @@
 import { UserType } from '@/interfaces'
 import React from 'react'
 import ChatModel from '@/models/chat-model'
-import UserModel from '@/models/user-model'
 import Link from 'next/link'
 import GroupForm from '../../group-components/group-form'
+import { GetAllUsers } from '@/server-actions/users'
+import { GetChatDataById } from '@/server-actions/chats'
 
 
 async function EditGroup
   ({ params }: { params: { id?: any } }) {
-  // Todo: Hier wird noch ein Fehler geworfen idk wieso
-  //console.log("params", params)
   const id = params.id
-  const users: UserType[] = await UserModel.find({})
-  const chat = await ChatModel.findById(id)
+
+  const chat = await GetChatDataById(id)
+  const [loading = false, setLoading] = React.useState<boolean>(false)
+
+
 
   return (
     <div className='p-5'>
@@ -26,7 +28,7 @@ async function EditGroup
 
       <GroupForm
         initialData={JSON.parse(JSON.stringify(chat))}
-        users={JSON.parse(JSON.stringify(users))} />
+      />
 
 
     </div>

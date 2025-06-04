@@ -18,7 +18,7 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
         const  {sessionId} = await auth();
         const  currentUser  = currentUserId.userId
 
-        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId!}`, {
+        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -32,7 +32,6 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
             console.error("Error creating chat:", data.error);
             return { error: data.error || "Unknown error occurred" };
         }
-        console.log("data", data)
         return data;
 
     } catch (error: any) {
@@ -50,14 +49,14 @@ export const GetAllChats = async (userId: string) => {
         }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
         return JSON.parse(JSON.stringify(users));
         */
-
+        console.log("userId", userId)
         const response = await fetch(`${process.env.DEV_URL}/chat/${userId}/all`, {
             method: "GET"
         });
 
         const data = await response.json();
         if (!response.ok) {
-            console.error("Error fetching chats:", data.error);
+            console.error("Error fetching chats:", data);
             return { error: data.error || "Unknown error occurred" };
         }
         return data;
@@ -79,8 +78,8 @@ export const GetChatDataById = async (chatId: string) => {
             .populate({ path: "lastMessage", populate: { path: "sender", } });
         return JSON.parse(JSON.stringify(chat));
         */
-
-        const response = await fetch(`/api/chats/${chatId}`, {
+        console.log("Hallo")
+        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
             method: "GET"
         });
 
@@ -107,7 +106,7 @@ export const UpdateChat = async ({ chatId, payload }: { chatId: string, payload:
         return { message: "Chat updated successfully" };
         */
 
-        const response = await fetch(`/api/chats/${chatId}`, {
+        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

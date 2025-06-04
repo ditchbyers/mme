@@ -1,11 +1,11 @@
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
-import React, { use, useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import RecipientInfo from './recipient-info'
 import { ChatType } from '@/interfaces'
 import socket from '@/config/socket-config'
-import { set } from 'mongoose'
+
 
 export default function Recipient() {
     const [typing = false, setTyping] = React.useState<boolean>(false)

@@ -1,11 +1,12 @@
 "use server"
-import { currentUser, auth} from "@clerk/nextjs/server";
+import { currentUser, auth } from "@clerk/nextjs/server";
 
 export const SendNewMessage = async (payload: {
     text?: string,
     image?: string,
     chat: string,
     sender: string,
+    socketMessageId?: string,
 }) => {
     try {
         /*const newMessage = new MessageModel(payload)
@@ -33,8 +34,8 @@ export const SendNewMessage = async (payload: {
         })
         return { message: "Message sent successfully" }
         */
-        const {  sessionId, userId } = await auth()
-        const response = await fetch("/api/messages", {
+        console.log("Sending message payload:", payload);
+        const response = await fetch(`${process.env.DEV_URL}/message`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -50,14 +51,14 @@ export const SendNewMessage = async (payload: {
         }
 
         return data;
-        
+
     } catch (error: any) {
         return { error: error.message }
 
     }
 }
 
-export const GetChatMessages = async (chatId: string) => {
+export const GetChatMessages = async (chatId: string, userId: string) => {
     try {
         /*const messages = await MessageModel.find({ chat: chatId })
             .populate("sender")
@@ -65,7 +66,8 @@ export const GetChatMessages = async (chatId: string) => {
         console.log("Fetched messages:", messages)
         return JSON.parse(JSON.stringify(messages))
         */
-        const response = await fetch(`/api/messages/${chatId}`, {
+        const user_id = userId
+        const response = await fetch(`${process.env.DEV_URL}/message/chat/${chatId}/?user_id=${user_id}`, {
             method: "GET"
         });
 
@@ -98,8 +100,8 @@ export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, user
         })
         return { message: "All messages marked as read" }
         */
-       
-        const response = await fetch("/api/messages/read", {
+        const user_id = userId
+        const response = await fetch(`${process.env.DEV_URL}/message/chat/${chatId}/?user_id=${user_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

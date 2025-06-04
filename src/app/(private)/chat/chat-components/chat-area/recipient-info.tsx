@@ -20,6 +20,7 @@ export default function RecipientInfo({
 
     let chatName = ""
     let chatImage = ""
+    console.log("selectedChat", selectedChat)
     if (selectedChat?.isGroupChat) {
         chatName = selectedChat.groupName
         chatImage = selectedChat.groupProfilePicture
@@ -99,12 +100,11 @@ export default function RecipientInfo({
                 )}
                 {!selectedChat?.isGroupChat && (
                     <>
-                        {getProperty("Location", currentUserData?.location)}
-                        {getProperty("Games", currentUserData?.games.join(", "))}
-                        {getProperty("Platform", currentUserData?.platform)}
+                        {getProperty("Location", currentUserData?.location || "")}
+                        {getProperty("Platform", currentUserData?.platform || "")}
                     </>
                 )}
-                {getProperty("Bio", currentUserData?.bio)}
+                {getProperty("Bio", currentUserData?.bio || "")}
 
 
             </div>

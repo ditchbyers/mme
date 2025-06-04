@@ -8,9 +8,11 @@ import { CreateNewChat, UpdateChat } from '@/server-actions/chats'
 import { Form, Input, Upload } from 'antd'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
+import { GetAllUsers } from '@/server-actions/users'
 
-export default function GroupForm({ users, initialData = null }: { users: UserType[], initialData: any }) {
+export default function GroupForm({ initialData = null }: { initialData: any }) {
     const router = useRouter()
+    const [users, setUsers] = React.useState<UserType[]>([])
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>(
         initialData?.users.filter((userId: string) => userId !== currentUserData?.id!) || []
@@ -18,6 +20,21 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
 
     const [selectedProfilePicture, setSelectedProfilePicture] = React.useState<File>()
     const [loading = false, setLoading] = React.useState<boolean>(false)
+    console.log(users, 'users')
+
+    const getUsers = async () => {
+        try {
+            setLoading(true)
+            const response = await GetAllUsers()
+            if (response.error) throw new Error("No user found")
+            console.log(response, 'response')
+            setUsers(response)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const onFinish = async (values: any) => {
         try {
@@ -27,7 +44,7 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
                 groupName: values.groupName,
                 groupBio: values.groupDescription,
                 users: [...selectedUserIds, currentUserData?.id!],
-                createdBy: currentUserData.name!,
+                createdBy: currentUserData.id!,
                 isGroupChat: true,
                 groupProfilePicture: initialData?.groupProfilePicture || '',
             }
@@ -60,6 +77,9 @@ export default function GroupForm({ users, initialData = null }: { users: UserTy
         }
     }
 
+    React.useEffect(() => {
+        getUsers()
+    }, [])
 
     return (
         <div className='grid grid-cols-2'>

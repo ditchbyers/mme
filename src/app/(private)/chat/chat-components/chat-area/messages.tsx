@@ -19,7 +19,7 @@ export default function Messages
   const getMessages = async () => {
     try {
       setLoading(true)
-      const response = await GetChatMessages(selectedChat?.id!)
+      const response = await GetChatMessages(selectedChat?.id!, currentUserData?.id!);
       if (response.error) throw new Error(response.error)
       setMessages(response)
     } catch (error: any) {
@@ -30,10 +30,7 @@ export default function Messages
   }
 
   React.useEffect(() => {
-
     getMessages()
-
-
   }, [selectedChat]);
 
   useEffect(() => {
@@ -58,10 +55,6 @@ export default function Messages
     if (messagesDivRef.current) {
       messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100;
     }
-    ReadAllMessages({
-      userId: currentUserData?.id!,
-      chatId: selectedChat?.id!,
-    });
 
     const newChats = chats.map((chat) => {
       if (chat.id === selectedChat?.id) {

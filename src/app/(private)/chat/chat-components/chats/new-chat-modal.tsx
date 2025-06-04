@@ -46,12 +46,12 @@ export default function NewChatModal({
             setLoading(true)
             const response = await CreateNewChat({
                 users: [userId, currentUserData.id],
-                createdBy: currentUserData.name!,
+                createdBy: currentUserData.id!,
                 isGroupChat: false,
             }, { userId: currentUserData.id })
             console.log("response", response)
             if (response.error) throw new Error(response.error)
-            dispatch(SetChats(response))
+            dispatch(SetChats([...chats, response]));
             setShowNewChatModal(false)
         } catch (error: any) {
             
