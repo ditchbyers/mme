@@ -7,8 +7,8 @@ import { GetChatDataById } from '@/server-actions/chats'
 
 
 async function EditGroup
-  ({ params }: { params: { id?: any } }) {
-  const id = params.id
+  ({ params }: { params: Promise<{ id: string }> }) {
+  const {id} =  await params
 
   const chat = await GetChatDataById(id)
   
