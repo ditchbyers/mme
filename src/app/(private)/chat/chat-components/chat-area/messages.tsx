@@ -34,10 +34,7 @@ export default function Messages
   }, [selectedChat]);
 
   useEffect(() => {
-
     socket.on("new-message-received", (message: MessageType) => {
-
-
       if (selectedChat?.id === message.chat.id) {
         setMessages((prev) => {
 

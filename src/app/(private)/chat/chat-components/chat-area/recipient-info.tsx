@@ -20,7 +20,6 @@ export default function RecipientInfo({
 
     let chatName = ""
     let chatImage = ""
-    console.log("selectedChat", selectedChat)
     if (selectedChat?.isGroupChat) {
         chatName = selectedChat.groupName
         chatImage = selectedChat.groupProfilePicture
@@ -69,7 +68,7 @@ export default function RecipientInfo({
                     <div className="flex flex-col gap-5 my-4">
                         <div className='flex justify-between items-center'>
                             <span className="text-grey-500 text-sm">{selectedChat.users.length} Members</span>
-                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat.id}`) }>
+                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat.id}`)}>
                                 Edit Group
                             </Button>
                         </div>
@@ -95,12 +94,13 @@ export default function RecipientInfo({
                 {getProperty("Created On", formatDateTime(selectedChat?.createdAt!))}
                 {selectedChat?.isGroupChat && (
                     <>
-                        {getProperty("Created By", selectedChat?.createdBy!)}
+                        {getProperty("Created By", selectedChat?.createdBy?.name! || "")}
                     </>
                 )}
                 {!selectedChat?.isGroupChat && (
                     <>
                         {getProperty("Location", currentUserData?.location || "")}
+                        {getProperty("Games", currentUserData?.games ? currentUserData.games.join(", ") : "")}
                         {getProperty("Platform", currentUserData?.platform || "")}
                     </>
                 )}

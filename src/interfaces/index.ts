@@ -17,7 +17,7 @@ export interface UserType {
 export interface ChatType {
     id: string;
     users: UserType[];
-    createdBy: string;
+    createdBy: UserType;
     lastMessage?: MessageType;
     isGroupChat: boolean;
     groupName: string;

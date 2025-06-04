@@ -1,10 +1,8 @@
 
-import { UserType } from '@/interfaces'
 import React from 'react'
-import ChatModel from '@/models/chat-model'
+
 import Link from 'next/link'
 import GroupForm from '../../group-components/group-form'
-import { GetAllUsers } from '@/server-actions/users'
 import { GetChatDataById } from '@/server-actions/chats'
 
 
@@ -13,9 +11,7 @@ async function EditGroup
   const id = params.id
 
   const chat = await GetChatDataById(id)
-  const [loading = false, setLoading] = React.useState<boolean>(false)
-
-
+  
 
   return (
     <div className='p-5'>
