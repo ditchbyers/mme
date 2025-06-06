@@ -12,7 +12,7 @@ export default function Message({ message }: { message: MessageType }) {
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
 
 
-    const isLoggedInUserMessage = message.sender._id === currentUserData._id
+    const isLoggedInUserMessage = message.sender.id === currentUserData.id
     if (isLoggedInUserMessage) {
         return (
             <div className="flex justify-end gap-2">

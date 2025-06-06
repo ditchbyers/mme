@@ -1,18 +1,16 @@
-
-import { UserType } from '@/interfaces'
 import React from 'react'
-import ChatModel from '@/models/chat-model'
-import UserModel from '@/models/user-model'
+
 import Link from 'next/link'
 import GroupForm from '../../group-components/group-form'
+import { GetChatDataById } from '@/server-actions/chats'
 
 
 async function EditGroup
   ({ params }: { params: Promise<{ id: string }> }) {
-
   const {id} =  await params
-  const users: UserType[] = await UserModel.find({})
-  const chat = await ChatModel.findById(id)
+
+  const chat = await GetChatDataById(id)
+  
 
   return (
     <div className='p-5'>
@@ -25,7 +23,7 @@ async function EditGroup
 
       <GroupForm
         initialData={JSON.parse(JSON.stringify(chat))}
-        users={JSON.parse(JSON.stringify(users))} />
+      />
 
 
     </div>

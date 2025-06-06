@@ -1,5 +1,5 @@
 import { UserType } from "@/interfaces";
-import { createSlice, current  } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 
 const userSlice = createSlice({
@@ -9,8 +9,8 @@ const userSlice = createSlice({
         currentUserId: "",
         onlineUsers: [],
     },
-    reducers :{
-       SetCurrentUser: (state, action) => {
+    reducers: {
+        SetCurrentUser: (state, action) => {
             state.currentUserData = action.payload;
         },
         SetCurrentUserId: (state, action) => {

@@ -18,19 +18,23 @@ export default function ChatsList() {
   const getChats = async () => {
     try {
       setLoading(true)
-      const response = await GetAllChats(currentUserData?._id!)
-      console.log(response)
+      const response = await GetAllChats(currentUserData?.id!)
       if (response.error) throw new Error("No chat found")
+      console.log("response", response)
+  
+
       dispatch(SetChats(response))
     } catch (error: any) {
-      error.message("Error fetching chats")
+      console.error("Error fetching chats", error.message || error)
     } finally {
       setLoading(false)
     }
   }
 
-  React.useEffect(() => {
-    if (currentUserData) getChats()
+  useEffect(() => {
+    if (currentUserData) {
+      getChats()
+    }
   }, [currentUserData])
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export default function ChatsList() {
       let prevChats = [...chats]
 
       let indexOfChatToUpdate = prevChats.findIndex(
-        (chat) => chat._id === newMessage.chat._id
+        (chat) => chat.id === newMessage.chat.id
       )
       if (indexOfChatToUpdate === -1) return;
 
@@ -54,31 +58,32 @@ export default function ChatsList() {
       chatToUpdateCopy.updatedAt = newMessage.createdAt
       chatToUpdateCopy.unreadCounts = { ...(chatToUpdate.unreadCounts || {}) }
 
-      if (newMessage.sender._id !== currentUserData?._id &&
-        selectedChat?._id !== newMessage.chat._id) {
-        chatToUpdateCopy.unreadCounts[currentUserData?._id!] = (chatToUpdateCopy.unreadCounts[currentUserData?._id!] || 0) + 1;
+      if (newMessage.sender.id !== currentUserData?.id &&
+        selectedChat?.id !== newMessage.chat.id) {
+        chatToUpdateCopy.unreadCounts[currentUserData?.id!] = (chatToUpdateCopy.unreadCounts[currentUserData?.id!] || 0) + 1;
       }
 
       prevChats[indexOfChatToUpdate] = chatToUpdateCopy;
 
       prevChats = [
         prevChats[indexOfChatToUpdate],
-        ...prevChats.filter((chat) => chat._id !== newMessage.chat._id),
+        ...prevChats.filter((chat) => chat.id !== newMessage.chat.id),
       ];
       dispatch(SetChats(prevChats))
     })
     return () => {
       socket.off("new-message-received");
     };
-  }, [currentUserData?._id, selectedChat]
+  }, [currentUserData?.id, selectedChat]
   )
 
   return (
     <div>
       {chats.length > 0 && (
         <div className="flex flex-col gap-5 mt-5">
-          {chats.map((chat) => {
-            return <ChatCard key={chat._id} chat={chat} />
+          
+          {chats.map((chat) => {console.log("CHATS", chats)
+            return <ChatCard key={chat.id} chat={chat} />
           })}
         </div>
       )}

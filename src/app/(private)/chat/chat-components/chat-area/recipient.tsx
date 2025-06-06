@@ -1,11 +1,11 @@
 import { ChatState } from '@/redux/chatSlice'
 import { UserState } from '@/redux/userSlice'
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import RecipientInfo from './recipient-info'
 import { ChatType } from '@/interfaces'
 import socket from '@/config/socket-config'
-import { set } from 'mongoose'
+
 
 export default function Recipient() {
     const [typing = false, setTyping] = React.useState<boolean>(false)
@@ -22,9 +22,9 @@ export default function Recipient() {
         chatImage = selectedChat.groupProfilePicture
     } else {
         const recipient = selectedChat?.users.find(
-            (user) => user._id !== currentUserData?._id
+            (user) => user.id !== currentUserData?.id
         )
-        chatName = recipient?.name || ""
+        chatName = recipient?.userName || ""
         chatImage = recipient?.profilePicture || ""
     }
 
@@ -38,23 +38,21 @@ export default function Recipient() {
     }
 
     useEffect(() => {
-        socket.on("typing", ({ chat, senderName }: { chat: ChatType, senderName: string }) => {
-            if (selectedChat?._id === chat._id) {
+        const handleTyping = ({ chat, senderName }: { chat: ChatType; senderName: string }) => {
+            if (selectedChat?.id === chat.id) {
                 setTyping(true)
                 if (chat.isGroupChat) {
                     setSenderName(senderName)
                 }
+                setTimeout(() => setTyping(false), 2000)
             }
+        }
 
-            setTimeout(() => {
-                setTyping(false)
-            }, 2000)
+        socket.on("typing", handleTyping)
 
-            return () => {
-                socket.off("typing")
-            }
-        })
-
+        return () => {
+            socket.off("typing", handleTyping)
+        }
     }, [selectedChat])
 
     return (
@@ -80,4 +78,3 @@ export default function Recipient() {
             )}
         </div>
     )
-}   

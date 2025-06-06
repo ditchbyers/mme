@@ -1,94 +1,87 @@
-'use client'
-import React, { useEffect } from "react";
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
-import { GetCurrentUserFromMongoDB } from "@/server-actions/users";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import CurrentUserInfo from "./current-user-infor";
-import { usePathname } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice";
-import { UserType } from "@/interfaces";
-import Link from 'next/link';
-import socket from "@/config/socket-config";
+"use client"
 
-function Header() {
+import React, { useEffect } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { UserType } from "@/interfaces"
+import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
+import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
+import { SignedIn, SignedOut, SignInButton, SignUpButton} from "@clerk/nextjs"
+import { useDispatch, useSelector } from "react-redux"
 
+import socket from "@/config/socket-config"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-    const pathname = usePathname();
-    const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up");
-    const { isSignedIn } = useUser();
-    if (isPublicRoute) return null;
+import CurrentUserInfo from "./current-user-infor"
 
-    const dispatch = useDispatch();
-    const { currentUserData }: UserState = useSelector((state: any) => state.user);
-    const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false);
+export default function Header() {
+  const pathname = usePathname()
+  const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
+   if (isPublicRoute) return null
 
-    useEffect(() => {
-        const getCurrentUser = async () => {
-            if (!isSignedIn) return;
-            try {
-                const response = await GetCurrentUserFromMongoDB();
-                if (response.error) throw new Error(response.error);
-                dispatch(SetCurrentUser(response as UserType));
-            } catch (error: any) {
-                console.error(error.message);
-            }
-        };
-        getCurrentUser();
-    }, [isSignedIn]);
+  const dispatch = useDispatch()
+  const { currentUserData }: UserState = useSelector((state: any) => state.user)
+  const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
+ 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const response = await GetCurrentUserFromMongoDB()
+        if (response.error) throw new Error(response.error)
+        dispatch(SetCurrentUser(response as UserType))
+      } catch (error: any) {
+        console.error(error.message)
+      }
+    }
+    getCurrentUser()
+  }, [])
 
-    useEffect(() => {
-        if (currentUserData) {
-            socket.emit("join", currentUserData._id);
+  useEffect(() => {
+    if (currentUserData) {
+      socket.emit("join", currentUserData.id)
 
-            const handleOnlineUsers = (onlineUsers: string[]) => {
-                dispatch(SetOnlineUsers(onlineUsers));
-                console.log("Online users updated:", onlineUsers);
-            };
+      const handleOnlineUsers = (onlineUsers: string[]) => {
+        dispatch(SetOnlineUsers(onlineUsers))
+        console.log("Online users updated:", onlineUsers)
+      }
 
-            socket.on("online-users-updated", handleOnlineUsers);
+      socket.on("online-users-updated", handleOnlineUsers)
 
-            return () => {
-                socket.off("online-users-updated", handleOnlineUsers);
-            };
-        }
-    }, [currentUserData]);
+      return () => {
+        socket.off("online-users-updated", handleOnlineUsers)
+      }
+    }
+  }, [currentUserData])
 
+  return (
+    <header className="flex h-16 w-full items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">
+      <div>
+        <Link href="/">
+          <h1 className="cursor-pointer p-3 text-xl font-bold hover:underline">Matchmaking Enabled</h1>
+        </Link>
+      </div>
+      <div className="flex gap-4">
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton />
+        </SignedOut>
+        <SignedIn>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-bold">{currentUserData?.userName}</span>
+            <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
+              <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+          </div>
 
-    return (
-        <header className="bg-gray-200 w-full h-16 py-1 flex items-center justify-between px-5 border-b border-solid border-gray-300">
-            <div>
-                <Link href="/">
-                    <h1 className="text-xl font-bold p-3 cursor-pointer hover:underline">
-                        Matchmaking Enabled
-                    </h1>
-                </Link>
-            </div>
-            <div className="flex gap-4">
-                <SignedOut>
-                    <SignInButton />
-                    <SignUpButton />
-                </SignedOut>
-                <SignedIn>
-                    <div className="flex items-center space-x-2">
-                        <span className="font-bold text-sm">{currentUserData?.userName}</span>
-                        <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
-                            <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
-                            <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        {/*<UserButton></UserButton>*/}
-                    </div>
-
-                    {showCurrentUserInfo && currentUserData && (
-                        <CurrentUserInfo
-                            setShowCurrentUserInfo={setShowCurrentUserInfo}
-                            showCurrentUserInfo={showCurrentUserInfo}
-                        />
-                    )}
-                </SignedIn>
-            </div>
-        </header>
-    );
+          {showCurrentUserInfo && currentUserData && (
+            <CurrentUserInfo
+              setShowCurrentUserInfo={setShowCurrentUserInfo}
+              showCurrentUserInfo={showCurrentUserInfo}
+            />
+          )}
+        </SignedIn>
+      </div>
+    </header>
+  )
 }
-
-export default Header;

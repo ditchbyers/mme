@@ -18,17 +18,24 @@ export default function RecipientInfo({
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const router = useRouter()
 
-    let chatName = ""
-    let chatImage = ""
+    let chatName = "" , chatImage = "", chatBio = "", chatLocation = "", chatLanguage = "", chatGames = "", chatPlatform = "", chatUserName = ""
     if (selectedChat?.isGroupChat) {
         chatName = selectedChat.groupName
         chatImage = selectedChat.groupProfilePicture
+        chatBio = selectedChat.groupBio
     } else {
         const recipient = selectedChat?.users.find(
-            (user) => user._id !== currentUserData?._id
+            (user) => user.id !== currentUserData?.id
         )
+        console.log("recipient", recipient)
         chatName = recipient?.name || ""
+        chatUserName = recipient?.userName || ""
         chatImage = recipient?.profilePicture || ""
+        chatBio = recipient?.bio || ""
+        chatLanguage = recipient?.language || ""
+        chatLocation = recipient?.location || ""
+        chatGames = recipient?.games ? recipient.games.join(", ") : ""
+        chatPlatform = recipient?.platforms ? recipient.platforms.join(", ") : ""
     }
 
     const getProperty = (key: string, value: string) => {
@@ -45,7 +52,6 @@ export default function RecipientInfo({
         <Drawer
             open={showRecipientInfo}
             onClose={() => setShowRecipientInfo(false)}
-            title={chatName}
         >
             <div className="flex justify-center flex-col items-center gap-5">
                 <img
@@ -56,7 +62,12 @@ export default function RecipientInfo({
                         (e.target as HTMLImageElement).src = './image.png';
                     }}
                 />
+                {selectedChat?.isGroupChat && (
                 <span className='text-gray-600'>{chatName}</span>
+                )}
+                {!selectedChat?.isGroupChat && (
+                    <span className='text-gray-600'>{chatUserName}</span>
+                )}
             </div>
 
 
@@ -68,12 +79,12 @@ export default function RecipientInfo({
                     <div className="flex flex-col gap-5 my-4">
                         <div className='flex justify-between items-center'>
                             <span className="text-grey-500 text-sm">{selectedChat.users.length} Members</span>
-                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat._id}`) }>
+                            <Button onClick={() => router.push(`/chat/groups/edit-group/${selectedChat.id}`)}>
                                 Edit Group
                             </Button>
                         </div>
                         {selectedChat?.users.map((user: any) => (
-                            <div key={user._id} className="flex items-center gap-3">
+                            <div key={user.id} className="flex items-center gap-3">
                                 <img
                                     src={user.profilePicture || './image.png'}
                                     alt="Profile"
@@ -94,17 +105,18 @@ export default function RecipientInfo({
                 {getProperty("Created On", formatDateTime(selectedChat?.createdAt!))}
                 {selectedChat?.isGroupChat && (
                     <>
-                        {getProperty("Created By", selectedChat?.createdBy?.name!)}
+                        {getProperty("Created By", selectedChat?.createdBy?.name! || "")}
                     </>
                 )}
                 {!selectedChat?.isGroupChat && (
                     <>
-                        {getProperty("Location", currentUserData?.location)}
-                        {getProperty("Games", currentUserData?.games.join(", "))}
-                        {getProperty("Platform", currentUserData?.platform)}
+                        {getProperty("Location", chatLocation || "")}
+                        {getProperty("Language", chatLanguage || "")}
+                        {getProperty("Games", chatGames || "")}
+                        {getProperty("Platforms", chatPlatform || "")}
                     </>
                 )}
-                {getProperty("Bio", currentUserData?.bio)}
+                {getProperty("Bio", chatBio || "")}
 
 
             </div>

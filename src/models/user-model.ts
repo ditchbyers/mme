@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    session_token: {
+        type: [String],
+        required: true,
+        unique: true
+    },
     clerkUserId: {
         type: String,
         required: true,

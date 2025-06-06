@@ -1,10 +1,12 @@
 "use server";
-import ChatModel from "@/models/chat-model";
+import { auth } from "@clerk/nextjs/server";
+import { current } from "@reduxjs/toolkit";
 
 
-export const CreateNewChat = async (payload: any) => {
+
+export const CreateNewChat = async (payload: any, currentUserId: any) => {
     try {
-        await ChatModel.create(payload);
+        /*await ChatModel.create(payload);
         const newchats = await ChatModel.find({
             users: {
                 $in: [payload.createdBy],
@@ -12,6 +14,27 @@ export const CreateNewChat = async (payload: any) => {
         }).populate("users").sort({ updatedAt: -1 });
         console.log("New Chat",JSON.parse(JSON.stringify(newchats)));
         return JSON.parse(JSON.stringify(newchats));
+        */
+        console.log("payload", payload)
+        const { sessionId } = await auth();
+        const currentUser = currentUserId.userId
+
+        const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log("scheiße")
+            console.error("Error creating chat:", data.error);
+            return { error: data.error || "Unknown error occurred" };
+        }
+        return data;
+
     } catch (error: any) {
         return {
             error: error.message
@@ -22,11 +45,23 @@ export const CreateNewChat = async (payload: any) => {
 
 export const GetAllChats = async (userId: string) => {
     try {
-        const users = await ChatModel.find({
+        /*const users = await ChatModel.find({
             users: { $in: [userId] }
         }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
         console.log("All Chats",JSON.parse(JSON.stringify(users)));
         return JSON.parse(JSON.stringify(users));
+        */
+        console.log("userId", userId)
+        const response = await fetch(`${process.env.DEV_URL}/chat/${userId}/all`, {
+            method: "GET"
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error("Error fetching chats:", data);
+            return { error: data.error || "Unknown error occurred" };
+        }
+        return data;
 
     } catch (error: any) {
         return {
@@ -38,13 +73,27 @@ export const GetAllChats = async (userId: string) => {
 
 export const GetChatDataById = async (chatId: string) => {
     try {
-        const chat = await ChatModel.findById(chatId)
+        /*const chat = await ChatModel.findById(chatId)
             .populate("users")
             .populate("lastMessage")
             .populate("createdBy")
             .populate({ path: "lastMessage", populate: { path: "sender", } });
         console.log("Get Chat", JSON.parse(JSON.stringify(chat)));
         return JSON.parse(JSON.stringify(chat));
+        */
+        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
+            method: "GET"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Error fetching chat:", data.error);
+            return { error: data.error || "Unknown error occurred" };
+        }
+
+        return data;
+
     } catch (error: any) {
         return {
             error: error.message
@@ -53,10 +102,33 @@ export const GetChatDataById = async (chatId: string) => {
     }
 }
 
-export const UpdateChat = async ({ chatId, payload }: { chatId: string, payload: any }) => {
+export const UpdateChat = async ({ chatId, payload, currentUserId }: { chatId: string, payload: any, currentUserId: any }) => {
     try {
-        await ChatModel.findByIdAndUpdate(chatId, payload)
+        /*await ChatModel.findByIdAndUpdate(chatId, payload)
         return { message: "Chat updated successfully" };
+        */
+        const { sessionId } = await auth();
+        const currentUser = currentUserId.userId
+        console.log("Session ID:", sessionId);
+        console.log("Current User ID:", currentUser);
+        console.log("chatId:", chatId);
+        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}?user_id=${currentUser}&session_token=${sessionId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Error updating chat:", data);
+            return { error: data.error || "Unknown error occurred" };
+        }
+
+        return data;
+
     } catch (error: any) {
         return {
             error: error.message

@@ -1,23 +1,24 @@
 
 export interface UserType {
-    _id: string;
-    ckerkUserId: string;
+    session_token?: string[];
+    id: string;
+    clerkUserId: string;
     name: string;
     userName: string;
     email: string;
-    profilePicture: string;
-    bio: string;
-    location: string;
-    platform: string;
-    language: string;
-    games: string[];
+    profilePicture?: string;
+    bio?: string;
+    location?: string;
+    platforms?: string[];
+    language?: string;
+    games?: string[];
 }
 
 export interface ChatType {
-    _id: string;
+    id: string;
     users: UserType[];
     createdBy: UserType;
-    lastMessage: MessageType;
+    lastMessage?: MessageType;
     isGroupChat: boolean;
     groupName: string;
     groupProfilePicture: string;
@@ -30,7 +31,7 @@ export interface ChatType {
 }
 
 export interface MessageType {
-    _id: string;
+    id: string;
     socketMessageId: string;
     chat: ChatType;
     sender: UserType;
