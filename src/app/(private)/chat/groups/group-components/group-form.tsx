@@ -15,7 +15,9 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
     const [users, setUsers] = React.useState<UserType[]>([])
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>(
-        initialData?.users.filter((userId: string) => userId !== currentUserData?.id!) || []
+        (initialData?.users || [])
+            .map((user: any) => typeof user === 'string' ? user : user.id)
+            .filter((userId: string) => userId !== currentUserData?.id!)
     )
 
     const [selectedProfilePicture, setSelectedProfilePicture] = React.useState<File>()
@@ -39,13 +41,18 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
     const onFinish = async (values: any) => {
         try {
             setLoading(true)
-
             const payload = {
                 groupName: values.groupName,
                 groupBio: values.groupDescription,
                 users: [...selectedUserIds, currentUserData?.id!],
                 createdBy: currentUserData.id!,
                 isGroupChat: true,
+                groupProfilePicture: initialData?.groupProfilePicture || '',
+            }
+            const payloadUpdated = {
+                groupName: values.groupName,
+                groupBio: values.groupDescription,
+                users: [...selectedUserIds, currentUserData?.id!],
                 groupProfilePicture: initialData?.groupProfilePicture || '',
             }
 
@@ -56,10 +63,11 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
             let response: any = null
 
             if (initialData) {
-
+                console.log("payload", payloadUpdated)
                 response = await UpdateChat({
                     chatId: initialData.id,
-                    payload: payload,
+                    payload: payloadUpdated,
+                    currentUserId: { userId: currentUserData?.id! },
                 })
             } else {
 

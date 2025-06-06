@@ -15,8 +15,8 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
         return JSON.parse(JSON.stringify(newchats));
         */
         console.log("payload", payload)
-        const  {sessionId} = await auth();
-        const  currentUser  = currentUserId.userId
+        const { sessionId } = await auth();
+        const currentUser = currentUserId.userId
 
         const response = await fetch(`${process.env.DEV_URL}/chat/?user_id=${currentUser}&session_token=${sessionId}`, {
             method: "POST",
@@ -78,7 +78,6 @@ export const GetChatDataById = async (chatId: string) => {
             .populate({ path: "lastMessage", populate: { path: "sender", } });
         return JSON.parse(JSON.stringify(chat));
         */
-        console.log("Hallo")
         const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
             method: "GET"
         });
@@ -100,13 +99,17 @@ export const GetChatDataById = async (chatId: string) => {
     }
 }
 
-export const UpdateChat = async ({ chatId, payload }: { chatId: string, payload: any }) => {
+export const UpdateChat = async ({ chatId, payload, currentUserId }: { chatId: string, payload: any, currentUserId: any }) => {
     try {
         /*await ChatModel.findByIdAndUpdate(chatId, payload)
         return { message: "Chat updated successfully" };
         */
-
-        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
+        const { sessionId } = await auth();
+        const currentUser = currentUserId.userId
+        console.log("Session ID:", sessionId);
+        console.log("Current User ID:", currentUser);
+        console.log("chatId:", chatId);
+        const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}?user_id=${currentUser}&session_token=${sessionId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -117,7 +120,7 @@ export const UpdateChat = async ({ chatId, payload }: { chatId: string, payload:
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Error updating chat:", data.error);
+            console.error("Error updating chat:", data);
             return { error: data.error || "Unknown error occurred" };
         }
 
