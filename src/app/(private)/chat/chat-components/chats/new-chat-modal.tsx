@@ -49,7 +49,6 @@ export default function NewChatModal({
                 createdBy: currentUserData.id!,
                 isGroupChat: false,
             }, { userId: currentUserData.id })
-            console.log("response", response)
             if (response.error) throw new Error(response.error)
             dispatch(SetChats([...chats, response]));
             setShowNewChatModal(false)

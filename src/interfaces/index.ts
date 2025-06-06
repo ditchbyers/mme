@@ -9,7 +9,7 @@ export interface UserType {
     profilePicture?: string;
     bio?: string;
     location?: string;
-    platform?: string;
+    platforms?: string[];
     language?: string;
     games?: string[];
 }

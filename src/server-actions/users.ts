@@ -35,8 +35,7 @@ export const GetCurrentUserFromMongoDB = async () => {
             email,
             profilePicture: clerkUser?.imageUrl
         };
-        //console.log("New User Payload:", newUserPayload);
-        // Todo Route zum BE eintragen ? oder schauen was genau mby hier auch put ? 
+
         const response = await fetch(`${process.env.DEV_URL}/user/`, {
             method: "POST",
             headers: {
@@ -66,12 +65,15 @@ export const GetCurrentUserFromMongoDB = async () => {
 }
 
 
-export const UpdateUserProfile = async (userId: string, payload: any) => {
+export const UpdateUserProfile = async (currentUserId: any, payload: any) => {
     try {
         //const updatedUser = await UserModel.findByIdAndUpdate(userId, payload, { new: true });
         //return JSON.parse(JSON.stringify(updatedUser));
 
-        const response = await fetch(`/api/users/${userId}`, {
+        const { sessionId } = await auth();
+        const currentUser = currentUserId
+        console.log("Current User ID:", currentUser);
+        const response = await fetch(`${process.env.DEV_URL}/user/self/profile?user_id=${currentUser}&session_token=${sessionId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

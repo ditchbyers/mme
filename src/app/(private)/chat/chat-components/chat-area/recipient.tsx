@@ -24,7 +24,7 @@ export default function Recipient() {
         const recipient = selectedChat?.users.find(
             (user) => user.id !== currentUserData?.id
         )
-        chatName = recipient?.name || ""
+        chatName = recipient?.userName || ""
         chatImage = recipient?.profilePicture || ""
     }
 

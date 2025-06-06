@@ -26,10 +26,8 @@ function ChatCard({ chat }: { chat: ChatType }) {
         chatName = chat.groupName
         chatImage = chat.groupProfilePicture
     } else {
-        console.log("chat", chat)
         const receipient = chat.users.find((user) => user.id !== currentUserData?.id)
-        console.log("receipient", receipient)
-        chatName = receipient?.name!
+        chatName = receipient?.userName || ""
         chatImage = receipient?.profilePicture!
     }
 
