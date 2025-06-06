@@ -12,6 +12,7 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
                 $in: [payload.createdBy],
             },
         }).populate("users").sort({ updatedAt: -1 });
+        console.log("New Chat",JSON.parse(JSON.stringify(newchats)));
         return JSON.parse(JSON.stringify(newchats));
         */
         console.log("payload", payload)
@@ -47,6 +48,7 @@ export const GetAllChats = async (userId: string) => {
         /*const users = await ChatModel.find({
             users: { $in: [userId] }
         }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
+        console.log("All Chats",JSON.parse(JSON.stringify(users)));
         return JSON.parse(JSON.stringify(users));
         */
         console.log("userId", userId)
@@ -76,6 +78,7 @@ export const GetChatDataById = async (chatId: string) => {
             .populate("lastMessage")
             .populate("createdBy")
             .populate({ path: "lastMessage", populate: { path: "sender", } });
+        console.log("Get Chat", JSON.parse(JSON.stringify(chat)));
         return JSON.parse(JSON.stringify(chat));
         */
         const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {

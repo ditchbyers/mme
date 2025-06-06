@@ -3,15 +3,11 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 import { Lato } from "next/font/google"
+import  Header  from "@/providers/layout-components/header"
 import ReduxProvider from "@/providers/redux-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
 import { MobileNavigation } from "@/components/usable/mobile-navigation"
-
-import "remixicon/fonts/remixicon.css"
-
-import Content from "@/providers/layout-components/content"
-import Header from "@/providers/layout-components/header"
 
 const lato = Lato({
   variable: "--font-oswald",
@@ -35,7 +31,7 @@ export default function RootLayout({
         <body className={`${lato.variable} flex min-h-screen flex-col antialiased`}>
           <ReduxProvider>
             <Header />
-            <Content>{children}</Content>
+            <main className="flex-1 space-y-20">{children}</main>
           </ReduxProvider>
           <footer>
             <MobileNavigation />

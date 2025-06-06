@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
     },
-    body: `fields 
+    body: `
+      fields 
       age_ratings.*,
       aggregated_rating,
       aggregated_rating_count,
@@ -30,8 +31,8 @@ export async function GET(request: NextRequest) {
       created_at,
       dlcs,
       expanded_games,
-      expansions,
-      external_games,
+      expansions.*,
+      external_games.*,
       first_release_date,
       forks,
       franchise,
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       ports,
       rating,
       rating_count,
-      release_dates,
+      release_dates.*,
       remakes,remasters,
       screenshots,
       similar_games.name,
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
       version_title,
       videos,
       websites.*;
-      where name = "Valorant";
+      where external_games.category = 14 & external_games.uid = "32399";
     `,
   })
 

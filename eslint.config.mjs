@@ -21,6 +21,7 @@ export default [
       "react/jsx-key": "off",
       "tailwindcss/no-custom-classname": "off",
       "tailwindcss/classnames-order": "error",
+      "@typescript-eslint/no-require-imports": "off",
     },
     settings: {
       tailwindcss: {
