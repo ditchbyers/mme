@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Divider, Drawer, Upload, Select } from "antd";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -15,15 +15,15 @@ function CurrentUserInfo({
     setShowCurrentUserInfo,
 }: {
     showCurrentUserInfo: boolean;
-    setShowCurrentUserInfo: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowCurrentUserInfo: Dispatch<SetStateAction<boolean>>;
 }) {
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
     const { currentUserData }: UserState = useSelector((state: any) => state.user);
-    const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const { signOut } = useClerk();
     const router = useRouter();
     const dispatch = useDispatch();
-    const [editableFields, setEditableFields] = React.useState({
+    const [editableFields, setEditableFields] = useState({
         name: currentUserData?.name || "",
         userName: currentUserData?.userName || "",
         bio: currentUserData?.bio || "",
@@ -31,7 +31,7 @@ function CurrentUserInfo({
         language: currentUserData?.language || "",
         platforms: currentUserData?.platforms || [],
     });
-    const [editingField, setEditingField] = React.useState<string | null>(null);
+    const [editingField, setEditingField] = useState<string | null>(null);
 
     const isChanged =
         selectedFile !== null ||
@@ -202,7 +202,7 @@ function CurrentUserInfo({
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (showCurrentUserInfo && currentUserData) {
             setEditableFields({
                 name: currentUserData.name || "",
