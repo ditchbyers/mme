@@ -1,7 +1,7 @@
 import { MessageType } from '@/interfaces'
 import { ChatState, SetChats } from '@/redux/chatSlice'
 import { GetChatMessages, ReadAllMessages } from '@/server-actions/messages'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Message from './message'
 import { UserState } from '@/redux/userSlice'
@@ -9,11 +9,11 @@ import socket from '@/config/socket-config'
 
 export default function Messages
   () {
-  const [messages, setMessages] = React.useState<MessageType[]>([])
-  const [loading, setLoading] = React.useState(false)
+  const [messages, setMessages] = useState<MessageType[]>([])
+  const [loading, setLoading] = useState(false)
   const { selectedChat, chats }: ChatState = useSelector((state: any) => state.chat)
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
-  const messagesDivRef = React.useRef<HTMLDivElement>(null)
+  const messagesDivRef = useRef<HTMLDivElement>(null)
   const dispach = useDispatch()
 
   const getMessages = async () => {
@@ -29,7 +29,7 @@ export default function Messages
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     getMessages()
   }, [selectedChat]);
 

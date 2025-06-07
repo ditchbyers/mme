@@ -6,15 +6,7 @@ import { current } from "@reduxjs/toolkit";
 
 export const CreateNewChat = async (payload: any, currentUserId: any) => {
     try {
-        /*await ChatModel.create(payload);
-        const newchats = await ChatModel.find({
-            users: {
-                $in: [payload.createdBy],
-            },
-        }).populate("users").sort({ updatedAt: -1 });
-        console.log("New Chat",JSON.parse(JSON.stringify(newchats)));
-        return JSON.parse(JSON.stringify(newchats));
-        */
+
         console.log("payload", payload)
         const { sessionId } = await auth();
         const currentUser = currentUserId.userId
@@ -45,12 +37,7 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
 
 export const GetAllChats = async (userId: string) => {
     try {
-        /*const users = await ChatModel.find({
-            users: { $in: [userId] }
-        }).populate("users").populate("lastMessage").populate("createdBy").populate({ path: "lastMessage", populate: { path: "sender", } }).sort({ lastMessageAt: -1 });
-        console.log("All Chats",JSON.parse(JSON.stringify(users)));
-        return JSON.parse(JSON.stringify(users));
-        */
+
         console.log("userId", userId)
         const response = await fetch(`${process.env.DEV_URL}/chat/${userId}/all`, {
             method: "GET"
@@ -73,14 +60,6 @@ export const GetAllChats = async (userId: string) => {
 
 export const GetChatDataById = async (chatId: string) => {
     try {
-        /*const chat = await ChatModel.findById(chatId)
-            .populate("users")
-            .populate("lastMessage")
-            .populate("createdBy")
-            .populate({ path: "lastMessage", populate: { path: "sender", } });
-        console.log("Get Chat", JSON.parse(JSON.stringify(chat)));
-        return JSON.parse(JSON.stringify(chat));
-        */
         const response = await fetch(`${process.env.DEV_URL}/chat/${chatId}`, {
             method: "GET"
         });

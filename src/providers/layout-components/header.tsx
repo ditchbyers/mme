@@ -54,7 +54,7 @@ export default function Header() {
   }, [currentUserData])
 
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">
+    <header className="hidden lg:flex h-16 w-full items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">
       <div>
         <Link href="/">
           <h1 className="cursor-pointer p-3 text-xl font-bold hover:underline">Matchmaking Enabled</h1>
