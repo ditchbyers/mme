@@ -70,7 +70,7 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
                 response = await CreateNewChat(payload, { userId: currentUserData?.id! })
             }
 
-            if (response?.error) throw new Error('Fehler beim Speichern des Gruppenchats')
+            if (response?.error) throw new Error('Error creating group chat')
 
             socket.emit("create-new-chat", {
                 chat: response,
