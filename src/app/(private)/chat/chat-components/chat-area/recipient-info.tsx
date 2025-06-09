@@ -34,7 +34,7 @@ export default function RecipientInfo({
         chatBio = recipient?.bio || ""
         chatLanguage = recipient?.language || ""
         chatLocation = recipient?.location || ""
-        chatGames = recipient?.games ? recipient.games.join(", ") : ""
+        chatGames = recipient?.games ? (recipient.games.map(game => game.name).join(", ") || "") : ""
         chatPlatform = recipient?.platforms ? recipient.platforms.join(", ") : ""
     }
 
