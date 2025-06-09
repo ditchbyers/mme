@@ -21,7 +21,7 @@ export default function ChatsList() {
       const response = await GetAllChats(currentUserData?.id!)
       if (response.error) throw new Error("No chat found")
       console.log("response", response)
-  
+
 
       dispatch(SetChats(response))
     } catch (error: any) {
@@ -50,7 +50,7 @@ export default function ChatsList() {
 
       let chatToUpdate = prevChats[indexOfChatToUpdate]
 
-     if(chatToUpdate.lastMessage && chatToUpdate.lastMessage.socketMessageId === newMessage.socketMessageId) return;
+      if (chatToUpdate.lastMessage && chatToUpdate.lastMessage.socketMessageId === newMessage.socketMessageId) return;
 
 
       let chatToUpdateCopy: ChatType = { ...chatToUpdate }
@@ -77,12 +77,29 @@ export default function ChatsList() {
   }, [currentUserData?.id, selectedChat]
   )
 
+  useEffect(() => {
+    socket.on("new-chat-created", (newChat: ChatType) => {
+      let { chats }: ChatState = store.getState().chat
+
+      const chatExists = chats.find(chat => chat.id === newChat.id);
+      if (chatExists) return;
+
+      const updatedChats = [newChat, ...chats];
+      dispatch(SetChats(updatedChats));
+    });
+
+    return () => {
+      socket.off("new-chat-created");
+    };
+  }, []);
+
   return (
     <div>
       {chats.length > 0 && (
         <div className="flex flex-col gap-5 mt-5">
-          
-          {chats.map((chat) => {console.log("CHATS", chats)
+
+          {chats.map((chat) => {
+            console.log("CHATS", chats)
             return <ChatCard key={chat.id} chat={chat} />
           })}
         </div>

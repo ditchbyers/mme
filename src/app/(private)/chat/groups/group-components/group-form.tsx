@@ -1,7 +1,6 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { UploadImageToFirebaseAndReturnUrl } from '@/helpers/image-upload'
 import { UserType } from '@/interfaces'
 import { UserState } from '@/redux/userSlice'
 import { CreateNewChat, UpdateChat } from '@/server-actions/chats'
@@ -9,19 +8,20 @@ import { Form, Input, Upload } from 'antd'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { GetAllUsers } from '@/server-actions/users'
+import socket from '@/config/socket-config'
 
 export default function GroupForm({ initialData = null }: { initialData: any }) {
     const router = useRouter()
-    const [users, setUsers] = React.useState<UserType[]>([])
+    const [users, setUsers] = useState<UserType[]>([])
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
-    const [selectedUserIds = [], setSelectedUserIds] = React.useState<string[]>(
+    const [selectedUserIds = [], setSelectedUserIds] = useState<string[]>(
         (initialData?.users || [])
             .map((user: any) => typeof user === 'string' ? user : user.id)
             .filter((userId: string) => userId !== currentUserData?.id!)
     )
 
-    const [selectedProfilePicture, setSelectedProfilePicture] = React.useState<File>()
-    const [loading = false, setLoading] = React.useState<boolean>(false)
+    const [selectedProfilePicture, setSelectedProfilePicture] = useState<File>()
+    const [loading = false, setLoading] = useState<boolean>(false)
     console.log(users, 'users')
 
     const getUsers = async () => {
@@ -56,10 +56,6 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
                 groupProfilePicture: initialData?.groupProfilePicture || '',
             }
 
-            if (selectedProfilePicture) {
-                payload.groupProfilePicture = await UploadImageToFirebaseAndReturnUrl(selectedProfilePicture)
-            }
-
             let response: any = null
 
             if (initialData) {
@@ -75,6 +71,12 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
             }
 
             if (response?.error) throw new Error('Fehler beim Speichern des Gruppenchats')
+
+            socket.emit("create-new-chat", {
+                chat: response,
+                senderId: currentUserData.id,
+            });
+            
             router.refresh()
             router.push('/chat')
         } catch (error) {
@@ -85,7 +87,7 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
         }
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         getUsers()
     }, [])
 

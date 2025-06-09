@@ -13,11 +13,14 @@ const chatSlice = createSlice({
         },
         SetSelectedChat: (state, action) => {
             state.selectedChat = action.payload;
-        }
+        },
+        clearSelectedChat: (state) => {
+            state.selectedChat = null;
+        },
     },
 });
 
-export const { SetChats, SetSelectedChat } = chatSlice.actions;
+export const { SetChats, SetSelectedChat, clearSelectedChat } = chatSlice.actions;
 export default chatSlice;
 
 

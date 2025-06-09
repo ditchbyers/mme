@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, Fragment, SetStateAction, use, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { UserType } from '@/interfaces'
 import { ChatState, SetChats } from '@/redux/chatSlice'
@@ -7,6 +7,7 @@ import { CreateNewChat } from '@/server-actions/chats'
 import { GetAllUsers } from '@/server-actions/users'
 import { Divider, Modal, Spin } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
+import socket from '@/config/socket-config'
 
 export default function NewChatModal({
     showNewChatModal,
@@ -14,17 +15,17 @@ export default function NewChatModal({
 }:
     {
         showNewChatModal: boolean,
-        setShowNewChatModal: React.Dispatch<React.SetStateAction<boolean>>
+        setShowNewChatModal: Dispatch<SetStateAction<boolean>>
 
     }
 
 ) {
-    const [loading, setLoading] = React.useState(false)
-    const [users, setUsers] = React.useState<UserType[]>([])
-    const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [users, setUsers] = useState<UserType[]>([])
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
     const { currentUserData }: UserState = useSelector((state: any) => state.user)
     const visibleUsers = users.filter((user) => user.id !== currentUserData.id)
-    const {chats} : ChatState = useSelector((state: any) => state.chat)
+    const { chats }: ChatState = useSelector((state: any) => state.chat)
     const dispatch = useDispatch()
 
     const getUsers = async () => {
@@ -44,26 +45,39 @@ export default function NewChatModal({
         try {
             setSelectedUserId(userId)
             setLoading(true)
+
             const response = await CreateNewChat({
                 users: [userId, currentUserData.id],
                 createdBy: currentUserData.id!,
                 isGroupChat: false,
             }, { userId: currentUserData.id })
+
             if (response.error) throw new Error(response.error)
+
+
+            console.log("Emitting create-new-chat")
+
+            socket.emit("create-new-chat", {
+                chat: response,
+                senderId: currentUserData.id,
+            });
+
             dispatch(SetChats([...chats, response]));
             setShowNewChatModal(false)
         } catch (error: any) {
-            
+
         } finally {
             setLoading(false)
         }
     }
 
-    React.useEffect(() => {
+
+    useEffect(() => {
         if (showNewChatModal) {
             getUsers()
         }
     }, [showNewChatModal])
+
 
     return (
         <Modal
@@ -92,7 +106,7 @@ export default function NewChatModal({
                             );
                             if (user.id === currentUserData.id || chatAlreadyCreated) return null;
                             return (
-                                <React.Fragment key={user.id}>
+                                <Fragment key={user.id}>
                                     <div className="flex justify-between items-center">
                                         <div className="flex gap-4 items-center">
                                             <img src={user.profilePicture} alt="avatar" className="w-10 h-10 rounded-full" />
@@ -111,7 +125,7 @@ export default function NewChatModal({
                                     {index !== visibleUsers.length - 1 && (
                                         <Divider className="border-gray-200 my-0.5" />
                                     )}
-                                </React.Fragment>
+                                </Fragment>
                             );
                         })}
                     </div>
