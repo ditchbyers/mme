@@ -17,13 +17,14 @@ import CurrentUserInfo from "./current-user-infor"
 export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
-   if (isPublicRoute) return null
+  if (isPublicRoute) return null
 
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
  
   useEffect(() => {
+    if(isPublicRoute) return
     const getCurrentUser = async () => {
       try {
         const response = await GetCurrentUserFromMongoDB()
