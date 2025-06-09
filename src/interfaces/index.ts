@@ -11,7 +11,7 @@ export interface UserType {
     location?: string;
     platforms?: string[];
     language?: string;
-    games?: string[];
+    games?: { id: string; name: string }[];
 }
 
 export interface ChatType {

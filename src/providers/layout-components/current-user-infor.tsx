@@ -252,7 +252,7 @@ function CurrentUserInfo({
                     {getProperty("Bio", editableFields.bio)}
                     {getProperty("Location", editableFields.location)}
                     {getProperty("Language", editableFields.language)}
-                    {getProperty("Games", currentUserData?.games?.join(", ") || "")}
+                    {getProperty("Games", currentUserData?.games?.map(game => game.name).join(", ") || "")}
                     {getProperty("Platforms", editableFields.platforms)}
                 </div>
 
