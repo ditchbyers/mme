@@ -29,7 +29,7 @@ export const MobileNavigation = () => {
 
 
   useEffect(() => {
-    if(isPublicRoute) return
+    if (isPublicRoute) return
     const getCurrentUser = async () => {
       try {
         const response = await GetCurrentUserFromMongoDB()
@@ -63,55 +63,66 @@ export const MobileNavigation = () => {
     <>
       <div className="fixed right-0 bottom-0 left-0 z-50 h-20 bg-slate-900 lg:hidden">
         <div className="container mx-auto flex justify-between px-4 py-6 font-bold text-gray-200 uppercase">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-gray-800"
-            onClick={() => router.push("/")}
-          >
-            <HouseIcon className="w-4 h-4 text-gray-500 hover:text-black" />
-          </Button>
+          <SignedOut>
+            <div className="absolute inset-0 flex justify-center items-center">
+              <div className="flex gap-10">
+                <SignInButton mode="modal">
+                  <Button variant="secondary" className="px-6 py-2 text-white bg-gray-700 hover:bg-gray-600">
+                    Sign In
+                  </Button>
+                </SignInButton>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-gray-800"
-            onClick={() => router.push("/search")}
-          >
-            <Search className="w-4 h-4 text-gray-500 hover:text-black" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-gray-800"
-            onClick={() => router.push("/chat")}
-          >
-            <MessagesSquare className="w-4 h-4 text-gray-500 hover:text-black" />
-          </Button>
-
-          <div className="flex gap-4">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-bold">{currentUserData?.userName}</span>
-                <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
-                  <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
-                  <AvatarFallback>U</AvatarFallback>
-                </Avatar>
+                <SignUpButton mode="modal">
+                  <Button variant="secondary" className="px-6 py-2 text-white bg-gray-700 hover:bg-gray-600">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
               </div>
+            </div>
+          </SignedOut>
 
-              {showCurrentUserInfo && currentUserData && (
-                <CurrentUserInfo
-                  setShowCurrentUserInfo={setShowCurrentUserInfo}
-                  showCurrentUserInfo={showCurrentUserInfo}
-                />
-              )}
-            </SignedIn>
-          </div>
+          <SignedIn>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-800"
+              onClick={() => router.push("/")}
+            >
+              <HouseIcon className="w-4 h-4 text-gray-500 hover:text-black" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-800"
+              onClick={() => router.push("/search")}
+            >
+              <Search className="w-4 h-4 text-gray-500 hover:text-black" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-800"
+              onClick={() => router.push("/chat")}
+            >
+              <MessagesSquare className="w-4 h-4 text-gray-500 hover:text-black" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-bold">{currentUserData?.userName}</span>
+              <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
+                <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+            </div>
+
+            {showCurrentUserInfo && currentUserData && (
+              <CurrentUserInfo
+                setShowCurrentUserInfo={setShowCurrentUserInfo}
+                showCurrentUserInfo={showCurrentUserInfo}
+              />
+            )}
+          </SignedIn>
         </div>
       </div>
 

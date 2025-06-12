@@ -4,7 +4,7 @@ import { Game, Stream } from "@/types"
 import { TH3 } from "@/components/typography/h3"
 import { GameCarousel } from "@/components/usable/game-wrapper"
 
-const fetchStreams = cache(async (): Promise<Stream[]> => {
+/*const fetchStreams = cache(async (): Promise<Stream[]> => {
   const res = await fetch("https://revenant.lyrica.systems/discovery/stream", {
     method: "GET",
     headers: {
@@ -34,6 +34,16 @@ export default async function Home() {
           <GameCarousel games={stream.queue}></GameCarousel>
         </div>
       ))}
+    </div>
+  )
+}
+*/
+
+export default function DiscoveryPage() {
+  return (
+    <div className="container mx-auto space-y-10 ps-5 pt-10">
+      <TH3>Discovery</TH3>
+      <p className="text-gray-500">This page is under construction.</p>
     </div>
   )
 }
