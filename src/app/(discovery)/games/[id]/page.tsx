@@ -68,7 +68,6 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                     <p>({distance})</p>
                   </div>
                 </CardTitle>
-                console.log("Game Details:", gamedetails)
                 <HeartButton gameId={gamedetails.identifier} gameName={gamedetails.name} gameCover={gamedetails.cover} />
               </div>
             </CardHeader>
