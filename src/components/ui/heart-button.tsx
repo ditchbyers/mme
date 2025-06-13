@@ -8,7 +8,7 @@ import { UpdateUserProfile } from "@/server-actions/users"
 
 
 
-export function HeartButton({ gameId, gameName }: { gameId: string; gameName: string }) {
+export function HeartButton({ gameId, gameName, gameCover }: { gameId: string; gameName: string ; gameCover?: any }) {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [liked, setLiked] = useState(false)
@@ -20,9 +20,10 @@ export function HeartButton({ gameId, gameName }: { gameId: string; gameName: st
   }, [currentUserData, gameId])
 
   const handleClick = async () => {
+    const coverImage = gameCover
     const updatedGames = liked
       ? currentUserData?.games?.filter((g) => g.id !== gameId)
-      : [...(currentUserData?.games || []), { id: gameId, name: gameName }]
+      : [...(currentUserData?.games || []), { id: gameId, name: gameName , cover: coverImage }]
 
     setLiked(!liked)
 

@@ -7,7 +7,7 @@ import { CreateNewChat, UpdateChat } from '@/server-actions/chats'
 import { Form, Input, Upload } from 'antd'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
-import { GetAllUsers } from '@/server-actions/users'
+import { GetAllUsers, GetAllUsersExistingChat } from '@/server-actions/users'
 import socket from '@/config/socket-config'
 
 export default function GroupForm({ initialData = null }: { initialData: any }) {
@@ -27,7 +27,7 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
     const getUsers = async () => {
         try {
             setLoading(true)
-            const response = await GetAllUsers()
+            const response = await GetAllUsersExistingChat(currentUserData?.id!);
             if (response.error) throw new Error("No user found")
             console.log(response, 'response')
             setUsers(response)
