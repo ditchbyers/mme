@@ -29,6 +29,14 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(false)
 
+  if (recommendedUsers.length === 0) {
+    return (
+      <p className="mt-1 text-sm text-gray-500">
+        No recommended Users
+      </p>
+    )
+  }
+
   useEffect(() => {
     const fetchRecommendations = async () => {
       if (!currentUserData?.id || !game_id) return
