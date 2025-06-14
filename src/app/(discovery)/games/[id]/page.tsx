@@ -12,6 +12,7 @@ import { TH3 } from "@/components/typography/h3"
 import { TypographyP as P } from "@/components/typography/p"
 import { GameCarousel } from "@/components/usable/game-wrapper"
 import { HeartButton } from "@/components/ui/heart-button"
+import { UserCarousel } from "@/components/usable/user-wrapper"
 
 const fetchGameDetails = async (id: string): Promise<GameDetails> => {
   const res = await fetch(`https://revenant.lyrica.systems/discovery/game/${id}`, {
@@ -41,10 +42,8 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
   const accordionItems = {
     storyline: gamedetails.storyline,
     platforms: gamedetails.platforms,
-    genres: gamedetails.genres,
     gameModes: gamedetails.game_modes,
   }
-  console.log("Game Details:", gamedetails)
   const mockCovers = new Array(20).fill(gamedetails)
   return (
     <div className="mx-auto mb-36 max-w-[96rem] space-y-5 p-6">
@@ -130,7 +129,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
       <TH3>Similar Games</TH3>
       <GameCarousel games={mockCovers} />
       <TH3>Users</TH3>
-      <GameCarousel games={mockCovers} />
+      <UserCarousel game_id={gamedetails.identifier} />
     </div>
   )
 }

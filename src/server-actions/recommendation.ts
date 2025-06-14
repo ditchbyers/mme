@@ -1,12 +1,16 @@
+'use server';
+
 export const GetSimilarUserRecommendations = async (currentUserId: any, currentGameId: any) => {
     try {
 
         const currentUser = currentUserId
         const currentGame = currentGameId
-        const response = await fetch(`${process.env.DEV_URL}/user/all/chat/profile?user_id=${currentUser}&game_id?${currentGame}`, {
-            method: "GET"
-        });
-
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_DEV_URL}/recommendation/recommend/users?user_id=${currentUser}&game_id=${currentGame}`,
+            {
+                method: "GET",
+            }
+        )
 
         const data = await response.json();
         if (!response.ok) {
