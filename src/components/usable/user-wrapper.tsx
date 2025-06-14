@@ -29,18 +29,14 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(false)
 
-  if (recommendedUsers.length === 0) {
-    return (
-      <p className="mt-1 text-sm text-gray-500">
-        No recommended Users
-      </p>
-    )
-  }
+
 
   useEffect(() => {
     const fetchRecommendations = async () => {
+      console.log("currentUserData, game_id", currentUserData, game_id)
       if (!currentUserData?.id || !game_id) return
       const rec = await GetSimilarUserRecommendations(currentUserData.id, game_id)
+      console.log("rec", rec)
       setRecommendedUsers(Array.isArray(rec) ? rec : [])
     }
     fetchRecommendations()
@@ -118,6 +114,15 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
       setLoading(false)
     }
   }
+
+  if (recommendedUsers.length === 0) {
+    return (
+      <p className="mt-1 text-sm text-gray-500">
+        No recommended Users
+      </p>
+    )
+  }
+
   return (
     <>
       <div className="mx-auto max-w-[96rem]">
@@ -167,9 +172,8 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
       </div>
 
       {selectedUser && (
-        <div
-          className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white rounded-lg p-6 max-w-md w-full shadow-lg max-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col"
-        >
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9999] bg-white rounded-lg p-6 max-w-md w-full shadow-lg max-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col">
+
           <button
             className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
             onClick={() => setSelectedUser(null)}
@@ -198,8 +202,9 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
             {getProperty("Games", selectedUser?.games ? (selectedUser.games.map(game => game.name).join(", ") || "") : "")}
             {getProperty("Platforms", selectedUser?.platforms ? selectedUser.platforms.join(", ") : "")}
             {getProperty("Bio", selectedUser.bio || "")}
-          </div>
 
+
+          </div>
           <button
             disabled={loading}
             onClick={() => onAddToChat(selectedUser.id!)}
@@ -207,6 +212,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
           >
             {loading ? "Loading..." : "Start to Chat"}
           </button>
+
         </div>
       )}
     </>
