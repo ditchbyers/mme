@@ -34,10 +34,11 @@ export default function RootLayout({
             <main className="flex-1 overflow-y-auto lg:mt-16 mb-20 lg:mb-0">
               {children}
             </main>
-          </ReduxProvider>
-          <footer>
-            <MobileNavigation />
-          </footer>
+
+            <footer>
+              <MobileNavigation />
+            </footer>
+            </ReduxProvider>
         </body>
       </html>
     </ClerkProvider>

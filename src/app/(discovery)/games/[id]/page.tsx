@@ -11,6 +11,8 @@ import { TH1 } from "@/components/typography/h1"
 import { TH3 } from "@/components/typography/h3"
 import { TypographyP as P } from "@/components/typography/p"
 import { GameCarousel } from "@/components/usable/game-wrapper"
+import { HeartButton } from "@/components/ui/heart-button"
+import { UserCarousel } from "@/components/usable/user-wrapper"
 
 const fetchGameDetails = async (id: string): Promise<GameDetails> => {
   const res = await fetch(`https://revenant.lyrica.systems/discovery/game/${id}`, {
@@ -40,12 +42,9 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
   const accordionItems = {
     storyline: gamedetails.storyline,
     platforms: gamedetails.platforms,
-    genres: gamedetails.genres,
     gameModes: gamedetails.game_modes,
   }
-
   const mockCovers = new Array(20).fill(gamedetails)
-
   return (
     <div className="mx-auto mb-36 max-w-[96rem] space-y-5 p-6">
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
@@ -60,13 +59,16 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
         <div className="flex-1">
           <Card className="overscroll-y-scroll mt-6 h-[480px] max-h-[480px] flex-1 md:mt-0">
             <CardHeader>
-              <CardTitle className="space-y-2">
-                <TH1>{gamedetails.name}</TH1>
-                <div className="flex gap-2">
-                  <p>{format(new Date(gamedetails.first_release_date), "dd.MM.yyyy")}</p>
-                  <p>({distance})</p>
-                </div>
-              </CardTitle>
+              <div className="flex items-start justify-between space-y-2">
+                <CardTitle className="space-y-2">
+                  <TH1>{gamedetails.name}</TH1>
+                  <div className="flex gap-2">
+                    <p>{format(new Date(gamedetails.first_release_date), "dd.MM.yyyy")}</p>
+                    <p>({distance})</p>
+                  </div>
+                </CardTitle>
+                <HeartButton gameId={gamedetails.identifier} gameName={gamedetails.name} gameCover={gamedetails.cover} />
+              </div>
             </CardHeader>
             <Separator />
             <CardContent className="space-y-4 overflow-y-scroll">
@@ -127,7 +129,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
       <TH3>Similar Games</TH3>
       <GameCarousel games={mockCovers} />
       <TH3>Users</TH3>
-      <GameCarousel games={mockCovers} />
+      <UserCarousel game_id={gamedetails.identifier} />
     </div>
   )
 }
