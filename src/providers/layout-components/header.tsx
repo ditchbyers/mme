@@ -2,29 +2,31 @@
 
 import React, { useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { UserType } from "@/interfaces"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
-import { SignedIn, SignedOut, SignInButton, SignUpButton} from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import CurrentUserInfo from "./current-user-infor"
+import { Button } from "@/components/ui/button"
+import { MessagesSquare } from "lucide-react"
 
 export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
   if (isPublicRoute) return null
-
+  const router = useRouter()
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
- 
+
   useEffect(() => {
-    if(isPublicRoute) return
+    if (isPublicRoute) return
     const getCurrentUser = async () => {
       try {
         const response = await GetCurrentUserFromMongoDB()
@@ -61,12 +63,22 @@ export default function Header() {
           <h1 className="cursor-pointer p-3 text-xl font-bold hover:underline">Matchmaking Enabled</h1>
         </Link>
       </div>
+
       <div className="flex gap-4">
         <SignedOut>
           <SignInButton />
           <SignUpButton />
         </SignedOut>
         <SignedIn>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full hover:bg-gray-800"
+            onClick={() => router.push("/chat")}
+          >
+            <MessagesSquare className="w-4 h-4 text-gray-500 hover:text-black" />
+          </Button>
+
           <div className="flex items-center space-x-2">
             <span className="text-sm font-bold">{currentUserData?.userName}</span>
             <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
