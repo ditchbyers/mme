@@ -6,7 +6,7 @@ export const GetSimilarUserRecommendations = async (currentUserId: any, currentG
         const currentUser = currentUserId
         const currentGame = currentGameId
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_DEV_URL}/recommendation/recommend/users?user_id=${currentUser}&game_id=${currentGame}`,
+            `${process.env.DEV_URL}/recommendation/recommend/users?user_id=${currentUser}&game_id=${currentGame}`,
             {
                 method: "GET",
             }
