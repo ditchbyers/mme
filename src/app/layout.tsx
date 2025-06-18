@@ -35,9 +35,9 @@ export default function RootLayout({
               {children}
             </main>
 
-            {/* <footer>
+            <footer>
               <MobileNavigation />
-            </footer> */}
+            </footer>
             </ReduxProvider>
         </body>
       </html>
