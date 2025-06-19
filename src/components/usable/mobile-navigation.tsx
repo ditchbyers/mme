@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import CurrentUserInfoModal from "@/providers/layout-components/update-user-info"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
 import { UserType } from "@/types"
