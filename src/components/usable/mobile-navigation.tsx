@@ -3,15 +3,13 @@
 import { useEffect, useState } from "react"
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { Button } from "../ui/button"
-import { HouseIcon, MessagesSquare, Search, UserRound } from "lucide-react"
+import { HouseIcon, MessagesSquare, Search } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
-import CurrentUserInfoModal from "@/providers/layout-components/update-user-info"
 import CurrentUserInfo from "@/providers/layout-components/current-user-infor"
-import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
+import { SetCurrentUser, UserState } from "@/redux/userSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
 import { UserType } from "@/interfaces"
-import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 
@@ -21,11 +19,10 @@ export const MobileNavigation = () => {
   if (isPublicRoute) return null
 
   const router = useRouter()
-  const { user } = useUser()
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
-  const [openProfileModal, setOpenProfileModal] = useState(false)
+
 
 
   useEffect(() => {
@@ -42,7 +39,7 @@ export const MobileNavigation = () => {
     getCurrentUser()
   }, [])
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (currentUserData) {
       socket.emit("join", currentUserData.id)
 
@@ -58,6 +55,7 @@ export const MobileNavigation = () => {
       }
     }
   }, [currentUserData])
+  */
 
   return (
     <>

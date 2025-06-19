@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { UserType } from "@/interfaces"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, useClerk } from "@clerk/nextjs"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
@@ -16,6 +16,7 @@ import CurrentUserInfo from "./current-user-infor"
 import { Button } from "@/components/ui/button"
 import { MessagesSquare } from "lucide-react"
 
+
 export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
@@ -24,6 +25,7 @@ export default function Header() {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
+
 
   useEffect(() => {
     if (isPublicRoute) return
@@ -55,6 +57,20 @@ export default function Header() {
       }
     }
   }, [currentUserData])
+
+  useEffect(() => {
+  const handleBeforeUnload = () => {
+    const userId = currentUserData?.id
+    if (userId) {
+      socket.emit("logout", userId)
+    }
+  }
+
+  window.addEventListener("beforeunload", handleBeforeUnload)
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload)
+  }
+}, [])
 
   return (
     <header className="hidden lg:flex fixed top-0 left-0 right-0 z-50 h-16 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">

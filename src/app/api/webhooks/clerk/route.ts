@@ -33,9 +33,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    console.log(`Webhook: id=${evt.data.id}, type=${evt.type}`)
-    console.log("Payload:", evt.data)
-
     return new Response("Webhook received", { status: 200 })
   } catch (err) {
     console.error("Error verifying webhook:", err)
