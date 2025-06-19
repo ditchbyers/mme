@@ -99,7 +99,6 @@ export default function ChatsList() {
         <div className="flex flex-col gap-5 mt-5">
 
           {chats.map((chat) => {
-            console.log("CHATS", chats)
             return <ChatCard key={chat.id} chat={chat} />
           })}
         </div>

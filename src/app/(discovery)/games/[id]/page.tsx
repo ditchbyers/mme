@@ -11,7 +11,7 @@ import { TH1 } from "@/components/typography/h1"
 import { TH3 } from "@/components/typography/h3"
 import { TypographyP as P } from "@/components/typography/p"
 import { GameCarousel } from "@/components/usable/game-wrapper"
-import { HeartButton } from "@/components/ui/heart-button"
+import { StarButton } from "@/components/ui/star-button"
 import { UserCarousel } from "@/components/usable/user-wrapper"
 
 const fetchGameDetails = async (id: string): Promise<GameDetails> => {
@@ -67,7 +67,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                     <p>({distance})</p>
                   </div>
                 </CardTitle>
-                <HeartButton gameId={gamedetails.identifier} gameName={gamedetails.name} gameCover={gamedetails.cover} />
+                <StarButton gameId={gamedetails.identifier} gameName={gamedetails.name} gameCover={gamedetails.cover} />
               </div>
             </CardHeader>
             <Separator />
