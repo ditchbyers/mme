@@ -74,7 +74,6 @@ export default function NewMessages
             inputRef.current?.focus();
           }} /></div>}
         <Button className="" onClick={() => setShowEmojiPicker(!showEmojiPicker)}><Smile className="w-5 h-5" /></Button>
-        {/* Todo: hier noch Logik um Bilder Upzuloaden <Button className = ""onClick={()=> setShowImageSelector(!showImageSelector)}><ImagePlus className="w-5 h-5" /></Button>*/}
       </div>
       <div className='flex-1'>
         <input

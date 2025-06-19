@@ -1,20 +1,19 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
 import { UserType } from "@/types"
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, useClerk } from "@clerk/nextjs"
 import { MessagesSquare } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-
-import CurrentUserInfo from "../../components/usable/user-info/current-user-infor"
+import CurrentUserInfo from "@/components/usable/user-info/current-user-infor"
 
 export default function Header() {
   const pathname = usePathname()
@@ -55,6 +54,20 @@ export default function Header() {
       }
     }
   }, [currentUserData])
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const userId = currentUserData?.id
+      if (userId) {
+        socket.emit("logout", userId)
+      }
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [])
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 hidden h-16 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1 lg:flex">

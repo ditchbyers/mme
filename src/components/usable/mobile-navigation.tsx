@@ -22,7 +22,6 @@ export const MobileNavigation = () => {
   if (isPublicRoute) return null
 
   const router = useRouter()
-  const { user } = useUser()
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
@@ -42,7 +41,7 @@ export const MobileNavigation = () => {
     getCurrentUser()
   }, [])
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (currentUserData) {
       socket.emit("join", currentUserData.id)
 
@@ -58,6 +57,7 @@ export const MobileNavigation = () => {
       }
     }
   }, [currentUserData])
+  */
 
   return (
     <>
