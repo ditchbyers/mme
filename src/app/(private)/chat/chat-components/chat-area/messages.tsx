@@ -1,14 +1,15 @@
-import { MessageType } from '@/interfaces'
-import { ChatState, SetChats } from '@/redux/chatSlice'
-import { GetChatMessages, ReadAllMessages } from '@/server-actions/messages'
-import React, { useEffect, useRef, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import Message from './message'
-import { UserState } from '@/redux/userSlice'
-import socket from '@/config/socket-config'
+import React, { useEffect, useRef, useState } from "react"
+import { ChatState, SetChats } from "@/redux/chatSlice"
+import { UserState } from "@/redux/userSlice"
+import { GetChatMessages, ReadAllMessages } from "@/server-actions/messages"
+import { MessageType } from "@/types"
+import { useDispatch, useSelector } from "react-redux"
 
-export default function Messages
-  () {
+import socket from "@/config/socket-config"
+
+import Message from "./message"
+
+export default function Messages() {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [loading, setLoading] = useState(false)
   const { selectedChat, chats }: ChatState = useSelector((state: any) => state.chat)
@@ -19,7 +20,7 @@ export default function Messages
   const getMessages = async () => {
     try {
       setLoading(true)
-      const response = await GetChatMessages(selectedChat?.id!, currentUserData?.id!);
+      const response = await GetChatMessages(selectedChat?.id!, currentUserData?.id!)
       if (response.error) throw new Error(response.error)
       setMessages(response)
     } catch (error: any) {
@@ -31,44 +32,41 @@ export default function Messages
 
   useEffect(() => {
     getMessages()
-  }, [selectedChat]);
+  }, [selectedChat])
 
   useEffect(() => {
     socket.on("new-message-received", (message: MessageType) => {
       if (selectedChat?.id === message.chat.id) {
         setMessages((prev) => {
-
-          const messageAlreadyExists = prev.find(
-            (msg) => msg.socketMessageId === message.socketMessageId
-          )
-          if (messageAlreadyExists) return prev;
-          else return [...prev, message];
-        });
+          const messageAlreadyExists = prev.find((msg) => msg.socketMessageId === message.socketMessageId)
+          if (messageAlreadyExists) return prev
+          else return [...prev, message]
+        })
       }
     })
   }, [selectedChat])
 
   useEffect(() => {
     if (messagesDivRef.current) {
-      messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100;
+      messagesDivRef.current.scrollTop = messagesDivRef.current.scrollHeight + 100
     }
 
     const newChats = chats.map((chat) => {
       if (chat.id === selectedChat?.id) {
-        let chatData = { ...chat };
-        chatData.unreadCounts = { ...chat.unreadCounts };
-        chatData.unreadCounts[currentUserData.id] = 0;
-        return chatData;
+        let chatData = { ...chat }
+        chatData.unreadCounts = { ...chat.unreadCounts }
+        chatData.unreadCounts[currentUserData.id] = 0
+        return chatData
       } else {
-        return chat;
+        return chat
       }
-    });
+    })
 
-    dispach(SetChats(newChats));
-  }, [selectedChat, messages]);
+    dispach(SetChats(newChats))
+  }, [selectedChat, messages])
 
   return (
-    <div className='flex-1 p-3 overflow-y-auto' ref={messagesDivRef}>
+    <div className="flex-1 overflow-y-auto p-3" ref={messagesDivRef}>
       <div className="flex flex-col gap-3">
         {[...messages]
           .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
