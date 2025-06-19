@@ -1,19 +1,20 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
-import { Button } from "../ui/button"
-import { HouseIcon, MessagesSquare, Search, UserRound } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 import CurrentUserInfoModal from "@/providers/layout-components/update-user-info"
-import CurrentUserInfo from "@/providers/layout-components/current-user-infor"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
-import { useDispatch, useSelector } from "react-redux"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
-import { UserType } from "@/interfaces"
+import { UserType } from "@/types"
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { HouseIcon, MessagesSquare, Search, UserRound } from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
+
 import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import CurrentUserInfo from "@/components/usable/user-info/current-user-infor"
 
+import { Button } from "../ui/button"
 
 export const MobileNavigation = () => {
   const pathname = usePathname()
@@ -26,7 +27,6 @@ export const MobileNavigation = () => {
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
   const [openProfileModal, setOpenProfileModal] = useState(false)
-
 
   useEffect(() => {
     if (isPublicRoute) return
@@ -64,16 +64,16 @@ export const MobileNavigation = () => {
       <div className="fixed right-0 bottom-0 left-0 z-50 h-20 bg-slate-900 lg:hidden">
         <div className="container mx-auto flex justify-between px-4 py-6 font-bold text-gray-200 uppercase">
           <SignedOut>
-            <div className="absolute inset-0 flex justify-center items-center">
+            <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex gap-10">
                 <SignInButton mode="modal">
-                  <Button variant="secondary" className="px-6 py-2 text-white bg-gray-700 hover:bg-gray-600">
+                  <Button variant="secondary" className="bg-gray-700 px-6 py-2 text-white hover:bg-gray-600">
                     Sign In
                   </Button>
                 </SignInButton>
 
                 <SignUpButton mode="modal">
-                  <Button variant="secondary" className="px-6 py-2 text-white bg-gray-700 hover:bg-gray-600">
+                  <Button variant="secondary" className="bg-gray-700 px-6 py-2 text-white hover:bg-gray-600">
                     Sign Up
                   </Button>
                 </SignUpButton>
@@ -88,7 +88,7 @@ export const MobileNavigation = () => {
               className="rounded-full hover:bg-gray-800"
               onClick={() => router.push("/")}
             >
-              <HouseIcon className="w-4 h-4 text-gray-500 hover:text-black" />
+              <HouseIcon className="h-4 w-4 text-gray-500 hover:text-black" />
             </Button>
 
             <Button
@@ -97,7 +97,7 @@ export const MobileNavigation = () => {
               className="rounded-full hover:bg-gray-800"
               onClick={() => router.push("/search")}
             >
-              <Search className="w-4 h-4 text-gray-500 hover:text-black" />
+              <Search className="h-4 w-4 text-gray-500 hover:text-black" />
             </Button>
 
             <Button
@@ -106,7 +106,7 @@ export const MobileNavigation = () => {
               className="rounded-full hover:bg-gray-800"
               onClick={() => router.push("/chat")}
             >
-              <MessagesSquare className="w-4 h-4 text-gray-500 hover:text-black" />
+              <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
             </Button>
             <div className="flex items-center space-x-2">
               <span className="text-sm font-bold">{currentUserData?.userName}</span>
@@ -127,10 +127,7 @@ export const MobileNavigation = () => {
       </div>
 
       {showCurrentUserInfo && currentUserData && (
-        <CurrentUserInfo
-          setShowCurrentUserInfo={setShowCurrentUserInfo}
-          showCurrentUserInfo={showCurrentUserInfo}
-        />
+        <CurrentUserInfo setShowCurrentUserInfo={setShowCurrentUserInfo} showCurrentUserInfo={showCurrentUserInfo} />
       )}
     </>
   )

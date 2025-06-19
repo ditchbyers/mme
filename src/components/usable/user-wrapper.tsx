@@ -1,20 +1,20 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
-import { UserType } from "@/interfaces"
-import { UserState } from "@/redux/userSlice"
-import { GetSimilarUserRecommendations } from "@/server-actions/recommendation"
-import { HeartButtonSimple } from "../ui/heart-button-user"
-import { CreateNewChat } from "@/server-actions/chats"
-import socket from "@/config/socket-config"
 import { SetChats, SetSelectedChat } from "@/redux/chatSlice"
+import { UserState } from "@/redux/userSlice"
+import { CreateNewChat } from "@/server-actions/chats"
+import { GetSimilarUserRecommendations } from "@/server-actions/recommendation"
+import { UserType } from "@/types"
+import { useDispatch, useSelector } from "react-redux"
 
+import socket from "@/config/socket-config"
+import { cn } from "@/lib/utils"
 
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
+import { HeartButtonSimple } from "../ui/heart-button-user"
 
 export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -25,11 +25,8 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(false)
-
-
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -68,20 +65,14 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
     try {
       setLoading(true)
 
-
       const existingChat = chats.find((chat: any) => {
         if (!chat.users) return false
         const chatUserIds = chat.users.map((u: any) => u.id || u)
 
-        return (
-          chatUserIds.length === 2 &&
-          chatUserIds.includes(userId) &&
-          chatUserIds.includes(currentUserData.id)
-        )
+        return chatUserIds.length === 2 && chatUserIds.includes(userId) && chatUserIds.includes(currentUserData.id)
       })
 
       if (existingChat) {
-
         dispatch(SetSelectedChat(existingChat))
         router.push(`/chat`)
         setSelectedUser(null)
@@ -116,11 +107,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
   }
 
   if (recommendedUsers.length === 0) {
-    return (
-      <p className="mt-1 text-sm text-gray-500">
-        No recommended Users
-      </p>
-    )
+    return <p className="mt-1 text-sm text-gray-500">No recommended Users</p>
   }
 
   return (
@@ -136,14 +123,14 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                   "flex justify-center select-none"
                 )}
               >
-                <div className="relative w-full max-w-xs bg-white rounded-md p-4 shadow-md flex flex-col items-center">
+                <div className="relative flex w-full max-w-xs flex-col items-center rounded-md bg-white p-4 shadow-md">
                   <div className="absolute top-3 right-3">
                     <HeartButtonSimple userId={user.id} />
                   </div>
 
                   <div
                     onClick={() => setSelectedUser(user)}
-                    className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 mb-4 cursor-pointer"
+                    className="relative mb-4 h-24 w-24 cursor-pointer overflow-hidden rounded-full border-2 border-gray-300"
                   >
                     <Image
                       src={user.profilePicture || "/image.png"}
@@ -153,9 +140,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                     />
                   </div>
 
-                  <p className="text-center font-semibold text-lg text-gray-900">
-                    {user.userName}
-                  </p>
+                  <p className="text-center text-lg font-semibold text-gray-900">{user.userName}</p>
                 </div>
               </CarouselItem>
             ))}
@@ -172,8 +157,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
       </div>
 
       {selectedUser && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9999] bg-white rounded-lg p-6 max-w-md w-full shadow-lg max-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col">
-
+        <div className="fixed top-1/2 left-1/2 z-[9999] flex max-h-[calc(100vh-5rem)] w-full max-w-md -translate-x-1/2 -translate-y-1/2 transform flex-col overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
           <button
             className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
             onClick={() => setSelectedUser(null)}
@@ -183,7 +167,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
           </button>
 
           <div className="flex flex-col items-center">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 mb-4">
+            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-300">
               <Image
                 src={selectedUser.profilePicture || "/image.png"}
                 alt={selectedUser.userName}
@@ -191,28 +175,28 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                 className="object-cover"
               />
             </div>
-            <h2 className="text-2xl font-bold mb-2">{selectedUser.userName}</h2>
+            <h2 className="mb-2 text-2xl font-bold">{selectedUser.userName}</h2>
           </div>
 
-          <div className="w-full border-t border-gray-300 my-4" />
+          <div className="my-4 w-full border-t border-gray-300" />
 
-          <div className="flex flex-col gap-4 mt-5 flex-grow overflow-auto">
+          <div className="mt-5 flex flex-grow flex-col gap-4 overflow-auto">
             {getProperty("Location", selectedUser.location || "")}
             {getProperty("Language", selectedUser.language || "")}
-            {getProperty("Games", selectedUser?.games ? (selectedUser.games.map(game => game.name).join(", ") || "") : "")}
+            {getProperty(
+              "Games",
+              selectedUser?.games ? selectedUser.games.map((game) => game.name).join(", ") || "" : ""
+            )}
             {getProperty("Platforms", selectedUser?.platforms ? selectedUser.platforms.join(", ") : "")}
             {getProperty("Bio", selectedUser.bio || "")}
-
-
           </div>
           <button
             disabled={loading}
             onClick={() => onAddToChat(selectedUser.id!)}
-            className="mt-6 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded disabled:opacity-50"
+            className="mt-6 rounded bg-gray-600 px-4 py-2 font-semibold text-white hover:bg-gray-500 disabled:opacity-50"
           >
             {loading ? "Loading..." : "Start to Chat"}
           </button>
-
         </div>
       )}
     </>

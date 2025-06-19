@@ -9,12 +9,8 @@ import ChatArea from "./chat-components/chat-area"
 import Chats from "./chat-components/chats"
 
 export default function ChatLayout() {
-  const pathname = usePathname()
-  const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
-
-  // if (isPublicRoute) return <>{children}</>
 
   useEffect(() => {
     const checkScreenSize = () => {

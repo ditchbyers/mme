@@ -11,17 +11,8 @@ const fetchStreams = cache(async (): Promise<Stream[]> => {
       "X-Session-Token": "_dev_skip_auth_roy",
     },
   })
-
-  const json = await res.json()
-  return json
+  return await res.json()
 })
-
-interface GamesResponseProps {
-  data: Game[]
-  pagination: {
-    cursor: string
-  }
-}
 
 export default async function Home() {
   const streams = await fetchStreams()

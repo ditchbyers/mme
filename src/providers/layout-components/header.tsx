@@ -3,18 +3,18 @@
 import React, { useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { UserType } from "@/interfaces"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/redux/userSlice"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
+import { UserType } from "@/types"
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
+import { MessagesSquare } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-import CurrentUserInfo from "./current-user-infor"
 import { Button } from "@/components/ui/button"
-import { MessagesSquare } from "lucide-react"
+
+import CurrentUserInfo from "../../components/usable/user-info/current-user-infor"
 
 export default function Header() {
   const pathname = usePathname()
@@ -57,7 +57,7 @@ export default function Header() {
   }, [currentUserData])
 
   return (
-    <header className="hidden lg:flex fixed top-0 left-0 right-0 z-50 h-16 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1">
+    <header className="fixed top-0 right-0 left-0 z-50 hidden h-16 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1 lg:flex">
       <div>
         <Link href="/">
           <h1 className="cursor-pointer p-3 text-xl font-bold hover:underline">Matchmaking Enabled</h1>
@@ -76,7 +76,7 @@ export default function Header() {
             className="rounded-full hover:bg-gray-800"
             onClick={() => router.push("/chat")}
           >
-            <MessagesSquare className="w-4 h-4 text-gray-500 hover:text-black" />
+            <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
           </Button>
 
           <div className="flex items-center space-x-2">
