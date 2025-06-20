@@ -72,21 +72,21 @@ function ChatCard({ chat, onSelect }: Props) {
       className={`flex cursor-pointer justify-between rounded-md px-2 py-3 hover:bg-gray-100 ${isSelected ? "border border-solid border-gray-300 bg-gray-200" : ""}`}
       onClick={onSelect}
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3">
         <img
           src={chatImage || "./image.png"}
           alt="Profile"
-          className="h-10 w-10 rounded-full"
+          className="size-10 rounded-full"
           onError={(e) => {
             ;(e.target as HTMLImageElement).src = "./image.png"
           }}
         />
         <div className="flex flex-col gap-1">
-          <span className="flex items-center gap-2 text-sm text-gray-700">
+          <span className="text flex items-center gap-2 font-bold text-gray-700">
             {chatName}
             {onlineIndicator()}
           </span>
-          <span className="text-xs text-gray-700">
+          <span className="line-clamp-1 text-xs text-gray-700">
             {lastMessageSenderName} {lastMessage}
           </span>
         </div>
