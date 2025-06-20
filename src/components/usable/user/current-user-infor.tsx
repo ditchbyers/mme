@@ -47,14 +47,14 @@ function CurrentUserInfo({
       })
 
   const isEditableText = (key: string) => ["Name", "Username", "Bio"].includes(key)
-  const isDropdown = (key: string) => ["Location", "Language", "Platforms"].includes(key)
+  const isDropdown = (key: string) => ["Server Location", "Language", "Platforms"].includes(key);
 
   const getPropertyKey = (label: string): keyof typeof editableFields => {
     const map: any = {
       Name: "name",
       Username: "userName",
       Bio: "bio",
-      Location: "location",
+      "Server Location": "location",
       Language: "language",
       Platforms: "platforms",
     }
@@ -88,7 +88,7 @@ function CurrentUserInfo({
           )
         } else if (isDropdown(label)) {
           const options = {
-            Location: ["Africa", "Europe", "Asia", "North America", "South America"],
+            "Server Location": ["Africa", "Europe", "Asia", "North America", "South America"],
             Language: [
               "German",
               "English",
@@ -244,7 +244,7 @@ function CurrentUserInfo({
           {getProperty("Username", editableFields.userName)}
           {getProperty("Email", currentUserData?.email)}
           {getProperty("Bio", editableFields.bio)}
-          {getProperty("Location", editableFields.location)}
+          {getProperty("Server Location", editableFields.location)}
           {getProperty("Language", editableFields.language)}
           {getProperty("Games", currentUserData?.games?.map((game) => game.name).join(", ") || "")}
           {getProperty("Platforms", editableFields.platforms)}
