@@ -86,7 +86,7 @@ function ChatCard({ chat, onSelect }: Props) {
             {chatName}
             {onlineIndicator()}
           </span>
-          <span className="line-clamp-1 text-xs text-gray-700">
+          <span className="max-w-[260px] overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-700">
             {lastMessageSenderName} {lastMessage}
           </span>
         </div>
