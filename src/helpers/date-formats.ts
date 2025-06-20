@@ -1,15 +1,9 @@
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInYears,
-  format,
-  isValid,
-  parseISO,
-} from "date-fns"
+import { differenceInDays, differenceInHours, differenceInMinutes, differenceInYears, format, isValid, parseISO } from "date-fns"
 
 export const formatDateTime = (input: string) => {
   let messageDate: Date
+
+  console.log(input)
 
   messageDate = parseISO(input)
 
