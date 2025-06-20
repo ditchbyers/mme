@@ -78,3 +78,8 @@ export interface MessageType {
   createdAt: string
   updatedAt: string
 }
+
+export interface recommendedUser {
+  user : UserType
+  score: number
+}

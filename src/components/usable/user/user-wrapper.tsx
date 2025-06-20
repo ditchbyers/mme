@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { CreateNewChat } from "@/server-actions/chats"
 import { GetSimilarUserRecommendations } from "@/server-actions/recommendation"
-import { UserType } from "@/types"
+import { recommendedUser, UserType } from "@/types"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
@@ -15,11 +15,13 @@ import { cn } from "@/lib/utils"
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../ui/carousel"
 import { HeartButtonSimple } from "../../ui/heart-button-user"
+import ScoreBar from "@/components/ui/score-bar"
+
 
 export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [slidesToScroll, setSlidesToScroll] = useState(6)
-  const [recommendedUsers, setRecommendedUsers] = useState<UserType[]>([])
+  const [recommendedUsers, setRecommendedUsers] = useState<recommendedUser[]>([])
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const chats = useSelector((state: any) => state.chat.chats)
   const dispatch = useDispatch()
@@ -27,14 +29,32 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
 
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(false)
+  const selectedScore = selectedUser ? recommendedUsers.find((r) => r.user.id === selectedUser.id)?.score ?? 0 : 0
 
   useEffect(() => {
     const fetchRecommendations = async () => {
       console.log("currentUserData, game_id", currentUserData, game_id)
       if (!currentUserData?.id || !game_id) return
       const rec = await GetSimilarUserRecommendations(currentUserData.id, game_id)
-      console.log("rec", rec)
-      setRecommendedUsers(Array.isArray(rec) ? rec : [])
+      const mapped = rec.map((r: any) => ({
+        user: {
+          id: r.id,
+          clerkUserId: r.clerkUserId,
+          name: r.name,
+          userName: r.userName,
+          email: r.email,
+          profilePicture: r.profilePicture,
+          bio: r.bio,
+          location: r.location,
+          platforms: r.platforms,
+          language: r.language,
+          games: r.games,
+          session_token: r.session_token,
+        },
+        score: r.score,
+      }))
+      console.log("Recommended Users:", mapped)
+      setRecommendedUsers(mapped)
     }
     fetchRecommendations()
   }, [currentUserData, game_id])
@@ -123,24 +143,30 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                   "flex justify-center select-none"
                 )}
               >
-                <div className="relative flex w-full max-w-xs flex-col items-center rounded-md bg-white p-4 shadow-md">
+                <div className="relative flex w-full max-w-xs flex-col items-center rounded-md bg-gray-400 p-4">
                   <div className="absolute top-3 right-3">
-                    <HeartButtonSimple userId={user.id} />
+                    <HeartButtonSimple userId={user.user.id} />
                   </div>
 
                   <div
-                    onClick={() => setSelectedUser(user)}
+                    onClick={() => setSelectedUser(user.user)}
                     className="relative mb-4 h-24 w-24 cursor-pointer overflow-hidden rounded-full border-2 border-gray-300"
                   >
                     <Image
-                      src={user.profilePicture || "/image.png"}
-                      alt={user.userName}
+                      src={user.user.profilePicture || "/image.png"}
+                      alt={user.user.userName}
                       fill
                       className="object-cover"
                     />
+
                   </div>
 
-                  <p className="text-center text-lg font-semibold text-gray-900">{user.userName}</p>
+
+                  <p className="text-center text-lg font-semibold text-gray-900">{user.user.userName}</p>
+
+                  <div className="my-4 w-full border-t gap-4 border-gray-300" />
+                  {/*<div className="flex-col font-semibold text-gray-700 gap-4" > User Match Score</div>*/}
+                  <ScoreBar score={user.score} />
                 </div>
               </CarouselItem>
             ))}
@@ -178,7 +204,9 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
             <h2 className="mb-2 text-2xl font-bold">{selectedUser.userName}</h2>
           </div>
 
-          <div className="my-4 w-full border-t border-gray-300" />
+          <div className="my-4 w-full border-t gap-4 border-gray-300" />
+
+
 
           <div className="mt-5 flex flex-grow flex-col gap-4 overflow-auto">
             {getProperty("Location", selectedUser.location || "")}

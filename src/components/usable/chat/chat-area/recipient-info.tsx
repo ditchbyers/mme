@@ -100,7 +100,7 @@ export default function RecipientInfo({
         {selectedChat?.isGroupChat && <>{getProperty("Created By", selectedChat?.createdBy?.name! || "")}</>}
         {!selectedChat?.isGroupChat && (
           <>
-            {getProperty("Location", chatLocation || "")}
+            {getProperty("Server Location", chatLocation || "")}
             {getProperty("Language", chatLanguage || "")}
             {getProperty("Games", chatGames || "")}
             {getProperty("Platforms", chatPlatform || "")}
