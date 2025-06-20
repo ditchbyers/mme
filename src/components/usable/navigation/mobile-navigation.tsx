@@ -13,6 +13,7 @@ import { SetCurrentUser, SetOnlineUsers, UserState } from "@/lib/redux/userSlice
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
+import Link from "next/link"
 
 export const MobileNavigation = () => {
   const pathname = usePathname()
@@ -80,37 +81,29 @@ export const MobileNavigation = () => {
           </SignedOut>
 
           <SignedIn>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-gray-800"
-              onClick={() => router.push("/")}
-            >
-              <HouseIcon className="h-4 w-4 text-gray-500 hover:text-black" />
-            </Button>
+            <Link href="/" passHref>
+              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
+                <HouseIcon className="h-4 w-4 text-gray-500 hover:text-black" />
+              </p>
+            </Link>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-gray-800"
-              onClick={() => router.push("/search")}
-            >
-              <Search className="h-4 w-4 text-gray-500 hover:text-black" />
-            </Button>
+            <Link href="/" passHref>
+              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
+                <Search className="h-4 w-4 text-gray-500 hover:text-black" />
+              </p>
+            </Link>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-gray-800"
-              onClick={() => router.push("/chat")}
-            >
-              <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
-            </Button>
+            <Link href="/chat" passHref>
+              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
+                <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
+              </p>
+            </Link>
+
             <div className="flex items-center space-x-2">
               <span className="text-sm font-bold">{currentUserData?.userName}</span>
               <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
                 <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
-                <AvatarFallback>U</AvatarFallback>
+                <AvatarFallback></AvatarFallback>
               </Avatar>
             </div>
 

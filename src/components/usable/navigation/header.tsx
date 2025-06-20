@@ -82,14 +82,12 @@ export default function Header() {
           <SignUpButton />
         </SignedOut>
         <SignedIn>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-gray-800"
-            onClick={() => router.push("/chat")}
-          >
-            <MessagesSquare className="size-5 text-gray-500 hover:text-black" />
-          </Button>
+
+          <Link href="/chat" passHref>
+            <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
+              <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
+            </p>
+          </Link>
 
           <div className="flex items-center gap-2">
             <span className="font-bold">{currentUserData?.userName}</span>
