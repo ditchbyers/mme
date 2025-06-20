@@ -1,4 +1,5 @@
 export type TypoProps = React.HTMLAttributes<HTMLHeadingElement>
+export type DivProps = React.HTMLAttributes<HTMLDivElement>
 
 export type NavigationConfig = {
   mainNav: NavItem[]

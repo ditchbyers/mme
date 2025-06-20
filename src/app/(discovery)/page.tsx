@@ -1,18 +1,6 @@
-import { cache } from "react"
-import { Game, Stream } from "@/types"
-
+import { fetchStreams } from "@/lib/fetch/games"
 import { TH3 } from "@/components/typography/h3"
-import { GameCarousel } from "@/components/usable/game-wrapper"
-
-const fetchStreams = cache(async (): Promise<Stream[]> => {
-  const res = await fetch("https://revenant.lyrica.systems/discovery/stream", {
-    method: "GET",
-    headers: {
-      "X-Session-Token": "_dev_skip_auth_roy",
-    },
-  })
-  return await res.json()
-})
+import { GameCarousel } from "@/components/usable/games/game-carousel"
 
 export default async function Home() {
   const streams = await fetchStreams()

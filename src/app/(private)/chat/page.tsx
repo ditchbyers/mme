@@ -1,44 +1,29 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { usePathname } from "next/navigation"
-import { ChatState } from "@/redux/chatSlice"
 import { useSelector } from "react-redux"
 
-import ChatArea from "./chat-components/chat-area"
-import Chats from "./chat-components/chats"
+import { ChatState } from "@/lib/redux/chatSlice"
+import Messages from "@/components/usable/chat/chat-area/messages"
+import NewMessages from "@/components/usable/chat/chat-area/new-messages"
+import Recipient from "@/components/usable/chat/chat-area/recipient"
 
-export default function ChatLayout() {
-  const [isMobile, setIsMobile] = useState<boolean | null>(null)
+export default function ChatPage() {
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 1020)
-    }
-
-    checkScreenSize()
-    window.addEventListener("resize", checkScreenSize)
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [])
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden"
-    return () => {
-      document.body.style.overflow = ""
-    }
-  }, [])
-
-  if (isMobile === null) return null
-  const showChatsOnly = isMobile && !selectedChat
-  const showChatOnly = isMobile && selectedChat
-  const showBoth = !isMobile
+  if (!selectedChat) {
+    return (
+      <div className="flex h-full flex-1 flex-col items-center justify-center">
+        <img src="/21_Message_Board.jpg" alt="" className="h-60" />
+        <span className="text-sm font-semibold text-gray-600">Select a chat to start messaging</span>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex h-full w-full overflow-hidden">
-      {(showChatsOnly || showBoth) && <Chats fullscreen={showChatsOnly} />}
-      {showBoth && <div className="h-full w-px bg-gray-300" />}
-      {(showChatOnly || showBoth) && <ChatArea isMobile={isMobile} />}
+    <div className="flex h-full w-full flex-col justify-between">
+      <Recipient />
+      <Messages />
+      <NewMessages />
     </div>
   )
 }

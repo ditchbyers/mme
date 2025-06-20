@@ -1,10 +1,11 @@
-import { HeartIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { CreateNewChat } from "@/server-actions/chats"
+import { HeartIcon } from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
+
 import socket from "@/config/socket-config"
-import { SetChats, SetSelectedChat } from "@/redux/chatSlice"
-import { UserState } from "@/redux/userSlice"
+import { SetChats, SetSelectedChat } from "@/lib/redux/chatSlice"
+import { UserState } from "@/lib/redux/userSlice"
 
 interface HeartButtonSimpleProps {
   userId: string
@@ -24,11 +25,7 @@ export function HeartButtonSimple({ userId }: HeartButtonSimpleProps) {
     const existingChat = chats.find((chat: any) => {
       if (!chat.users) return false
       const chatUserIds = chat.users.map((u: any) => u.id || u)
-      return (
-        chatUserIds.length === 2 &&
-        chatUserIds.includes(userId) &&
-        chatUserIds.includes(currentUserData.id)
-      )
+      return chatUserIds.length === 2 && chatUserIds.includes(userId) && chatUserIds.includes(currentUserData.id)
     })
 
     setLiked(!!existingChat)
@@ -66,11 +63,9 @@ export function HeartButtonSimple({ userId }: HeartButtonSimpleProps) {
   }
 
   return (
-    <span
-      title={liked ? "Chat already exists" : "Add to chat"}
-    >
+    <span title={liked ? "Chat already exists" : "Add to chat"}>
       <HeartIcon
-        className={`w-5 h-5 cursor-pointer transition-colors ${
+        className={`h-5 w-5 cursor-pointer transition-colors ${
           liked ? "text-red-500" : "text-gray-600 hover:text-red-500"
         }`}
         onClick={onAddToChat}

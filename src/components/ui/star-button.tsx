@@ -1,14 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { StarIcon } from "lucide-react"
-import { useSelector, useDispatch } from "react-redux"
-import { UserState, SetCurrentUser } from "@/redux/userSlice"
 import { UpdateUserProfile } from "@/server-actions/users"
+import { StarIcon } from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
 
+import { SetCurrentUser, UserState } from "@/lib/redux/userSlice"
 
-
-export function StarButton({ gameId, gameName, gameCover }: { gameId: string; gameName: string ; gameCover?: any }) {
+export function StarButton({ gameId, gameName, gameCover }: { gameId: string; gameName: string; gameCover?: any }) {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [liked, setLiked] = useState(false)
@@ -23,7 +22,7 @@ export function StarButton({ gameId, gameName, gameCover }: { gameId: string; ga
     const coverImage = gameCover
     const updatedGames = liked
       ? currentUserData?.games?.filter((g) => g.id !== gameId)
-      : [...(currentUserData?.games || []), { id: gameId, name: gameName , cover: coverImage }]
+      : [...(currentUserData?.games || []), { id: gameId, name: gameName, cover: coverImage }]
 
     setLiked(!liked)
 
@@ -39,7 +38,7 @@ export function StarButton({ gameId, gameName, gameCover }: { gameId: string; ga
 
   return (
     <StarIcon
-      className={`w-5 h-5 right-0 top-0 cursor-pointer transition-colors ${
+      className={`top-0 right-0 h-5 w-5 cursor-pointer transition-colors ${
         liked ? "text-yellow-500" : "text-gray-600 hover:text-yellow-500"
       }`}
       onClick={handleClick}

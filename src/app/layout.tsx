@@ -3,11 +3,11 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 import { Lato } from "next/font/google"
-import Header from "@/providers/layout-components/header"
-import ReduxProvider from "@/providers/redux-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
-import { MobileNavigation } from "@/components/usable/mobile-navigation"
+import ReduxProvider from "@/lib/redux-provider"
+import Header from "@/components/usable/navigation/header"
+import { MobileNavigation } from "@/components/usable/navigation/mobile-navigation"
 
 const lato = Lato({
   variable: "--font-oswald",
@@ -28,17 +28,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${lato.variable} flex min-h-screen w-full h-full flex-col antialiased`}>
+        <body className={`${lato.variable} flex h-full min-h-screen w-full flex-col antialiased`}>
           <ReduxProvider>
             <Header />
-            <main className="flex-1 overflow-y-auto lg:mt-16 mb-20 lg:mb-0">
-              {children}
-            </main>
-
-            <footer>
+            <main className="flex-1 lg:mt-20">{children}</main>
+            <footer className="min-h-[1px]">
               <MobileNavigation />
             </footer>
-            </ReduxProvider>
+          </ReduxProvider>
         </body>
       </html>
     </ClerkProvider>

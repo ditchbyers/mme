@@ -1,36 +1,15 @@
 import Image from "next/image"
-import { GameDetails } from "@/types"
 import { format, formatDistanceToNow } from "date-fns"
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { fetchGameDetails } from "@/lib/fetch/games"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { StarButton } from "@/components/ui/star-button"
 import { TH1 } from "@/components/typography/h1"
 import { TH3 } from "@/components/typography/h3"
-import { TypographyP as P } from "@/components/typography/p"
-import { GameCarousel } from "@/components/usable/game-wrapper"
-import { StarButton } from "@/components/ui/star-button"
-import { UserCarousel } from "@/components/usable/user-wrapper"
-
-const fetchGameDetails = async (id: string): Promise<GameDetails> => {
-  const res = await fetch(`https://revenant.lyrica.systems/discovery/game/${id}`, {
-    method: "GET",
-    headers: {
-      "X-Session-Token": "_dev_skip_auth_roy",
-    },
-  })
-
-  return res.json()
-}
-
-const displayMap: Record<string, string> = {
-  storyline: "Storyline",
-  platforms: "Platforms",
-  genres: "Genres",
-  gameModes: "Game Modes",
-}
+import { GameCarousel } from "@/components/usable/games/game-carousel"
+import { UserCarousel } from "@/components/usable/user/user-wrapper"
 
 export default async function GameDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -39,11 +18,6 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
     addSuffix: true,
   })
 
-  const accordionItems = {
-    storyline: gamedetails.storyline,
-    platforms: gamedetails.platforms,
-    gameModes: gamedetails.game_modes,
-  }
   const mockCovers = new Array(20).fill(gamedetails)
   return (
     <div className="mx-auto mb-36 max-w-[96rem] space-y-5 p-6">
@@ -80,7 +54,6 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                   <p className="text-sm">{gamedetails.storyline}</p>
                 </div>
               )}
-
               {gamedetails.genres?.length > 0 && (
                 <div>
                   <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Genres</h3>
@@ -93,7 +66,6 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                   </div>
                 </div>
               )}
-
               {gamedetails.game_modes?.length > 0 && (
                 <div>
                   <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Game Modes</h3>
@@ -106,7 +78,6 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                   </div>
                 </div>
               )}
-
               {gamedetails.platforms?.length > 0 && (
                 <div>
                   <h3 className="text-muted-foreground mb-1 text-sm font-semibold">Platforms</h3>
