@@ -17,6 +17,15 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { HeartButtonSimple } from "../../ui/heart-button-user"
 import ScoreBar from "@/components/ui/score-bar"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog"
+
 
 export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -143,14 +152,14 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                   "flex justify-center select-none"
                 )}
               >
-                <div className="relative flex w-full max-w-xs flex-col items-center rounded-md bg-gray-400 p-4">
+                <div className="relative flex w-full max-w-xs flex-col items-center rounded-2xl bg-gray-100 border border-gray-300 shadow-md hover:shadow-lg transition-shadow p-4">
                   <div className="absolute top-3 right-3">
                     <HeartButtonSimple userId={user.user.id} />
                   </div>
 
                   <div
                     onClick={() => setSelectedUser(user.user)}
-                    className="relative mb-4 h-24 w-24 cursor-pointer overflow-hidden rounded-full border-2 border-gray-300"
+                    className="relative mb-4 h-24 w-24 cursor-pointer overflow-hidden rounded-full ring-4 ring-gray-200"
                   >
                     <Image
                       src={user.user.profilePicture || "/image.png"}
@@ -158,15 +167,17 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
                       fill
                       className="object-cover"
                     />
-
                   </div>
 
+                  <p className="text-center text-base font-semibold text-gray-800">
+                    {user.user.userName}
+                  </p>
 
-                  <p className="text-center text-lg font-semibold text-gray-900">{user.user.userName}</p>
+                  <div className="my-3 w-full border-t border-gray-200" />
 
-                  <div className="my-4 w-full border-t gap-4 border-gray-300" />
-                  {/*<div className="flex-col font-semibold text-gray-700 gap-4" > User Match Score</div>*/}
-                  <ScoreBar score={user.score} />
+                  <div className="w-full">
+                    <ScoreBar score={user.score} />
+                  </div>
                 </div>
               </CarouselItem>
             ))}
@@ -182,51 +193,48 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
         </Carousel>
       </div>
 
-      {selectedUser && (
-        <div className="fixed top-1/2 left-1/2 z-[9999] flex max-h-[calc(100vh-5rem)] w-full max-w-md -translate-x-1/2 -translate-y-1/2 transform flex-col overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
-          <button
-            className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
-            onClick={() => setSelectedUser(null)}
-            aria-label="Close Modal"
-          >
-            ✕
-          </button>
+      <Dialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
+        <DialogContent className="max-h-[calc(100vh-5rem)] max-w-md overflow-y-auto">
+          {selectedUser && (
+            <>
+              <DialogHeader className="items-center">
+                <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-300">
+                  <Image
+                    src={selectedUser.profilePicture || "/image.png"}
+                    alt={selectedUser.userName}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <DialogTitle>{selectedUser.userName}</DialogTitle>
+              </DialogHeader>
 
-          <div className="flex flex-col items-center">
-            <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-300">
-              <Image
-                src={selectedUser.profilePicture || "/image.png"}
-                alt={selectedUser.userName}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h2 className="mb-2 text-2xl font-bold">{selectedUser.userName}</h2>
-          </div>
+              <div className="my-4 w-full border-t border-gray-300" />
 
-          <div className="my-4 w-full border-t gap-4 border-gray-300" />
+              <div className="mt-5 flex flex-col gap-4">
+                {getProperty("Location", selectedUser.location || "")}
+                {getProperty("Language", selectedUser.language || "")}
+                {getProperty(
+                  "Games",
+                  selectedUser?.games ? selectedUser.games.map((game) => game.name).join(", ") || "" : ""
+                )}
+                {getProperty("Platforms", selectedUser?.platforms ? selectedUser.platforms.join(", ") : "")}
+                {getProperty("Bio", selectedUser.bio || "")}
+              </div>
 
-
-
-          <div className="mt-5 flex flex-grow flex-col gap-4 overflow-auto">
-            {getProperty("Location", selectedUser.location || "")}
-            {getProperty("Language", selectedUser.language || "")}
-            {getProperty(
-              "Games",
-              selectedUser?.games ? selectedUser.games.map((game) => game.name).join(", ") || "" : ""
-            )}
-            {getProperty("Platforms", selectedUser?.platforms ? selectedUser.platforms.join(", ") : "")}
-            {getProperty("Bio", selectedUser.bio || "")}
-          </div>
-          <button
-            disabled={loading}
-            onClick={() => onAddToChat(selectedUser.id!)}
-            className="mt-6 rounded bg-gray-600 px-4 py-2 font-semibold text-white hover:bg-gray-500 disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Start to Chat"}
-          </button>
-        </div>
-      )}
+              <DialogClose asChild>
+                <button
+                  disabled={loading}
+                  onClick={() => onAddToChat(selectedUser.id!)}
+                  className="mt-6 w-full rounded bg-gray-600 px-4 py-2 font-semibold text-white hover:bg-gray-500 disabled:opacity-50"
+                >
+                  {loading ? "Loading..." : "Start to Chat"}
+                </button>
+              </DialogClose>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

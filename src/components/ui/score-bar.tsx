@@ -1,14 +1,28 @@
 interface ScoreBarProps {
-  score: number 
+  score: number
   maxScore?: number
 }
 
 const ScoreBar = ({ score, maxScore = 10 }: ScoreBarProps) => {
   const percent = Math.min((score / maxScore) * 100, 100)
+
   const getBarColor = (p: number) => {
-    const r = p < 50 ? 255 : Math.floor(255 - ((p - 50) * 2 * 255) / 100)
-    const g = p < 50 ? Math.floor((p * 2 * 255) / 100) : 255
-    return `rgb(${r}, ${g}, 0)`
+    
+    if (p < 50) {
+      
+      const ratio = p / 50
+      const r = Math.round(139 + (204 - 139) * ratio)   
+      const g = Math.round(0 + (85 - 0) * ratio)          
+      const b = 0
+      return `rgb(${r}, ${g}, ${b})`
+    } else {
+      // orange to green
+      const ratio = (p - 50) / 50
+      const r = Math.round(204 - (204 - 0) * ratio)      
+      const g = Math.round(85 + (100 - 85) * ratio)       
+      const b = 0
+      return `rgb(${r}, ${g}, ${b})`
+    }
   }
 
   const barColor = getBarColor(percent)
@@ -25,4 +39,5 @@ const ScoreBar = ({ score, maxScore = 10 }: ScoreBarProps) => {
     </div>
   )
 }
+
 export default ScoreBar
