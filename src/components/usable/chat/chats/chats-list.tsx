@@ -13,7 +13,11 @@ import { UserState } from "@/lib/redux/userSlice"
 
 import ChatCard from "./chat-card"
 
-export default function ChatsList() {
+type ChatsListProps = {
+  searchQuery: string
+}
+
+export default function ChatsList({ searchQuery }: ChatsListProps) {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const { chats, selectedChat }: ChatState = useSelector((state: any) => state.chat)
@@ -81,11 +85,23 @@ export default function ChatsList() {
     }
   }, [])
 
+  const filteredChats = chats.filter((chat) => {
+    const query = searchQuery.toLowerCase()
+
+    // Match group name
+    const groupNameMatch = chat.groupName?.toLowerCase().includes(query)
+
+    // Match any participant userName
+    const userMatch = chat.users?.some((p) => p.userName.toLowerCase().includes(query))
+
+    return groupNameMatch || userMatch
+  })
+
   return (
     <div>
-      {chats.length > 0 && (
+      {filteredChats.length > 0 && (
         <div className="mt-5 flex flex-col">
-          {chats.map((chat) => (
+          {filteredChats.map((chat) => (
             <ChatCard
               key={chat.id}
               chat={chat}
@@ -95,6 +111,10 @@ export default function ChatsList() {
             />
           ))}
         </div>
+      )}
+
+      {!loading && filteredChats.length === 0 && searchQuery && (
+        <div className="mt-10 text-center text-sm text-gray-500 italic">No chats found</div>
       )}
 
       {loading && (

@@ -1,56 +1,56 @@
 "use client"
-import React from 'react'
 
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+import React from "react"
+import { useRouter } from "next/navigation"
 import { ChevronDownIcon } from "lucide-react"
-import NewChatModal from './new-chat-modal'
-import { useRouter } from 'next/navigation';
 
-export default function ChatsHeader() {
-    const [showNewChatModal, setShowNewChatModal] = React.useState(false)
-    const router = useRouter();
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-    return (
-        <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
+import NewChatModal from "./new-chat-modal"
 
-                <h1 className="text-xl text-gray-500 font-bold uppercase">Chats</h1>
+type ChatsHeaderProps = {
+  searchQuery: string
+  setSearchQuery: (value: string) => void
+}
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button size="sm" variant="outline">
-                            New
-                            <ChevronDownIcon className="ml-1 size-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setShowNewChatModal(true)}
-                            onSelect={(e) => e.preventDefault()}>
-                            New Chat
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => router.push('/chat/groups/create-group')}>
-                            New Group
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                {showNewChatModal && (
-                    <NewChatModal setShowNewChatModal={setShowNewChatModal} showNewChatModal={showNewChatModal} />
-                )}
+export default function ChatsHeader({ searchQuery, setSearchQuery }: ChatsHeaderProps) {
+  const [showNewChatModal, setShowNewChatModal] = React.useState(false)
+  const router = useRouter()
 
-            </div>
-            <input
-                type="text"
-                placeholder="Search chats..."
-                className="bg-blue-100/30 w-full border border-gray-300 border-solid outline-none rounded-md px-3 h-14 focus:outline-none focus:border-primary"
-            />
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Header and New button */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-500 uppercase">Chats</h1>
 
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="outline">
+              New
+              <ChevronDownIcon className="ml-1 size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setShowNewChatModal(true)} onSelect={(e) => e.preventDefault()}>
+              New Chat
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => router.push("/chat/groups/create-group")}>New Group</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {showNewChatModal && (
+          <NewChatModal setShowNewChatModal={setShowNewChatModal} showNewChatModal={showNewChatModal} />
+        )}
+      </div>
 
-    )
+      {/* Search input */}
+      <input
+        type="text"
+        placeholder="Search chats..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="focus:border-primary h-14 w-full rounded-md border border-solid border-gray-300 bg-blue-100/30 px-3 outline-none"
+      />
+    </div>
+  )
 }

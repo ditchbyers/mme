@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
@@ -13,16 +14,20 @@ import socket from "@/config/socket-config"
 import { SetCurrentUser, SetOnlineUsers, UserState } from "@/lib/redux/userSlice"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
+
+import SearchPopover from "./header-search"
 
 export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
   if (isPublicRoute) return null
+
   const router = useRouter()
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
-  const [showCurrentUserInfo, setShowCurrentUserInfo] = React.useState(false)
+  const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
 
   useEffect(() => {
     if (isPublicRoute) return
@@ -70,12 +75,20 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 hidden h-20 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1 lg:flex">
-      <div>
+    <header className="fixed top-0 right-0 left-0 z-50 hidden h-20 grid-cols-3 items-center justify-between border-b border-solid border-gray-300 bg-gray-200 px-5 py-1 lg:grid">
+      {/* Left - Logo */}
+      <div className="flex-shrink-0">
         <Link href="/">
           <h1 className="cursor-pointer p-3 text-xl font-bold hover:underline">Matchmaking Enabled</h1>
         </Link>
       </div>
+
+      {/* Center - Search bar */}
+      <div className="flex w-full max-w-md justify-center px-4">
+        <SearchPopover />
+      </div>
+
+      {/* Right - User controls */}
       <div className="flex h-full flex-1 items-center justify-end gap-4">
         <SignedOut>
           <SignInButton />
