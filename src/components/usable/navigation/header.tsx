@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
 
-import SearchPopover from "./header-search"
+import { SearchCommandPopover } from "./header-search"
 
 export default function Header() {
   const pathname = usePathname()
@@ -85,7 +85,7 @@ export default function Header() {
 
       {/* Center - Search bar */}
       <div className="flex w-full max-w-md justify-center px-4">
-        <SearchPopover />
+        <SearchCommandPopover />
       </div>
 
       {/* Right - User controls */}
@@ -95,7 +95,6 @@ export default function Header() {
           <SignUpButton />
         </SignedOut>
         <SignedIn>
-
           <Link href="/chat" passHref>
             <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
               <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />

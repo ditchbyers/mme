@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
 import { UserType } from "@/types"
@@ -8,12 +9,20 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } 
 import { HouseIcon, MessagesSquare, Search, UserRound } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 
-import socket from "@/config/socket-config"
-import { SetCurrentUser, SetOnlineUsers, UserState } from "@/lib/redux/userSlice"
+import { SetCurrentUser, UserState } from "@/lib/redux/userSlice"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
-import Link from "next/link"
+
+import { SearchCommandPopover } from "./header-search"
 
 export const MobileNavigation = () => {
   const pathname = usePathname()
@@ -24,7 +33,6 @@ export const MobileNavigation = () => {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
-  const [openProfileModal, setOpenProfileModal] = useState(false)
 
   useEffect(() => {
     if (isPublicRoute) return
@@ -86,13 +94,16 @@ export const MobileNavigation = () => {
                 <HouseIcon className="h-4 w-4 text-gray-500 hover:text-black" />
               </p>
             </Link>
-
-            <Link href="/" passHref>
-              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
-                <Search className="h-4 w-4 text-gray-500 hover:text-black" />
-              </p>
-            </Link>
-
+            <Dialog>
+              <DialogTrigger>
+                <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
+                  <Search className="h-4 w-4 text-gray-500 hover:text-black" />
+                </p>
+              </DialogTrigger>
+              <DialogContent className="fixed top-20 border-none bg-transparent p-0">
+                <SearchCommandPopover />
+              </DialogContent>
+            </Dialog>
             <Link href="/chat" passHref>
               <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
                 <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
