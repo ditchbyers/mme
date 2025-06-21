@@ -81,20 +81,19 @@ function ChatCard({ chat, onSelect }: Props) {
             ;(e.target as HTMLImageElement).src = "./image.png"
           }}
         />
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col justify-between gap-1">
           <span className="text flex items-center gap-2 font-bold text-gray-700">
             {chatName}
             {onlineIndicator()}
           </span>
-          <span className="max-w-[260px] overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-700">
+          <span className="max-w-[200px] overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-700">
             {lastMessageSenderName} {lastMessage}
           </span>
         </div>
       </div>
-
-      <div>
-        {unreadCounts()}
+      <div className="flex flex-col items-end justify-between">
         <span className="text-xs text-gray-500">{lastMessageTime}</span>
+        {unreadCounts()}
       </div>
     </div>
   )

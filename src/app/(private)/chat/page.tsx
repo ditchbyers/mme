@@ -15,21 +15,17 @@ export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("")
 
   return (
-    <div className="flex h-full w-full">
+    <div className="container mx-auto flex h-full w-full border-r border-gray-300">
       {/* ChatList - Desktop OR mobile if no chat selected */}
-      <div className={`w-full p-3 lg:w-[400px] ${selectedChat ? "hidden" : "block"} lg:block`}>
+      <div className={`w-full p-3 lg:w-[400px] ${selectedChat ? "hidden" : "block"} border-r border-gray-300 lg:block`}>
         <ChatsHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="mt-3 flex-1 overflow-auto">
           <ChatsList searchQuery={searchQuery} />
         </div>
       </div>
-
-      {/* Divider */}
-      <div className="hidden h-full w-px bg-gray-300 lg:block" />
-
       {/* ChatArea */}
       {selectedChat && (
-        <div className="flex w-full flex-1 flex-col lg:w-auto" style={{ height: "calc(100vh - 80px)" }}>
+        <div className="flex w-full flex-1 flex-col lg:w-auto" style={{ height: "calc(100vh - 64px)" }}>
           <div className="flex h-full w-full flex-col justify-between">
             <Recipient />
             <Messages />

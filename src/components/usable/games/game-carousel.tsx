@@ -14,50 +14,40 @@ interface GameCarouselProps {
 
 export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [slidesToScroll, setSlidesToScroll] = useState(6) // default
-
-  useEffect(() => {
-    const updateSlidesToScroll = () => {
-      const width = window.innerWidth
-
-      if (width <= 640) {
-        setSlidesToScroll(2)
-      } else if (width > 640 && width <= 768) {
-        setSlidesToScroll(3)
-      } else if (width > 768 && width <= 1280) {
-        setSlidesToScroll(4)
-      } else {
-        setSlidesToScroll(6)
-      }
-    }
-
-    updateSlidesToScroll()
-    window.addEventListener("resize", updateSlidesToScroll)
-    return () => window.removeEventListener("resize", updateSlidesToScroll)
-  }, [])
+  const [touchActiveIndex, setTouchActiveIndex] = useState<number | null>(null)
 
   return (
-    <div className="mx-auto max-w-[96rem]">
-      <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll }} draggable={false}>
+    <div className="container mx-auto">
+      <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll: "auto" }} draggable={false}>
         <CarouselContent className="-ml-2 pr-8 lg:pr-0">
           {games.map((game, index) => (
             <CarouselItem
               key={index}
               className={cn(
-                "relative aspect-[3/4] basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 xl:basis-1/6",
+                "relative aspect-[3/4] basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 xl:basis-1/8",
                 "flex items-center justify-center select-none"
               )}
             >
-              <div className="relative aspect-[3/4] w-full">
-                <Link href={`/games/${game.identifier}`}>
-                  <Image
-                    src={game.cover.replace("{width}", "285").replace("{height}", "380")}
-                    alt={game.name}
-                    className="cursor-pointer rounded-md object-contain shadow active:cursor-grabbing"
-                    fill
-                  />
-                </Link>
-              </div>
+              <Link
+                href={`/games/${game.identifier}`}
+                className={cn(
+                  "group relative aspect-[3/4] w-full overflow-hidden transition-all duration-300 select-none hover:rounded-2xl",
+                  touchActiveIndex === index && "rounded-2xl"
+                )}
+                onTouchStart={() => setTouchActiveIndex(index)}
+                onTouchEnd={() => setTouchActiveIndex(null)}
+                onTouchCancel={() => setTouchActiveIndex(null)}
+              >
+                <Image
+                  src={game.cover.replace("{width}", "285").replace("{height}", "380")}
+                  alt={game.name}
+                  className={cn(
+                    "cursor-pointer rounded-md object-contain transition-transform duration-300 select-none group-hover:scale-105 active:cursor-grabbing",
+                    touchActiveIndex === index && "scale-105"
+                  )}
+                  fill
+                />
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

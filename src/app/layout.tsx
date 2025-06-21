@@ -31,7 +31,7 @@ export default function RootLayout({
         <body className={`${lato.variable} flex h-full min-h-screen w-full flex-col antialiased`}>
           <ReduxProvider>
             <Header />
-            <main className="flex-1 lg:mt-20">{children}</main>
+            <main className="flex-1 lg:mt-16">{children}</main>
             <footer className="min-h-[1px]">
               <MobileNavigation />
             </footer>

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { Search } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -55,21 +56,21 @@ export function SearchCommandPopover() {
         },
         {
           type: "user",
-          id: "user1",
+          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
           username: "pascal",
           profileImage:
             "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
         },
         {
           type: "user",
-          id: "user2",
+          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
           username: "mitch",
           profileImage:
             "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
         },
         {
           type: "user",
-          id: "user3",
+          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
           username: "lisa",
           profileImage:
             "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
@@ -119,8 +120,8 @@ export function SearchCommandPopover() {
   )
 
   const handleSearch = (query: string) => {
-    setSearchValue(query)
     setOpen(false)
+    setSearchValue("") // Clear the search value instead of setting it to the query
     console.log("Searching for:", query)
   }
 
@@ -166,7 +167,7 @@ export function SearchCommandPopover() {
                               {/* 3:4 aspect ratio wrapper */}
                               <div className="relative aspect-[3/4] w-8">
                                 <img
-                                  src={game.imageUrl}
+                                  src={game.imageUrl || "/placeholder.svg"}
                                   alt={game.name}
                                   className="absolute inset-0 h-full w-full object-cover"
                                 />
@@ -184,20 +185,20 @@ export function SearchCommandPopover() {
                           Users ({filteredUsers.length})
                         </div>
                         {filteredUsers.map((user) => (
-                          <Button
+                          <Link
                             key={user.id}
-                            variant="ghost"
-                            className="hover:bg-muted h-auto w-full justify-start p-3 text-left font-normal"
+                            href={`/user/${user.id}`}
+                            className="hover:bg-muted block h-auto w-full justify-start p-3 text-left font-normal"
                             onClick={() => handleSearch(user.username)}
                           >
                             <div className="flex items-center gap-3">
                               <Avatar className="h-8 w-8">
-                                <AvatarImage src={user.profileImage} alt={user.username} />
+                                <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.username} />
                                 <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
                               </Avatar>
                               <span className="font-medium">{user.username}</span>
                             </div>
-                          </Button>
+                          </Link>
                         ))}
                       </div>
                     )}

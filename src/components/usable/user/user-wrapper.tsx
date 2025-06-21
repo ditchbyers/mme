@@ -6,30 +6,33 @@ import { useRouter } from "next/navigation"
 import { CreateNewChat } from "@/server-actions/chats"
 import { GetSimilarUserRecommendations } from "@/server-actions/recommendation"
 import { recommendedUser, UserType } from "@/types"
+import { Gamepad2, Globe, Heart, MapPin } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 
 import socket from "@/config/socket-config"
 import { SetChats, SetSelectedChat } from "@/lib/redux/chatSlice"
 import { UserState } from "@/lib/redux/userSlice"
 import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import ScoreBar from "@/components/ui/score-bar"
+import { Separator } from "@/components/ui/separator"
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../ui/carousel"
 import { HeartButtonSimple } from "../../ui/heart-button-user"
-import ScoreBar from "@/components/ui/score-bar"
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
-} from "@/components/ui/dialog"
-
 
 export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [slidesToScroll, setSlidesToScroll] = useState(6)
   const [recommendedUsers, setRecommendedUsers] = useState<recommendedUser[]>([])
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
   const chats = useSelector((state: any) => state.chat.chats)
@@ -38,7 +41,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
 
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(false)
-  const selectedScore = selectedUser ? recommendedUsers.find((r) => r.user.id === selectedUser.id)?.score ?? 0 : 0
+  const selectedScore = selectedUser ? (recommendedUsers.find((r) => r.user.id === selectedUser.id)?.score ?? 0) : 0
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -67,19 +70,6 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
     }
     fetchRecommendations()
   }, [currentUserData, game_id])
-
-  useEffect(() => {
-    const updateSlidesToScroll = () => {
-      const width = window.innerWidth
-      if (width <= 640) setSlidesToScroll(2)
-      else if (width <= 768) setSlidesToScroll(3)
-      else if (width <= 1280) setSlidesToScroll(4)
-      else setSlidesToScroll(6)
-    }
-    updateSlidesToScroll()
-    window.addEventListener("resize", updateSlidesToScroll)
-    return () => window.removeEventListener("resize", updateSlidesToScroll)
-  }, [])
 
   const getProperty = (key: string, value: string) => {
     return (
@@ -142,42 +132,15 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
   return (
     <>
       <div className="mx-auto max-w-[96rem]">
-        <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll }} draggable={false}>
+        <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll: "auto" }} draggable={false}>
           <CarouselContent className="-ml-2 pr-8 lg:pr-0">
             {recommendedUsers.map((user, index) => (
               <CarouselItem
                 key={index}
-                className={cn(
-                  "relative basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 xl:basis-1/6",
-                  "flex justify-center select-none"
-                )}
+                className={cn("relative basis-1/2 pl-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 xl:basis-1/8")}
               >
-                <div className="relative flex w-full max-w-xs flex-col items-center rounded-2xl bg-gray-100 border border-gray-300 shadow-md hover:shadow-lg transition-shadow p-4">
-                  <div className="absolute top-3 right-3">
-                    <HeartButtonSimple userId={user.user.id} />
-                  </div>
-
-                  <div
-                    onClick={() => setSelectedUser(user.user)}
-                    className="relative mb-4 h-24 w-24 cursor-pointer overflow-hidden rounded-full ring-4 ring-gray-200"
-                  >
-                    <Image
-                      src={user.user.profilePicture || "/image.png"}
-                      alt={user.user.userName}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <p className="text-center text-base font-semibold text-gray-800">
-                    {user.user.userName}
-                  </p>
-
-                  <div className="my-3 w-full border-t border-gray-200" />
-
-                  <div className="w-full">
-                    <ScoreBar score={user.score} />
-                  </div>
+                <div className="flex w-full justify-center">
+                  <UserDialog user={user} />
                 </div>
               </CarouselItem>
             ))}
@@ -237,4 +200,146 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
       </Dialog>
     </>
   )
+}
+
+function UserDialog({ user }: { user: recommendedUser }) {
+  return (
+    <Dialog>
+      <DialogTrigger className="w-full cursor-pointer">
+        <Button
+          variant={"ghost"}
+          className="hover:bg-muted/50 flex h-auto w-full flex-col items-center space-y-2 p-2 transition-colors"
+        >
+          <div className="relative">
+            <Avatar className="ring-background h-16 w-16 shadow-lg ring-2">
+              <AvatarImage src={user.user.profilePicture} alt={user.user.name} />
+              <AvatarFallback className="text-lg font-semibold">
+                {user.user.name.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            {user.score && (
+              <div
+                className={cn(
+                  "absolute -top-1 -right-5 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold",
+                  getMatchColor(user.score)
+                )}
+              >
+                {user.score > 10 ? 10 : user.score}
+              </div>
+            )}
+          </div>
+          <div className="text-center">
+            <p className="line-clamp-1 text-sm font-medium">{user.user.name}</p>
+            <p className="text-muted-foreground text-xs">@{user.user.userName}</p>
+          </div>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[80vh] overflow-y-auto lg:min-w-5xl xl:min-w-6xl 2xl:min-w-7xl">
+        <DialogHeader>
+          <div className="flex items-start gap-4">
+            <Avatar className="ring-border h-20 w-20 ring-2">
+              <AvatarImage src={user.user.profilePicture || "/placeholder.svg"} alt={user.user.name} />
+              <AvatarFallback className="text-xl font-bold">{user.user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <DialogTitle className="text-2xl">{user.user.name}</DialogTitle>
+              <p className="text-muted-foreground">@{user.user.userName}</p>
+              {user.score && (
+                <div className="mt-2">
+                  <Badge variant="secondary" className={cn("text-sm", getMatchColor(user.score))}>
+                    <Heart className="mr-1 h-3 w-3" />
+                    {getMatchLabel(user.score)} ({user.score > 10 ? 10 : user.score}/10)
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </div>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Bio */}
+          {user.user.bio && (
+            <div>
+              <h3 className="text-muted-foreground mb-2 text-sm font-semibold tracking-wide uppercase">About</h3>
+              <p className="text-sm leading-relaxed">{user.user.bio}</p>
+            </div>
+          )}
+
+          {/* Location & Language */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {user.user.location && (
+              <div className="flex items-center gap-2">
+                <MapPin className="text-muted-foreground h-4 w-4" />
+                <span className="text-sm">{user.user.location}</span>
+              </div>
+            )}
+            {user.user.language && (
+              <div className="flex items-center gap-2">
+                <Globe className="text-muted-foreground h-4 w-4" />
+                <span className="text-sm">{user.user.language}</span>
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Platforms */}
+          {user.user.platforms && user.user.platforms.length > 0 && (
+            <div>
+              <h3 className="text-muted-foreground mb-3 text-sm font-semibold tracking-wide uppercase">Platforms</h3>
+              <div className="flex flex-wrap gap-2">
+                {user.user.platforms.map((platform) => (
+                  <Badge key={platform} variant="outline" className="flex items-center gap-1">
+                    <Gamepad2 className="h-3 w-3" />
+                    {platform}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Games */}
+          {user.user.games && user.user.games.length > 0 && (
+            <div>
+              <h3 className="text-muted-foreground mb-3 text-sm font-semibold tracking-wide uppercase">
+                Favorite Games ({user.user.games.length})
+              </h3>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                {user.user.games.map((game) => (
+                  <div
+                    key={game.id}
+                    className="group relative aspect-[3/4] overflow-hidden rounded-lg shadow-md transition-shadow hover:shadow-lg"
+                  >
+                    <Image
+                      src={game.cover.replace('{width || "/placeholder.svg"}', "150").replace("{height}", "200")}
+                      alt={game.name}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="absolute right-2 bottom-2 left-2">
+                        <p className="line-clamp-2 text-xs font-medium text-white">{game.name}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function getMatchColor(score: number) {
+  if (score >= 8) return "text-green-500 bg-green-500/10"
+  if (score >= 4) return "text-yellow-500 bg-yellow-500/10"
+  return "text-red-500 bg-red-500/10"
+}
+
+function getMatchLabel(score: number) {
+  if (score >= 8) return "Excellent Match"
+  if (score >= 4) return "Good Match"
+  return "Low Match"
 }
