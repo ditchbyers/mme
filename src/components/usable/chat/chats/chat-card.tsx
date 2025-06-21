@@ -40,7 +40,9 @@ function ChatCard({ chat, onSelect }: Props) {
   if (chat.lastMessage?.sender) {
     lastMessageSenderName =
       chat.lastMessage.sender.id === currentUserData?.id ? "You :" : `${chat.lastMessage.sender.name.split(" ")[0]} :`
-    lastMessageTime = formatDateTime(chat.lastMessage.createdAt)
+    const dateWithAdded2Hours = new Date(chat.lastMessage.createdAt)
+    dateWithAdded2Hours.setHours(dateWithAdded2Hours.getHours() + 2)
+    lastMessageTime = formatDateTime(dateWithAdded2Hours.toISOString())
     lastMessage = chat.lastMessage.text
   }
 
@@ -78,7 +80,7 @@ function ChatCard({ chat, onSelect }: Props) {
           alt="Profile"
           className="size-10 rounded-full"
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = "./image.png"
+            ; (e.target as HTMLImageElement).src = "./image.png"
           }}
         />
         <div className="flex flex-col gap-1">
