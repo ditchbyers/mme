@@ -212,7 +212,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
               <div className="my-4 w-full border-t border-gray-300" />
 
               <div className="mt-5 flex flex-col gap-4">
-                {getProperty("Location", selectedUser.location || "")}
+                {getProperty("Server Location", selectedUser.location || "")}
                 {getProperty("Language", selectedUser.language || "")}
                 {getProperty(
                   "Games",
