@@ -13,12 +13,11 @@ interface GameCarouselProps {
 }
 
 export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
   const [touchActiveIndex, setTouchActiveIndex] = useState<number | null>(null)
 
   return (
     <div className="container mx-auto">
-      <Carousel ref={containerRef} opts={{ align: "start", loop: true, slidesToScroll: "auto" }} draggable={false}>
+      <Carousel opts={{ align: "start", loop: true, slidesToScroll: "auto" }} draggable={false}>
         <CarouselContent className="-ml-2 pr-8 lg:pr-0">
           {games.map((game, index) => (
             <CarouselItem

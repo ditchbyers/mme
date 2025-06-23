@@ -2,37 +2,29 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { GetCurrentUserFromMongoDB } from "@/server-actions/users"
 import { UserType } from "@/types"
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
-import { HouseIcon, MessagesSquare, Search, UserRound } from "lucide-react"
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs"
+import { Home, Icon, MessagesSquare, Search, User } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 
 import { SetCurrentUser, UserState } from "@/lib/redux/userSlice"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
 
-import { SearchCommandPopover } from "./header-search"
+import { HeaderSearch } from "./header-search"
 
 export const MobileNavigation = () => {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")
   if (isPublicRoute) return null
 
-  const router = useRouter()
   const dispatch = useDispatch()
-  const { currentUserData }: UserState = useSelector((state: any) => state.user)
-  const [showCurrentUserInfo, setShowCurrentUserInfo] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
 
   useEffect(() => {
     if (isPublicRoute) return
@@ -48,28 +40,50 @@ export const MobileNavigation = () => {
     getCurrentUser()
   }, [])
 
-  /*useEffect(() => {
-    if (currentUserData) {
-      socket.emit("join", currentUserData.id)
-
-      const handleOnlineUsers = (onlineUsers: string[]) => {
-        dispatch(SetOnlineUsers(onlineUsers))
-        console.log("Online users updated:", onlineUsers)
-      }
-
-      socket.on("online-users-updated", handleOnlineUsers)
-
-      return () => {
-        socket.off("online-users-updated", handleOnlineUsers)
-      }
-    }
-  }, [currentUserData])
-  */
+  const navItems = [
+    {
+      name: "Home",
+      href: "/",
+      icon: Home,
+      isActive: pathname === "/",
+    },
+    {
+      name: "Chat",
+      href: "/chat",
+      icon: MessagesSquare,
+      isActive: pathname === "/chat",
+    },
+    {
+      name: "Search",
+      href: "#",
+      icon: Search,
+      isActive: false,
+      onClick: () => setIsSearchOpen(true),
+    },
+    {
+      name: "Profile",
+      href: "#",
+      icon: User,
+      isActive: false,
+      onClick: () => setIsProfileOpen(true),
+    },
+  ]
 
   return (
     <>
-      <div className="fixed right-0 bottom-0 left-0 z-50 h-20 bg-slate-900 lg:hidden">
-        <div className="container mx-auto flex justify-between px-4 py-6 font-bold text-gray-200 uppercase">
+      {/* Search Dialog */}
+      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <DialogContent className="fixed top-20 border-none bg-transparent p-0 [&>button]:hidden">
+          <DialogTitle className="sr-only">Search</DialogTitle>
+          <HeaderSearch />
+        </DialogContent>
+      </Dialog>
+
+      <CurrentUserInfo setShowCurrentUserInfo={setIsProfileOpen} showCurrentUserInfo={isProfileOpen} />
+
+      {/* Mobile Bottom Navigation */}
+      <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 fixed right-0 bottom-0 left-0 z-[9999] h-16 border-t px-2 py-2 backdrop-blur lg:hidden">
+        <div className="flex h-full items-center justify-around">
           <SignedOut>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex gap-10">
@@ -87,50 +101,50 @@ export const MobileNavigation = () => {
               </div>
             </div>
           </SignedOut>
-
           <SignedIn>
-            <Link href="/" passHref>
-              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
-                <HouseIcon className="h-4 w-4 text-gray-500 hover:text-black" />
-              </p>
-            </Link>
-            <Dialog>
-              <DialogTrigger>
-                <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
-                  <Search className="h-4 w-4 text-gray-500 hover:text-black" />
-                </p>
-              </DialogTrigger>
-              <DialogContent className="fixed top-20 border-none bg-transparent p-0">
-                <SearchCommandPopover />
-              </DialogContent>
-            </Dialog>
-            <Link href="/chat" passHref>
-              <p className="inline-flex items-center justify-center rounded-full p-2 hover:bg-gray-800">
-                <MessagesSquare className="h-4 w-4 text-gray-500 hover:text-black" />
-              </p>
-            </Link>
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = item.isActive
 
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-bold">{currentUserData?.userName}</span>
-              <Avatar className="cursor-pointer" onClick={() => setShowCurrentUserInfo(true)}>
-                <AvatarImage src={currentUserData?.profilePicture} alt="User Avatar" />
-                <AvatarFallback></AvatarFallback>
-              </Avatar>
-            </div>
+              if (item.onClick) {
+                return (
+                  <Button
+                    key={item.name}
+                    variant="ghost"
+                    size="sm"
+                    onClick={item.onClick}
+                    className={`relative flex h-12 w-16 flex-col items-center justify-center rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${isActive ? "scale-110" : ""} transition-transform`} />
+                    <span className="mt-1 text-xs font-medium">{item.name}</span>
+                  </Button>
+                )
+              }
 
-            {showCurrentUserInfo && currentUserData && (
-              <CurrentUserInfo
-                setShowCurrentUserInfo={setShowCurrentUserInfo}
-                showCurrentUserInfo={showCurrentUserInfo}
-              />
-            )}
+              return (
+                <Link href={item.href} key={item.name}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`relative flex h-12 w-16 flex-col items-center justify-center rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${isActive ? "scale-110" : ""} transition-transform`} />
+                    <span className="mt-1 text-xs font-medium">{item.name}</span>
+                  </Button>
+                </Link>
+              )
+            })}
           </SignedIn>
         </div>
       </div>
-
-      {showCurrentUserInfo && currentUserData && (
-        <CurrentUserInfo setShowCurrentUserInfo={setShowCurrentUserInfo} showCurrentUserInfo={showCurrentUserInfo} />
-      )}
     </>
   )
 }

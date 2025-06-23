@@ -15,6 +15,19 @@ body {
   font-family: Lato, Arial, Helvetica, sans-serif;
 }
 
+.ant-select-item-option-active {
+  background-color: transparent !important;
+}
+
+/* Optional: also remove blue background for selected options */
+.ant-select-item-option-selected {
+  background-color: transparent !important;
+}
+
+.ant-select-item-option-selected .ant-select-item-option-state {
+  color: #6b7280 !important; /* Tailwind's gray-500 */
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);

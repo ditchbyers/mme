@@ -1,214 +1,211 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Gamepad2, Search, Star, User } from "lucide-react"
 
+import { searchContent } from "@/lib/fetch/games"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-type Game = {
-  type: "game"
-  id: string
-  name: string
-  imageUrl: string
-}
-
-type User = {
-  type: "user"
+export interface SearchUser {
   id: string
   username: string
-  profileImage: string
+  profilePicture: string
 }
 
-type SearchItem = Game | User
+export interface SearchGame {
+  identifier: string
+  cover: string
+  name: string
+  rating: number
+  viewer_count: number
+}
 
-export function SearchCommandPopover() {
-  const [searchValue, setSearchValue] = React.useState("")
-  const [open, setOpen] = React.useState(false)
-  const [data, setData] = React.useState<SearchItem[]>([])
-  const inputRef = React.useRef<HTMLInputElement>(null)
+export interface SearchResponse {
+  users: SearchUser[]
+  games: SearchGame[]
+}
+
+export function HeaderSearch() {
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [isSearching, setIsSearching] = React.useState(false)
+  const [searchResults, setSearchResults] = React.useState<SearchResponse>({ users: [], games: [] })
   const containerRef = React.useRef<HTMLDivElement>(null)
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
-  // Simulate data fetching
-  React.useEffect(() => {
-    // Replace with actual API call
-    const fetchData = async () => {
-      const result: SearchItem[] = [
-        {
-          type: "game",
-          id: "game1",
-          name: "League of Legends",
-          imageUrl: "/_next/image?url=https%3A%2F%2Fstatic-cdn.jtvnw.net%2Fttv-boxart%2F21779-285x380.jpg&w=3840&q=75",
-        },
-        {
-          type: "game",
-          id: "game2",
-          name: "Valorant",
-          imageUrl: "/_next/image?url=https%3A%2F%2Fstatic-cdn.jtvnw.net%2Fttv-boxart%2F21779-285x380.jpg&w=3840&q=75",
-        },
-        {
-          type: "game",
-          id: "game3",
-          name: "Elden Ring",
-          imageUrl: "/_next/image?url=https%3A%2F%2Fstatic-cdn.jtvnw.net%2Fttv-boxart%2F21779-285x380.jpg&w=3840&q=75",
-        },
-        {
-          type: "user",
-          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
-          username: "pascal",
-          profileImage:
-            "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
-        },
-        {
-          type: "user",
-          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
-          username: "mitch",
-          profileImage:
-            "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
-        },
-        {
-          type: "user",
-          id: "user_2wwRY6Qau8aFSxUTy9OsBrcOM2o",
-          username: "lisa",
-          profileImage:
-            "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ4dWJRTmtkTFlUdEZ0TWhNWmVEZFVicXNHRyJ9",
-        },
-      ]
-      setData(result)
+  const debouncedSearch = React.useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults({ users: [], games: [] })
+      setIsSearching(false)
+      return
     }
 
-    fetchData()
+    setIsSearching(true)
+    try {
+      const results = await searchContent(query)
+      setSearchResults(results)
+    } catch (error) {
+      console.error("Search failed:", error)
+      setSearchResults({ users: [], games: [] })
+    } finally {
+      setIsSearching(false)
+    }
   }, [])
 
   React.useEffect(() => {
-    setOpen(searchValue.length > 0)
-  }, [searchValue])
+    const timer = setTimeout(() => {
+      debouncedSearch(searchQuery)
+    }, 300)
 
+    return () => clearTimeout(timer)
+  }, [searchQuery, debouncedSearch])
+
+  // Open dropdown when there's a search query
+  React.useEffect(() => {
+    setIsOpen(searchQuery.length > 0)
+  }, [searchQuery])
+
+  // Handle click outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpen(false)
+        setIsOpen(false)
       }
     }
 
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside)
-    }
-
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [open])
+  }, [])
 
-  // Filtering the API data based on searchValue
-  const filteredGames = React.useMemo(
-    () =>
-      data.filter(
-        (item): item is Game => item.type === "game" && item.name.toLowerCase().includes(searchValue.toLowerCase())
-      ),
-    [data, searchValue]
-  )
+  const handleLinkClick = () => {
+    setIsOpen(false)
+    setSearchQuery("")
+    setSearchResults({ users: [], games: [] })
+    setIsSearching(false)
+  }
 
-  const filteredUsers = React.useMemo(
-    () =>
-      data.filter(
-        (item): item is User => item.type === "user" && item.username.toLowerCase().includes(searchValue.toLowerCase())
-      ),
-    [data, searchValue]
-  )
-
-  const handleSearch = (query: string) => {
-    setOpen(false)
-    setSearchValue("") // Clear the search value instead of setting it to the query
-    console.log("Searching for:", query)
+  const handleInputFocus = () => {
+    if (searchQuery.length > 0) {
+      setIsOpen(true)
+    }
   }
 
   return (
-    <div className="mx-auto w-full">
-      <div className="relative" ref={containerRef}>
-        <div className="relative">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-          <Input
-            ref={inputRef}
-            placeholder="Search games or users..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="bg-secondary h-12 py-3 pr-4 pl-10 text-base"
-          />
-        </div>
-
-        {open && (
-          <div className="absolute top-full right-0 left-0 z-50 mt-1">
-            <div className="bg-popover text-popover-foreground rounded-md border p-0 shadow-md outline-none">
-              <div className="max-h-80 overflow-y-auto">
-                {filteredGames.length === 0 && filteredUsers.length === 0 ? (
-                  <div className="text-muted-foreground p-4 text-center">
-                    <Search className="mx-auto mb-2 h-8 w-8" />
-                    <p>No results found</p>
-                    <p className="text-sm">Try a different search term</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2 p-2">
-                    {filteredGames.length > 0 && (
-                      <div>
-                        <div className="text-muted-foreground px-2 py-1.5 text-sm font-medium">
-                          Games ({filteredGames.length})
-                        </div>
-                        {filteredGames.map((game) => (
-                          <Button
-                            key={game.id}
-                            variant="ghost"
-                            className="hover:bg-muted h-auto w-full justify-start p-3 text-left font-normal"
-                            onClick={() => handleSearch(game.name)}
-                          >
-                            <div className="flex items-center gap-3">
-                              {/* 3:4 aspect ratio wrapper */}
-                              <div className="relative aspect-[3/4] w-8">
-                                <img
-                                  src={game.imageUrl || "/placeholder.svg"}
-                                  alt={game.name}
-                                  className="absolute inset-0 h-full w-full object-cover"
-                                />
-                              </div>
-                              <span className="font-medium">{game.name}</span>
-                            </div>
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-
-                    {filteredUsers.length > 0 && (
-                      <div>
-                        <div className="text-muted-foreground px-2 py-1.5 text-sm font-medium">
-                          Users ({filteredUsers.length})
-                        </div>
-                        {filteredUsers.map((user) => (
-                          <Link
-                            key={user.id}
-                            href={`/user/${user.id}`}
-                            className="hover:bg-muted block h-auto w-full justify-start p-3 text-left font-normal"
-                            onClick={() => handleSearch(user.username)}
-                          >
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
-                                <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.username} />
-                                <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
-                              </Avatar>
-                              <span className="font-medium">{user.username}</span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="bg-popover relative mx-auto w-full rounded-md" ref={containerRef}>
+      <div className="relative">
+        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2" />
+        <Input
+          ref={inputRef}
+          type="search"
+          placeholder="Search users and games..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={handleInputFocus}
+          className="bg-muted/50 focus-visible:ring-primary/20 h-12 border-0 pr-4 pl-10 text-base focus-visible:ring-2"
+        />
       </div>
+
+      {isOpen && searchQuery && (
+        <div className="absolute top-full right-0 left-0 z-50 mt-1">
+          <div className="bg-popover text-popover-foreground max-h-96 overflow-y-auto rounded-md border shadow-md">
+            {isSearching && (
+              <div className="text-muted-foreground py-8 text-center">
+                <div className="border-primary mx-auto mb-2 h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"></div>
+                <p className="text-sm">Searching...</p>
+              </div>
+            )}
+
+            {!isSearching && searchResults.users.length === 0 && searchResults.games.length === 0 && (
+              <div className="text-muted-foreground py-8 text-center">
+                <Search className="mx-auto mb-2 h-8 w-8 opacity-50" />
+                <p className="text-sm font-medium">No results found</p>
+                <p className="text-xs">Try searching for different users or games</p>
+              </div>
+            )}
+
+            {!isSearching && searchResults.users.length > 0 && (
+              <div className="p-2">
+                <h3 className="text-muted-foreground mb-2 px-2 text-sm font-medium">Users</h3>
+                <div className="space-y-1">
+                  {searchResults.users.map((user) => (
+                    <Link
+                      href={`/user/${user.id}`}
+                      key={user.id}
+                      onClick={handleLinkClick}
+                      className="hover:bg-accent flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors"
+                    >
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.profilePicture || "/placeholder.svg"} alt={user.username} />
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-sm text-white">
+                          {user.username.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{user.username}</p>
+                        <p className="text-muted-foreground text-xs">User Profile</p>
+                      </div>
+                      <User className="text-muted-foreground h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isSearching && searchResults.games.length > 0 && (
+              <div className="p-2">
+                <h3 className="text-muted-foreground mb-2 px-2 text-sm font-medium">Games</h3>
+                <div className="space-y-1">
+                  {searchResults.games.map((game) => (
+                    <Link
+                      href={`/games/${game.identifier}`}
+                      key={game.identifier}
+                      onClick={handleLinkClick}
+                      className="hover:bg-accent flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors"
+                    >
+                      <div className="bg-muted relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                        <Image
+                          src={
+                            game.cover.replace('{width || "/placeholder.svg"}', "96").replace("{height}", "128") ||
+                            "/placeholder.svg"
+                          }
+                          alt={`${game.name} cover`}
+                          className="object-cover"
+                          fill
+                          sizes="48px"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.src = "/placeholder.svg?height=48&width=48"
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{game.name}</p>
+                        <div className="text-muted-foreground flex items-center space-x-2 text-xs">
+                          {game.rating > 0 && (
+                            <div className="flex items-center space-x-1">
+                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                              <span>{game.rating.toFixed(1)}</span>
+                            </div>
+                          )}
+                          {game.viewer_count > 0 && <span>{game.viewer_count.toLocaleString()} viewers</span>}
+                        </div>
+                      </div>
+                      <Gamepad2 className="text-muted-foreground h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

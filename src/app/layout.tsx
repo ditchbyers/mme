@@ -4,6 +4,7 @@ import "./globals.css"
 
 import { Lato } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
+import { Toaster } from "sonner"
 
 import ReduxProvider from "@/lib/redux-provider"
 import Header from "@/components/usable/navigation/header"
@@ -32,6 +33,7 @@ export default function RootLayout({
           <ReduxProvider>
             <Header />
             <main className="flex-1 lg:mt-16">{children}</main>
+            <Toaster />
             <footer className="min-h-[1px]">
               <MobileNavigation />
             </footer>

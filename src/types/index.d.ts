@@ -18,15 +18,27 @@ export interface GameDetails extends Game {
   platforms: string[]
   game_modes: string[]
   genres: string[]
+  base_game: Game
+  similar_games: Game[]
+  expansions: Game[]
+  related_games: Game[]
 }
 
 export interface Game {
-  age_rating: number
+  age_rating: AgeRating[]
   cover: string
   identifier: string
   name: string
   rating: number
   viewer_count: number
+}
+
+interface AgeRating {
+  age_limit: number
+  agency: string
+  icon: string
+  location: string
+  name: string
 }
 
 export interface Stream {
@@ -80,6 +92,6 @@ export interface MessageType {
 }
 
 export interface recommendedUser {
-  user : UserType
+  user: UserType
   score: number
 }

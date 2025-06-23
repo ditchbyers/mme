@@ -1,7 +1,8 @@
 import Image from "next/image"
 import { format, formatDistanceToNow } from "date-fns"
 
-import { fetchGameDetails } from "@/lib/fetch/games"
+import { fetchGameDetails, searchContent } from "@/lib/fetch/games"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -13,12 +14,14 @@ import { UserCarousel } from "@/components/usable/user/user-wrapper"
 
 export default async function GameDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+
   const gamedetails = await fetchGameDetails(id)
   const distance = formatDistanceToNow(new Date(gamedetails.first_release_date), {
     addSuffix: true,
   })
 
-  const mockCovers = new Array(20).fill(gamedetails)
+  console.log(gamedetails)
+
   return (
     <div className="container mx-auto min-h-screen space-y-12 p-6 pb-36">
       {/* Hero Section */}
@@ -128,6 +131,43 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                     </div>
                   </div>
                 )}
+
+                {/* Age Ratings */}
+                {gamedetails.age_rating.length > 1 && (
+                  <div className="space-y-3 sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                    <h3 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">Age Rating</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {gamedetails.age_rating.map((rating, index) => {
+                        // Determine if this is an ESRB rating (typically rectangular)
+                        const isESRB = rating.agency.toLowerCase() === "esrb"
+
+                        return (
+                          <div
+                            key={index}
+                            className="group relative flex max-w-16 min-w-0 flex-col items-center space-y-2"
+                          >
+                            <div
+                              className={`relative overflow-hidden bg-white/5 backdrop-blur-sm transition-all duration-300 ${isESRB ? "h-20 w-16" : "h-16 w-16"} `}
+                            >
+                              <Image
+                                src={rating.icon || "/placeholder.svg?height=80&width=80"}
+                                alt={`${rating.agency} ${rating.name}`}
+                                className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
+                                fill
+                                sizes={isESRB ? "64px" : "64px"}
+                              />
+                            </div>
+                            <div className="flex max-w-[80px] flex-col items-center space-y-1">
+                              <span className="text-muted-foreground/80 text-center text-[10px] leading-tight">
+                                {rating.location}
+                              </span>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -135,26 +175,30 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
       </div>
       <div className="space-y-12">
         {/* Expansions */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-4">
-            <TH3 className="text-2xl font-bold">Expansions</TH3>
-            <div className="from-border h-px flex-1 bg-gradient-to-r to-transparent" />
-          </div>
-          <div className="bg-card/30 rounded-xl p-6 backdrop-blur-sm">
-            <GameCarousel games={mockCovers} />
-          </div>
-        </section>
+        {gamedetails.expansions.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-4">
+              <TH3 className="text-2xl font-bold">Expansions</TH3>
+              <div className="from-border h-px flex-1 bg-gradient-to-r to-transparent" />
+            </div>
+            <div className="bg-card/30 rounded-xl p-6 backdrop-blur-sm">
+              <GameCarousel games={gamedetails.expansions} />
+            </div>
+          </section>
+        )}
 
         {/* Similar Games */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-4">
-            <TH3 className="text-2xl font-bold">Similar Games</TH3>
-            <div className="from-border h-px flex-1 bg-gradient-to-r to-transparent" />
-          </div>
-          <div className="bg-card/30 rounded-xl p-6 backdrop-blur-sm">
-            <GameCarousel games={mockCovers} />
-          </div>
-        </section>
+        {gamedetails.similar_games.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-4">
+              <TH3 className="text-2xl font-bold">Similar Games</TH3>
+              <div className="from-border h-px flex-1 bg-gradient-to-r to-transparent" />
+            </div>
+            <div className="bg-card/30 rounded-xl p-6 backdrop-blur-sm">
+              <GameCarousel games={gamedetails.similar_games} />
+            </div>
+          </section>
+        )}
 
         {/* Users */}
         <section className="space-y-6">

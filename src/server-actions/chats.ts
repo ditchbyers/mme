@@ -19,7 +19,6 @@ export const CreateNewChat = async (payload: any, currentUserId: any) => {
     const data = await response.json()
 
     if (!response.ok) {
-      console.log("scheiße")
       console.error("Error creating chat:", data.error)
       return { error: data.error || "Unknown error occurred" }
     }

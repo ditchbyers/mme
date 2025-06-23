@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { CreateNewChat, UpdateChat } from "@/server-actions/chats"
-import { GetAllUsers, GetAllUsersExistingChat } from "@/server-actions/users"
+import { GetAllUsersExistingChat } from "@/server-actions/users"
 import { UserType } from "@/types"
 import { Form, Input, Upload } from "antd"
 import { useSelector } from "react-redux"
@@ -93,8 +93,26 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
   }, [])
 
   return (
-    <div className="grid grid-cols-[auto_1fr] gap-20">
-      <div className="flex flex-col gap-5">
+    <Form onFinish={onFinish} layout="vertical" initialValues={initialData} className="space-y-4!">
+      <Upload
+        className="mb-4!"
+        beforeUpload={(file) => {
+          setSelectedProfilePicture(file)
+          return false
+        }}
+        maxCount={1}
+        listType="picture-card"
+      >
+        <span className="p-3 text-xs text-gray-500">Upload Group Picture</span>
+      </Upload>
+      <Form.Item label="Group Name" name="groupName" rules={[{ required: true, message: "Please input group name!" }]}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Group Description" name="groupDescription">
+        <Input.TextArea />
+      </Form.Item>
+
+      <div className="space-y-4">
         <span className="mt-3 text-sm text-gray-500 uppercase">Select users</span>
         {users.map((user) => {
           if (user.id === currentUserData?.id) return null
@@ -117,40 +135,14 @@ export default function GroupForm({ initialData = null }: { initialData: any }) 
           )
         })}
       </div>
-      <div>
-        <Form onFinish={onFinish} layout="vertical" initialValues={initialData}>
-          <Form.Item
-            label="Group Name"
-            name="groupName"
-            rules={[{ required: true, message: "Please input group name!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Group Description" name="groupDescription">
-            <Input.TextArea />
-          </Form.Item>
-
-          <Upload
-            beforeUpload={(file) => {
-              setSelectedProfilePicture(file)
-              return false
-            }}
-            maxCount={1}
-            listType="picture-card"
-          >
-            <span className="p-3 text-xs text-gray-500">Upload Group Picture</span>
-          </Upload>
-
-          <div className="flex justify-end gap-2">
-            <Button type="button" onClick={() => router.push("/chat")}>
-              Cancel
-            </Button>
-            <Button type="submit" loading={loading}>
-              {initialData ? "Update Group" : "Create Group"}
-            </Button>
-          </div>
-        </Form>
+      <div className="flex justify-end gap-2">
+        <Button type="button" onClick={() => router.push("/chat")}>
+          Cancel
+        </Button>
+        <Button type="submit" loading={loading}>
+          {initialData ? "Update Group" : "Create Group"}
+        </Button>
       </div>
-    </div>
+    </Form>
   )
 }

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  cacheMaxMemorySize: 10000000,
   images: {
     // unoptimized: true,
     domains: ["img.clerk.com"],
@@ -16,6 +17,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.igdb.com",
+      },
+      {
+        protocol: "https",
+        hostname: "revenant.lyrica.systems",
       },
     ],
   },
