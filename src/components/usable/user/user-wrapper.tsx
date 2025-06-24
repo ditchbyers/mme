@@ -264,7 +264,7 @@ export const UserCarousel = ({ game_id }: { game_id: any }) => {
               </Card>
             )}
             {/* Games */}
-            {selectedUser.games && selectedUser.games.length > 1 && <UserProfileGames games={selectedUser.games} />}
+            {selectedUser.games && selectedUser.games.length > 0 && <UserProfileGames games={selectedUser.games} />}
           </DialogContent>
         </Dialog>
       )}

@@ -105,7 +105,7 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
         )}
 
         {/* Games */}
-        {games && games.length > 1 && <UserProfileGames games={games} />}
+        {games && games.length > 0 && <UserProfileGames games={games} />}
       </div>
     </div>
   )

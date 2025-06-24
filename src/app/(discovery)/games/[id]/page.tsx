@@ -133,7 +133,7 @@ export default async function GameDetailsPage({ params }: { params: Promise<{ id
                 )}
 
                 {/* Age Ratings */}
-                {gamedetails.age_rating.length > 1 && (
+                {gamedetails.age_rating.length > 0 && (
                   <div className="space-y-3 sm:col-span-2 lg:col-span-1 xl:col-span-2">
                     <h3 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">Age Rating</h3>
                     <div className="flex flex-wrap gap-3">
