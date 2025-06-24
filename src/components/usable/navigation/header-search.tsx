@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 
 export interface SearchUser {
-  id: string
+  clerkUserId: string
   username: string
   profilePicture: string
 }
@@ -136,8 +136,8 @@ export function HeaderSearch() {
                 <div className="space-y-1">
                   {searchResults.users.map((user) => (
                     <Link
-                      href={`/user/${user.id}`}
-                      key={user.id}
+                      href={`/user/${user.clerkUserId}`}
+                      key={user.clerkUserId}
                       onClick={handleLinkClick}
                       className="hover:bg-accent flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors"
                     >
