@@ -1,9 +1,8 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  cacheMaxMemorySize: 10000000,
   images: {
-    // unoptimized: true,
+    unoptimized: true,
     domains: ["img.clerk.com"],
     remotePatterns: [
       {
