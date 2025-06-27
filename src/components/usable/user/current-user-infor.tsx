@@ -269,7 +269,7 @@ function CurrentUserInfo({
                 placeholder="Tell us about yourself..."
               />
             </div>
-            {currentUserData.games && currentUserData.games.length > 1 && (
+            {currentUserData.games && currentUserData.games.length > 0 && (
               <div className="space-y-4 pb-6">
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center space-x-2">
