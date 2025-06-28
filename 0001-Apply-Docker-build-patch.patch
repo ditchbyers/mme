@@ -1,0 +1,154 @@
+From 67f29969709341497e3a52e87feffaf63ae7920b Mon Sep 17 00:00:00 2001
+From: Felix Kurz <115644420+BrrrUzi@users.noreply.github.com>
+Date: Sat, 28 Jun 2025 16:50:37 +0200
+Subject: [PATCH] Apply Docker build patch
+
+---
+ .gitignore   |   6 +++
+ docker.patch | 118 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 124 insertions(+)
+ create mode 100644 docker.patch
+
+diff --git a/.gitignore b/.gitignore
+index 5ef6a52..2835ef7 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -39,3 +39,9 @@ yarn-error.log*
+ # typescript
+ *.tsbuildinfo
+ next-env.d.ts
++
++.vercel
++.env*.local
++
++# clerk configuration (can include secrets)
++/.clerk/
+\ No newline at end of file
+diff --git a/docker.patch b/docker.patch
+new file mode 100644
+index 0000000..ca6f07e
+--- /dev/null
++++ b/docker.patch
+@@ -0,0 +1,118 @@
++From b45b15fae3d187695818a2497fcdd02bde4c6954 Mon Sep 17 00:00:00 2001
++From: "User" <root@localhost.localdomain>
++Date: Sat, 28 Jun 2025 16:12:53 +0200
++Subject: [PATCH] Docker build!
++
++---
++ .gitignore         |  3 +++
++ Dockerfile         | 61 ++++++++++++++++++++++++++++++++++++++++++++++
++ next.config.ts     |  4 +++
++ src/app/layout.tsx |  2 ++
++ 4 files changed, 70 insertions(+)
++ create mode 100644 Dockerfile
++
++diff --git a/.gitignore b/.gitignore
++index 5ef6a52..e2764f9 100644
++--- a/.gitignore
+++++ b/.gitignore
++@@ -39,3 +39,6 @@ yarn-error.log*
++ # typescript
++ *.tsbuildinfo
++ next-env.d.ts
+++
+++# clerk configuration (can include secrets)
+++/.clerk/
++diff --git a/Dockerfile b/Dockerfile
++new file mode 100644
++index 0000000..bb62e35
++--- /dev/null
+++++ b/Dockerfile
++@@ -0,0 +1,61 @@
+++# mle: taken from https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+++
+++# mle: Pascal said this would run on node22
+++FROM node:22-alpine AS base
+++
+++# Install dependencies only when needed
+++FROM base AS deps
+++# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+++RUN apk add --no-cache libc6-compat
+++WORKDIR /app
+++
+++COPY package.json package-lock.json ./
+++RUN npm ci --force
+++
+++# Rebuild the source code only when needed
+++FROM base AS builder
+++WORKDIR /app
+++COPY --from=deps /app/node_modules ./node_modules
+++COPY *.json .
+++COPY *.mjs .
+++COPY *.ts .
+++COPY public ./public
+++COPY *.mts .
+++COPY src ./src
+++
+++
+++# Next.js collects completely anonymous telemetry data about general usage.
+++# Learn more here: https://nextjs.org/telemetry
+++# Uncomment the following line in case you want to disable telemetry during the build.
+++ENV NEXT_TELEMETRY_DISABLED=1
+++
+++RUN npm run build
+++
+++# Production image, copy all the files and run next
+++FROM base AS runner
+++WORKDIR /app
+++
+++ENV NODE_ENV=production
+++# Uncomment the following line in case you want to disable telemetry during runtime.
+++ENV NEXT_TELEMETRY_DISABLED=1
+++
+++RUN addgroup --system --gid 1001 nodejs
+++RUN adduser --system --uid 1001 nextjs
+++
+++COPY --from=builder /app/public ./public
+++
+++# Automatically leverage output traces to reduce image size
+++# https://nextjs.org/docs/advanced-features/output-file-tracing
+++COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+++COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+++
+++USER nextjs
+++
+++EXPOSE 3000
+++
+++ENV PORT=3000
+++
+++# server.js is created by next build from the standalone output
+++# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
+++ENV HOSTNAME="0.0.0.0"
+++CMD ["node", "server.js"]
++diff --git a/next.config.ts b/next.config.ts
++index 32b7c44..cd5dd92 100644
++--- a/next.config.ts
+++++ b/next.config.ts
++@@ -25,4 +25,8 @@ const nextConfig: NextConfig = {
++   },
++ }
++ 
+++module.exports = {
+++  output: 'standalone',
+++}
+++
++ export default nextConfig
++diff --git a/src/app/layout.tsx b/src/app/layout.tsx
++index dac247f..cd3112c 100644
++--- a/src/app/layout.tsx
+++++ b/src/app/layout.tsx
++@@ -1,5 +1,7 @@
++ import type { Metadata } from "next"
++ 
+++export const dynamic = 'force-dynamic';
+++
++ import "./globals.css"
++ 
++ import { Lato } from "next/font/google"
++-- 
++2.49.0
+\ No newline at end of file
+-- 
+2.47.0.windows.1
+
