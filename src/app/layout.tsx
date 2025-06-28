@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 
+export const dynamic = 'force-dynamic';
+
 import "./globals.css"
 
 import { Lato } from "next/font/google"
