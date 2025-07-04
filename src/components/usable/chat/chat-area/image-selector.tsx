@@ -1,6 +1,14 @@
 import { Modal, Upload } from 'antd'
 import React from 'react'
 
+/**
+ * Image selector modal component for chat messages
+ * Allows users to select and upload images to include in chat messages
+ * 
+ * @param showImageSelector - Boolean state controlling modal visibility
+ * @param setShowImageSelector - State setter function to control modal visibility
+ * @returns JSX element containing the image selection modal
+ */
 export default function ImageSelector({
     showImageSelector, setShowImageSelector
 }: {

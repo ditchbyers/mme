@@ -23,7 +23,14 @@ import { Separator } from "@/components/ui/separator"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../ui/carousel"
 import { ExpandableBio } from "./expandable-bio"
 import { UserProfileGames } from "./user-profile-games"
-
+/**
+ * User recommendation carousel component for displaying recommended users based on gaming preferences
+ * Features user matching scores, profile information, and direct chat functionality
+ * Includes modal dialogs for detailed user profiles and match compatibility
+ *
+ * @param game_id - The game identifier used to find similar users with matching preferences
+ * @returns JSX element containing the user carousel with match scores and chat functionality
+ */
 export const UserCarousel = ({ game_id }: { game_id: any }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [recommendedUsers, setRecommendedUsers] = useState<recommendedUser[]>([])

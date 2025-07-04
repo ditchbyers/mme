@@ -21,6 +21,13 @@ export const metadata: Metadata = {
   description: "App for gamers to find gamers",
 }
 
+/**
+ * Root layout component for the entire application
+ * Provides global providers, authentication, navigation, and styling
+ *
+ * @param children - The page content to be rendered within the layout
+ * @returns JSX element containing the complete application structure
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

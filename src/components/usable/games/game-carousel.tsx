@@ -12,6 +12,14 @@ interface GameCarouselProps {
   games: Game[]
 }
 
+/**
+ * Game carousel component for displaying a horizontal scrollable list of games
+ * Features responsive design with different item counts per viewport
+ * Includes hover effects, touch interactions, and navigation controls
+ *
+ * @param games - Array of game objects to display in the carousel
+ * @returns JSX element containing the game carousel with navigation
+ */
 export const GameCarousel: React.FC<GameCarouselProps> = ({ games }) => {
   const [touchActiveIndex, setTouchActiveIndex] = useState<number | null>(null)
 

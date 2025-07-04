@@ -5,6 +5,14 @@ import { useSelector } from "react-redux"
 
 import { UserState } from "@/lib/redux/userSlice"
 
+/**
+ * Individual message component for chat display
+ * Renders a single message with different styling based on sender
+ * Shows sender info, message content, and timestamp
+ *
+ * @param message - The message object containing text, sender info, and metadata
+ * @returns JSX element displaying the formatted message
+ */
 export default function Message({ message }: { message: MessageType }) {
   const { currentUserData }: UserState = useSelector((state: any) => state.user)
 

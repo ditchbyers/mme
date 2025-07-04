@@ -16,7 +16,14 @@ import { Button } from "@/components/ui/button"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
 
 import { HeaderSearch } from "./header-search"
-
+/**
+ * Main application header component
+ * Provides navigation, search functionality, user authentication, and real-time features
+ * Handles socket connections, user status management, and responsive design
+ * Hidden on public authentication routes
+ *
+ * @returns JSX element containing the complete header navigation or null for public routes
+ */
 export default function Header() {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")

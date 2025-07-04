@@ -9,6 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
+/**
+ * User profile games component for displaying a user's favorite games
+ * Features search functionality, responsive grid layout, and game cover images
+ * Includes empty state handling and interactive game cards
+ *
+ * @param games - Array of game objects containing id, name, and cover image
+ * @returns JSX element containing the games section with search and grid display
+ */
 export function UserProfileGames({
   games,
 }: {

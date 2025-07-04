@@ -24,6 +24,15 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 
+/**
+ * Current user information component for displaying and editing user profile
+ * Provides comprehensive user profile management with real-time updates
+ * Includes profile picture upload, field editing, logout functionality
+ *
+ * @param showCurrentUserInfo - Boolean state controlling the visibility of the user info sheet
+ * @param setShowCurrentUserInfo - State setter function to control sheet visibility
+ * @returns JSX element containing the user profile sheet or null if no user data
+ */
 function CurrentUserInfo({
   showCurrentUserInfo,
   setShowCurrentUserInfo,

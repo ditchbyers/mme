@@ -2,6 +2,12 @@ import React from "react"
 
 import Loader from "@/components/loader"
 
-export default function Lading() {
+/**
+ * Global loading component for the application
+ * Displays a loading indicator while pages are being rendered
+ * 
+ * @returns JSX element containing the loader component
+ */
+export default function Loading() {
   return <Loader />
 }

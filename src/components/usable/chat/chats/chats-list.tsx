@@ -16,7 +16,14 @@ import ChatCard from "./chat-card"
 type ChatsListProps = {
   searchQuery: string
 }
-
+/**
+ * Chats list component for displaying and managing user's chat conversations
+ * Handles real-time chat updates, search filtering, and chat selection
+ * Manages socket connections for new messages and chat creation events
+ *
+ * @param searchQuery - Current search query for filtering chats by name or participants
+ * @returns JSX element containing the filtered and sorted list of chat cards
+ */
 export default function ChatsList({ searchQuery }: ChatsListProps) {
   const dispatch = useDispatch()
   const { currentUserData }: UserState = useSelector((state: any) => state.user)

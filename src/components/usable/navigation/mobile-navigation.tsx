@@ -16,7 +16,14 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import CurrentUserInfo from "@/components/usable/user/current-user-infor"
 
 import { HeaderSearch } from "./header-search"
-
+/**
+ * Mobile navigation component for bottom navigation bar
+ * Provides responsive navigation for mobile devices with authentication integration
+ * Features home, chat, search, and profile navigation with real-time user management
+ * Hidden on public authentication routes
+ *
+ * @returns JSX element containing the mobile bottom navigation or null for public routes
+ */
 export const MobileNavigation = () => {
   const pathname = usePathname()
   const isPublicRoute = pathname.includes("sign-in") || pathname.includes("sign-up")

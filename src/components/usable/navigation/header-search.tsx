@@ -28,7 +28,13 @@ export interface SearchResponse {
   users: SearchUser[]
   games: SearchGame[]
 }
-
+/**
+ * Header search component providing global search functionality
+ * Enables searching for users and games with real-time results
+ * Features debounced search, dropdown results, and navigation integration
+ *
+ * @returns JSX element containing the search input with dropdown results
+ */
 export function HeaderSearch() {
   const [searchQuery, setSearchQuery] = React.useState("")
   const [isOpen, setIsOpen] = React.useState(false)

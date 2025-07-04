@@ -11,6 +11,14 @@ import { UserState } from "@/lib/redux/userSlice"
 
 import Message from "./message"
 
+/**
+ * Messages container component for displaying chat message history
+ * Handles real-time message updates, auto-scrolling, and unread message tracking
+ * Fetches and displays all messages for the selected chat
+ *
+ * @param messageID - Optional message ID for direct message linking
+ * @returns JSX element containing the scrollable message history
+ */
 export default function Messages({ messageID = "" }: { messageID?: string }) {
   const [messages, setMessages] = useState<MessageType[]>([])
   const [loading, setLoading] = useState(false)

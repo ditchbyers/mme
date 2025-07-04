@@ -11,6 +11,13 @@ import { UserState } from "@/lib/redux/userSlice"
 
 import RecipientInfo from "./recipient-info"
 
+/**
+ * Recipient header component for chat interface
+ * Displays chat/user information, typing indicators, and navigation controls
+ * Shows either group chat info or individual user details
+ *
+ * @returns JSX element containing the chat header with recipient information
+ */
 export default function Recipient() {
   const [typing = false, setTyping] = React.useState<boolean>(false)
   const [senderName = "", setSenderName] = React.useState<string>("")

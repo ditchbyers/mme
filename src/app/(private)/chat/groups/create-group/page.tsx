@@ -4,6 +4,13 @@ import { GetAllUsers } from "@/server-actions/users"
 
 import GroupForm from "../../../../../components/usable/group/group-form"
 
+/**
+ * Create group chat page component
+ * Provides an interface for users to create new group chats
+ * Fetches all available users and displays a form for group creation
+ *
+ * @returns JSX element containing the group creation form with navigation
+ */
 export default async function CreateGroupPage() {
   const { users } = await GetAllUsers()
 

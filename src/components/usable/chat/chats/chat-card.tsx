@@ -16,6 +16,15 @@ type Props = {
   onSelect: () => void
 }
 
+/**
+ * Chat card component for displaying individual chat items in the chat list
+ * Shows chat name, last message, timestamp, unread count, and online status
+ * Handles both group chats and individual user chats with different layouts
+ *
+ * @param chat - The chat object containing all chat information
+ * @param onSelect - Callback function executed when the chat card is clicked
+ * @returns JSX element representing a clickable chat card
+ */
 function ChatCard({ chat, onSelect }: Props) {
   const dispatch = useDispatch()
   const { currentUserData, onlineUsers }: UserState = useSelector((state: any) => state.user)

@@ -10,6 +10,14 @@ import Recipient from "@/components/usable/chat/chat-area/recipient"
 import ChatsHeader from "@/components/usable/chat/chats/chats-header"
 import ChatsList from "@/components/usable/chat/chats/chats-list"
 
+/**
+ * Main chat page component with responsive layout
+ * Displays a list of chats on the left and the selected chat conversation on the right
+ * On mobile devices, shows either the chat list or the conversation based on selection
+ * Includes search functionality for filtering chats
+ *
+ * @returns JSX element containing the complete chat interface with responsive layout
+ */
 export default function ChatPage() {
   const { selectedChat }: ChatState = useSelector((state: any) => state.chat)
   const [searchQuery, setSearchQuery] = useState("")

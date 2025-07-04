@@ -10,6 +10,16 @@ interface ExpandableBioProps {
   className?: string
 }
 
+/**
+ * Expandable bio component for displaying user biography text
+ * Automatically truncates long text and provides expand/collapse functionality
+ * Includes smooth transitions and responsive design
+ *
+ * @param bio - The biography text to display
+ * @param maxLength - Maximum number of characters to show before truncation (default: 150)
+ * @param className - Optional CSS classes for styling the bio text
+ * @returns JSX element containing the expandable bio with toggle button
+ */
 export function ExpandableBio({ bio, maxLength = 150, className = "" }: ExpandableBioProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 

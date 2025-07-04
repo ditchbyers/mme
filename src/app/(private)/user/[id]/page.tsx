@@ -9,6 +9,15 @@ import { Separator } from "@/components/ui/separator"
 import { ExpandableBio } from "@/components/usable/user/expandable-bio"
 import { UserProfileGames } from "@/components/usable/user/user-profile-games"
 
+/**
+ * User profile page component
+ * Displays comprehensive user information including avatar, bio, location, language,
+ * gaming platforms, and favorite games. Provides functionality to start a chat with the user
+ *
+ * @param params - Route parameters containing the user ID
+ * @param params.id - The unique identifier of the user whose profile to display
+ * @returns JSX element containing the complete user profile layout
+ */
 export default async function UserPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { userName, location, language, games, platforms, bio, profilePicture, name } = await fetchUserInfo(id)

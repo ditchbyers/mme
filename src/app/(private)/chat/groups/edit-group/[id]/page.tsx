@@ -4,6 +4,15 @@ import { GetChatDataById } from "@/server-actions/chats"
 
 import GroupForm from "../../../../../../components/usable/group/group-form"
 
+/**
+ * Edit group chat page component
+ * Allows users to modify existing group chat settings and members
+ * Fetches current group data and pre-populates the form for editing
+ *
+ * @param params - Route parameters containing the group ID
+ * @param params.id - The unique identifier of the group chat to edit
+ * @returns JSX element containing the group edit form with navigation
+ */
 async function EditGroup({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 

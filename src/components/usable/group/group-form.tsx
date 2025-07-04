@@ -12,6 +12,14 @@ import socket from "@/config/socket-config"
 import { UserState } from "@/lib/redux/userSlice"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Group form component for creating and editing group chats
+ * Handles group creation, member selection, and group information updates
+ * Supports both new group creation and editing existing groups
+ *
+ * @param initialData - Optional initial data for editing existing groups (null for new groups)
+ * @returns JSX element containing the group creation/editing form
+ */
 export default function GroupForm({ initialData = null }: { initialData: any }) {
   const router = useRouter()
   const [users, setUsers] = useState<UserType[]>([])

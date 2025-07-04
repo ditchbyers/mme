@@ -1,5 +1,11 @@
 "use server"
 
+/**
+ * Retrieves user recommendations based on similar gaming preferences
+ * @param currentUserId - The ID of the current user
+ * @param currentGameId - The ID of the game to base recommendations on
+ * @returns Promise with recommended users data or error object
+ */
 export const GetSimilarUserRecommendations = async (currentUserId: any, currentGameId: any) => {
   try {
     const currentUser = currentUserId

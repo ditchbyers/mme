@@ -14,6 +14,13 @@ import { Button } from "@/components/ui/button"
 
 import ImageSelector from "./image-selector"
 
+/**
+ * New message input component for sending messages in chat
+ * Provides text input, emoji picker, image upload, and real-time typing indicators
+ * Handles message sending via both socket and database operations
+ *
+ * @returns JSX element containing the message input interface
+ */
 export default function NewMessages() {
   const [text, setText] = React.useState("")
   const { currentUserData }: UserState = useSelector((state: any) => state.user)

@@ -12,6 +12,15 @@ import { TH3 } from "@/components/typography/h3"
 import { GameCarousel } from "@/components/usable/games/game-carousel"
 import { UserCarousel } from "@/components/usable/user/user-wrapper"
 
+/**
+ * Game details page component
+ * Displays comprehensive information about a specific game including cover art,
+ * description, genres, platforms, expansions, similar games, and recommended users
+ *
+ * @param params - Route parameters containing the game ID
+ * @param params.id - The unique identifier of the game to display
+ * @returns JSX element containing the complete game details layout
+ */
 export default async function GameDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 

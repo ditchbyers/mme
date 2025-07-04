@@ -14,6 +14,15 @@ type ChatsHeaderProps = {
   setSearchQuery: (value: string) => void
 }
 
+/**
+ * Header component for the chats list section
+ * Provides search functionality and options to create new chats or groups
+ * Includes dropdown menu for different chat creation options
+ *
+ * @param searchQuery - Current search query for filtering chats
+ * @param setSearchQuery - Function to update the search query
+ * @returns JSX element containing the chats header with search and actions
+ */
 export default function ChatsHeader({ searchQuery, setSearchQuery }: ChatsHeaderProps) {
   const [showNewChatModal, setShowNewChatModal] = React.useState(false)
   const router = useRouter()

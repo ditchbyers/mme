@@ -10,6 +10,16 @@ import { ChatState, SetChats } from "@/lib/redux/chatSlice"
 import { UserState } from "@/lib/redux/userSlice"
 import { Button } from "@/components/ui/button"
 
+/**
+ * New chat modal component for creating individual chats with other users
+ * Displays a searchable list of available users and handles chat creation
+ * Prevents duplicate chats and manages loading states during creation
+ *
+ * @param showNewChatModal - Boolean state controlling modal visibility
+ * @param setShowNewChatModal - State setter function to control modal visibility
+ * @returns JSX element containing the new chat creation modal
+ */
+
 export default function NewChatModal({
   showNewChatModal,
   setShowNewChatModal,

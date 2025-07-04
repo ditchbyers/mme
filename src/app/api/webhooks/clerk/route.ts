@@ -1,6 +1,13 @@
 import { NextRequest } from "next/server"
 import { verifyWebhook } from "@clerk/nextjs/webhooks"
 
+/**
+ * Webhook handler for Clerk authentication events
+ * Processes session-related events (ended, removed, revoked) and cleans up user sessions
+ *
+ * @param req - The incoming webhook request from Clerk
+ * @returns Promise resolving to a response indicating webhook processing status
+ */
 export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req)

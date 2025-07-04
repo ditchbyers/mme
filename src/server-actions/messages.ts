@@ -1,6 +1,16 @@
 "use server"
 import { currentUser, auth } from "@clerk/nextjs/server";
 
+/**
+ * Sends a new message to a chat
+ * @param payload - The message data containing text, image, chat ID, sender, etc.
+ * @param payload.text - Optional text content of the message
+ * @param payload.image - Optional base64 encoded image data
+ * @param payload.chat - The ID of the chat to send the message to
+ * @param payload.sender - The ID of the user sending the message
+ * @param payload.socketMessageId - Optional socket message ID for real-time updates
+ * @returns Promise with the sent message data or error object
+ */
 export const SendNewMessage = async (payload: {
     text?: string,
     image?: string,
@@ -33,6 +43,12 @@ export const SendNewMessage = async (payload: {
     }
 }
 
+/**
+ * Retrieves all messages for a specific chat
+ * @param chatId - The unique ID of the chat
+ * @param userId - The ID of the user requesting the messages
+ * @returns Promise with the chat messages data or error object
+ */
 export const GetChatMessages = async (chatId: string, userId: string) => {
     try {
         const user_id = userId
@@ -53,6 +69,12 @@ export const GetChatMessages = async (chatId: string, userId: string) => {
     }
 }
 
+/**
+ * Marks all messages in a chat as read for a specific user
+ * @param chatId - The ID of the chat where messages should be marked as read
+ * @param userId - The ID of the user marking the messages as read
+ * @returns Promise with operation result or error object
+ */
 export const ReadAllMessages = async ({ chatId, userId }: { chatId: string, userId: string }) => {
     try {
         const user_id = userId
